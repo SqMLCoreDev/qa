@@ -18,136 +18,9 @@
       <script src='../assets/dist/js/investigate/selectize.js'></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-      <script src='https://unpkg.com/formiojs@latest/dist/formio.full.min.js'></script>
-      <style>
-		.bd-placeholder-img {
-		  font-size: 1.125rem;
-		  text-anchor: middle;
-		  -webkit-user-select: none;
-		  -moz-user-select: none;
-		  -ms-user-select: none;
-		  user-select: none;
-		}
-
-		.select2-selection {
-		  overflow: hidden;
-		}
-
-		.select2-selection__rendered {
-		  white-space: normal;
-		  word-break: break-all;
-		}
-
-		@media (min-width: 768px) {
-		  .bd-placeholder-img-lg {
-			font-size: 3.5rem;
-		  }
-		}
-
-		.btn-status {
-		  font-size: 0.8rem;
-		}
-
-		.rounded {
-		  border-radius: 1.25rem!important;
-		}
-
-		.auto-width {
-		  width: auto!important;
-		}
-
-		.loader {
-		  border: 16px solid #f3f3f3;
-		  border-radius: 50%;
-		  border-top: 16px solid #3498db;
-		  width: 120px;
-		  height: 120px;
-		  -webkit-animation: spin 2s linear infinite;
-		  /* Safari */
-		  animation: spin 2s linear infinite;
-		}
-
-
-		/* Safari */
-
-		@-webkit-keyframes spin {
-		  0% {
-			-webkit-transform: rotate(0deg);
-		  }
-		  100% {
-			-webkit-transform: rotate(360deg);
-		  }
-		}
-
-		@keyframes spin {
-		  0% {
-			transform: rotate(0deg);
-		  }
-		  100% {
-			transform: rotate(360deg);
-		  }
-		}
-
-		.invalid-feedback {
-		  display: block;
-		  color: #dc3545 !important;
-		}
-
-		.alert {
-		  display: none;
-		}
-
-		.form-control.is-invalid {
-		  border-color: #dc3545 !important;
-		}
-
-		.formio-component {
-		  background-color: transparent !important;
-		}
-
-		.formio-error-wrapper,
-		.formio-warning-wrapper {
-		  padding: 0em;
-		}
-
-		.form-control:disabled,
-		.form-control[readonly] {
-		  background-color: #e9ecef !important;
-		  opacity: 1;
-		  cursor: not-allowed;
-		}
-
-		.btn-primary.disabled,
-		.btn-primary:disabled {
-		  color: #000;
-		  background-color: #e9ecef !important;
-		  border-color: rgba(0, 0, 0, 0);
-		  cursor: not-allowed;
-		}
-
-		.disable {
-		  background-color: #e9ecef !important;
-		  opacity: 1;
-		  cursor: not-allowed !important;
-		}
-
-		.field-required:after {
-		  content: " *" !important;
-		  color: transparent !important;
-		}
-		.form-control.is-invalid, .was-validated .form-control:invalid {
-		  background-position: right calc(.375em + 0.5875rem) center !important;
-		}
-		.bg-primary {
-			background-color: #154877!important;
-		}
-		i.fa.fa-remove {
-			display: contents !important;
-			font-size: 25px !important;
-			color: red !important;
-			font-weight: normal !important;
-		}
-      </style>
+      <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
+	  <script src='../assets/dist/js/main.js'></script>
+	  <link href="../assets/dist/css/main.css" rel="stylesheet">
       <script>
 		var globalForm = null;
 		var flutterPlatformReady = false;
@@ -161,18 +34,16 @@
 
 		$(document).ready(function () {
 		
-			var formDefinitionDept = "SDA-Membership";
 			var docvars = getUrlVars();
-			
+			var formDefinitionDept = docvars.departmentName;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
 			
+			var filing_URL = "https://qa.servicedx.com/filing/membership/formio";
 			var formDefinitionUrl = "https://qa.servicedx.com/admin/departments/" + formDefinitionDept;
-			var membershipUrl = "https://qa.servicedx.com/filing/membership/formio/departments/"+docvars.departmentName+"/users/"+docvars.userName;
-			var membershipByIdUrl = "https://qa.servicedx.com/filing/membership/formio/membership_id/"+docvars.membershipId;
-			//var membershipUrl = "http://localhost:9104/filing/membership/formio/departments/"+docvars.departmentName+"/users/"+docvars.userName;
-			//var membershipByIdUrl = "http://localhost:9104/filing/membership/formio/membership_id/"+docvars.membershipId;
+			var membershipUrl = filing_URL + "/departments/"+docvars.departmentName+"/users/"+docvars.userName;
+			var membershipByIdUrl = filing_URL + "/membership_id/"+docvars.membershipId;
 			
 			var formDefComponent = getFormComp(formDefinitionUrl);
 			var formObj = null;
@@ -259,7 +130,9 @@
 						console.log("AF : userObject : " + JSON.stringify(userObject))
 					
 						if(!isMember){
-							fetchAPI("https://qa.servicedx.com/filing/membership/formio", options(JSON.stringify(userObject), isMember)).then(response => {
+							showLoader('show');
+							fetchAPI(filing_URL, options(JSON.stringify(userObject), isMember)).then(response => {
+								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Create Success')
 								}else{
@@ -271,7 +144,9 @@
 							});
 							//fetchAPI("http://localhost:9104/filing/membership/formio/", options(JSON.stringify(userObject), isMember));
 						}else{
-							fetchAPI("https://qa.servicedx.com/filing/membership/formio/" + userObject.membershipId, options(JSON.stringify(userObject), isMember)).then(response => {
+							showLoader('show');
+							fetchAPI(filing_URL +"/" + userObject.membershipId, options(JSON.stringify(userObject), isMember)).then(response => {
+								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Update Success')
 								}else{
@@ -400,18 +275,10 @@
 					$.each($('div[class*="selectize-dropdown"]'), function () {
 						$(this).removeClass("form-control");
 					});
+					form.on('redraw', () => {
+						form.triggerChange();
+					});
 				});
-
-			$('#privacyLaunch').click(function (e) {
-				$("#privacy-policy-modal").toggleClass("hidden");
-			});
-			$('#privacy-policy-close').click(function (e) {
-				$("#privacy-policy-modal").toggleClass("hidden");
-			});
-			
-			setTimeout(function(){ 
-				$("[ref=toggleCameraMode]").remove();
-			}, 300);
 		});
 
 		$(window).on('load', function () {
@@ -446,7 +313,7 @@
 					if(json.addressProof != null){
 						json["addressProof1"] = JSON.parse(json.addressProof);
 					}else{
-						json["addressProof1"] = [];
+					json["addressProof1"] = [];
 					}
 					
 				}else {
@@ -454,10 +321,6 @@
 					json["socialMedia"] = json.referredByValue;
 					json["person"] = json.referredByValue;
 					json["termsAndCondition"] = true;
-					if (json.receiptNo != null || json.receiptNo != "" && json.receiptNo != undefined && json.paymentMode != null || json.paymentMode != "" && json.paymentMode != undefined ) {
-						json["paymentStatus"] = "Success";
-						json["payment"] = true;
-					}
 					
 					if(json.registeredNurseDocument != null){
 						json["registeredNurseDocument1"] = JSON.parse(json.registeredNurseDocument);
@@ -497,6 +360,10 @@
 					json["others"] = json.maritalStatus;
 				}else{
 					json["maritalStatus1"] = json.maritalStatus;
+				}
+				if(json.receiptNo != null && json.receiptNo != ''){
+					json["payment"] = true;
+					json["paymentStatus"] = "success";
 				}
 				json["role"] = docvars.loggedInRole;
 				json["isMember"] = isMember;
@@ -581,7 +448,13 @@
 				  type : "GET",
 				  async : false,
 				  success: function(result){
-				  formDefinition =  JSON.parse(result.membershipDefinition)
+				  var parsedForm = result.formioDefinition.Definition
+				  for (i = 0; i < parsedForm.length; i++) {
+					  var form = parsedForm[i];
+					  if(form.formName == 'membership'){
+						 formDefinition =  JSON.parse(form.formDefinition);
+					  }
+					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
 			}});
 			return formDefinition;
@@ -644,52 +517,25 @@
 			  $('#'+id).removeClass('disable');
 			});
 		}
+				
+		function showLoader(loader){
+			if(loader == 'show'){
+				$(".loader").show();
+				$("#builder").addClass('hide');
+			}else{
+				$(".loader").hide();
+				$("#builder").removeClass('hide');
+			}
+		}
+		
       </script>
       <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
-      <style>body { font-family:'Poppins', sans-serif!important; overflow-x: hidden!important; }
-         .card-header {
-         padding: 5px;
-         margin-bottom: 0;
-         background-color: rgba(0,0,0,.03);
-         border-bottom: 1px solid rgba(0,0,0,.125);
-         }
-         .formio-component,.form-control,.select2-selection__rendered {
-         font-size:15px!important;
-         }
-         .select2-selection__rendered, .select2-selection--multiple{
-         background-color: #e8f0fa!important;
-         }
-         .select2-selection--multiple{
-         padding-left: 4px!important;
-         }
-         .select2-container--bootstrap4 .select2-selection {
-         border: 1px solid #d3dae8!important;
-         } 
-         .card-body {
-         padding: 5px 10px!important;
-         }
-         .select2-selection__choice__remove{
-         border:none;background:transparent;color:#fff!important;
-         }
-         .select2-search__field {
-         background:transparent;
-         }
-         .select2-selection__choice__display{
-         font-size:13px!important;
-         color:#fff!important;
-         }
-		 .head{
-			margin-top: 15px;
-         }
-      </style>
    </head>
    <body style="padding:10px;background-color: #dde0e0;">
       <div id="wrapper">
-         <div id="loader" class="hidden">
-            <div id="loaderCircle"></div>
-         </div>
          <div id="initScreen" style="display: block;">
             <div class="section" id="a67a329f1c344dfd887b3efc8a413ed3">
+			   <span class="loader"></span>
                <div class="screen" id="survey-screen-1" style="background-color: rgb(245, 249, 250);">
                   <div class="main-container">
                      <div id="survey-section" class="">
@@ -699,72 +545,6 @@
                            <div class="question-answer-row" id="section" style="padding-left:10px;padding-right:10px;">
                               <div class="question-answer-cell">
                                  <div id='builder'></div>
-                              </div>
-							  <div class="question-answer-cell">
-                                 <div id='formio'></div>
-                              </div>
-                           </div>
-                           <div class="question-answer-row" style="display:none;">
-                              <div class="question-answer-cell">
-                                 <div class="question-section-row">
-                                    <div id="question-section" class="">How old are you?</div>
-                                 </div>
-                                 <div class="table" id="options-section" style="color: rgb(63, 127, 241);">
-                                    <div class="table-row options-title-row">
-                                       <div class="options-title">Select One</div>
-                                    </div>
-                                    <div class="table-row"  style="display:none;">
-                                       <div class="options-content-container">
-                                          <div class="options-content">
-                                             <div class="question-695d225da68f4a42acc389c83e165f29 invisible-scrollbar" style="width: 100%; max-height: 100%;">
-                                                <style>.icon-selection { color: #3f7ff1 !important } .icon-selected { color: #3f7ff1 !important } .icon-unselected { color: #3f7ff1 !important } .submit-button-container .submit-button.active { background-color: #3f7ff1 }</style>
-                                                <div class="options-list-container">
-                                                   <style>.multiple-choice-option.selected { color: #3f7ff1; border-color: #3f7ff1 } .submit-button-container .submit-button.active { background-color: #3f7ff1 }</style>
-                                                   <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="27741a5d005a478f98b5fcaeda723526">
-                                                      <div class="icon-checkbox icon-check" data-option-id="27741a5d005a478f98b5fcaeda723526" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                      <div class="text-content" data-option-id="27741a5d005a478f98b5fcaeda723526" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">&lt; 14</div>
-                                                   </div>
-                                                   <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="6c37f5c3044442c2b94791e8423d8c04">
-                                                      <div class="icon-checkbox icon-check" data-option-id="6c37f5c3044442c2b94791e8423d8c04" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                      <div class="text-content" data-option-id="6c37f5c3044442c2b94791e8423d8c04" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">14-17</div>
-                                                   </div>
-                                                   <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="aa95d0d30f20423393d639a0f38b3e16">
-                                                      <div class="icon-checkbox icon-check" data-option-id="aa95d0d30f20423393d639a0f38b3e16" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                      <div class="text-content" data-option-id="aa95d0d30f20423393d639a0f38b3e16" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">18-24</div>
-                                                   </div>
-                                                   <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="e95fb4d3173a4d04b727e62437166b27">
-                                                      <div class="icon-checkbox icon-check" data-option-id="e95fb4d3173a4d04b727e62437166b27" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                      <div class="text-content" data-option-id="e95fb4d3173a4d04b727e62437166b27" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">25-34</div>
-                                                   </div>
-                                                   <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="e2b8a669ec034ef4a317379bad2e2f8d">
-                                                      <div class="icon-checkbox icon-check" data-option-id="e2b8a669ec034ef4a317379bad2e2f8d" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                      <div class="text-content" data-option-id="e2b8a669ec034ef4a317379bad2e2f8d" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">35-44</div>
-                                                   </div>
-                                                   <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="f40ba0f5d9944009af2f3b4c30f6afbb">
-                                                      <div class="icon-checkbox icon-check" data-option-id="f40ba0f5d9944009af2f3b4c30f6afbb" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                      <div class="text-content" data-option-id="f40ba0f5d9944009af2f3b4c30f6afbb" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">45-54</div>
-                                                   </div>
-                                                   <div class="multiple-choice-option" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0" data-option-id="b657f78427fc4caebc35c18363e0459b">
-                                                      <div class="icon-checkbox icon-check" data-option-id="b657f78427fc4caebc35c18363e0459b" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0"></div>
-                                                      <div class="text-content" data-option-id="b657f78427fc4caebc35c18363e0459b" data-question-id="695d225da68f4a42acc389c83e165f29" data-bucket-id="0">55+</div>
-                                                   </div>
-                                                </div>
-                                             </div>
-                                          </div>
-                                          <div class="more-options-below hidden" data-action="scroll-to-bottom">
-                                             More options &nbsp;
-                                             <span class="icon-down-arrow" data-action="scroll-to-bottom">c</span>
-                                          </div>
-                                       </div>
-                                    </div>
-                                 </div>
-                              </div>
-                           </div>
-                           <div class="privacy-policy-row" style="display:none">
-                              <div class="privacy-policy-container">
-                                 <div id="privacy-policy-text" class="privacy-policy-text">By clicking the button above, you agree to our
-                                    <span id="privacy-policy-button" class="" style="color: unset; background-color: unset;">Privacy Policy</span>
-                                 </div>
                               </div>
                            </div>
                         </div>
@@ -783,30 +563,6 @@
          <div id="main-error-container" class="hidden">
             <div id="error-message">Something went wrong. Please retry.</div>
             <div id="retry-button">Retry</div>
-         </div>
-         <div id="privacy-policy-modal" class="hidden">
-            <div class="title-row table-row">
-               <div class="table-cell title-container">
-                  <div class="title">Privacy Policy</div>
-                  <div id="privacy-policy-close"><button type="button" class="close" aria-label="Close">
-                     <span aria-hidden="true">&times;</span>
-                     </button>
-                  </div>
-               </div>
-            </div>
-            <div class="table-row">
-               <div class="table-cell content-container">
-                  <div class="content"><strong>HOW WE USE INFORMATION WE COLLECT</strong><br>
-                     How we use the information we collect depends in part on which Services you use, how you use them, and any preferences you have communicated to us. Below are the specific purposes for which we use the information we collect about you.
-                     <br>We collect and use your information only where:
-                     <br>â€¢	We need it to provide you the Services, including to operate the Services, provide customer support and personalized features and to protect the safety and security of the Services;
-                     <br>â€¢	It satisfies a legitimate interest (which is not overridden by your data protection interests), such as for research and development, to market and promote the Services and to protect our legal rights and interests;
-                     <br>â€¢	You give us consent to do so for a specific purpose; or
-                     <br>â€¢	We need to process your data to comply with a legal obligation.
-                     <br>â€¢	If you have consented to our use of information about you for a specific purpose, you have the right to change your mind at any time, but this will not affect any processing that has already taken place. Where we are using your information because we or a third party (e.g. your employer) have a legitimate interest to do so, you have the right to object to that use though, in some cases, this may mean no longer using the Services.
-                  </div>
-               </div>
-            </div>
          </div>
       </div>
    </body>

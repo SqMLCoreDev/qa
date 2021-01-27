@@ -18,213 +18,9 @@
       <script src='../assets/dist/js/investigate/selectize.js'></script>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-      <script src='https://unpkg.com/formiojs@latest/dist/formio.full.min.js'></script>
-      <style>
-		body {
-		  font-family: 'Poppins', sans-serif!important;
-		  overflow-x: hidden!important;
-		}
-
-		.card-header {
-		  padding: 5px !important;
-		  margin-bottom: 0 !important;
-		  background-color: rgba(0, 0, 0, .03) !important;
-		  border-bottom: 1px solid rgba(0, 0, 0, .125) !important;
-		}
-
-		.formio-component,
-		.form-control,
-		.select2-selection__rendered {
-		  font-size: 15px!important;
-		}
-
-		.select2-selection__rendered,
-		.select2-selection--multiple {
-		  background-color: #e8f0fa!important;
-		}
-
-		.select2-selection--multiple {
-		  padding-left: 4px!important;
-		}
-
-		.select2-container--bootstrap4 .select2-selection {
-		  border: 1px solid #d3dae8!important;
-		}
-
-		.card-body {
-		  padding: 5px 10px!important;
-		}
-
-		.select2-selection__choice__remove {
-		  border: none !important;
-		  background: transparent !important;
-		  color: #fff!important;
-		}
-
-		.select2-search__field {
-		  background: transparent !important;
-		}
-
-		.select2-selection__choice__display {
-		  font-size: 13px!important;
-		  color: #fff!important;
-		}
-
-		.head {
-		  margin-top: 15px !important;
-		}
-
-		.bd-placeholder-img {
-		  font-size: 1.125rem !important;
-		  text-anchor: middle !important;
-		  -webkit-user-select: none !important;
-		  -moz-user-select: none !important;
-		  -ms-user-select: none !important;
-		  user-select: none !important;
-		}
-
-		.select2-selection {
-		  overflow: hidden !important;
-		}
-
-		.select2-selection__rendered {
-		  white-space: normal !important;
-		  word-break: break-all !important;
-		}
-
-		@media (min-width: 768px) {
-		  .bd-placeholder-img-lg {
-			font-size: 3.5rem !important;
-		  }
-		}
-
-		.btn-status {
-		  font-size: 0.8rem !important;
-		}
-
-		.rounded {
-		  border-radius: 1.25rem!important;
-		}
-
-		.auto-width {
-		  width: auto!important;
-		}
-
-		.loader {
-		  border: 16px solid #f3f3f3;
-		  border-radius: 50%;
-		  border-top: 16px solid #3498db;
-		  width: 120px;
-		  height: 120px;
-		  -webkit-animation: spin 2s linear infinite;
-		  /* Safari */
-		  animation: spin 2s linear infinite;
-		}
-
-		/* Safari */
-
-		@-webkit-keyframes spin {
-		  0% {
-			-webkit-transform: rotate(0deg);
-		  }
-		  100% {
-			-webkit-transform: rotate(360deg);
-		  }
-		}
-
-		@keyframes spin {
-		  0% {
-			transform: rotate(0deg);
-		  }
-		  100% {
-			transform: rotate(360deg);
-		  }
-		}
-
-		.invalid-feedback {
-		  display: block !important;
-		  color: #dc3545 !important;
-		}
-
-		.alert {
-		  display: none !important;
-		}
-
-		.form-control {
-			background-color: #e8f0fa!important;
-		}
-		
-		.form-control.is-invalid {
-		  border-color: #dc3545 !important;
-		}
-
-		.formio-component {
-		  background-color: transparent !important;
-		}
-
-		.formio-error-wrapper,
-		.formio-warning-wrapper {
-		  padding: 0em !important;
-		}
-
-		.form-control:disabled,
-		.form-control[readonly] {
-		  background-color: #e9ecef !important;
-		  opacity: 1 !important;
-		  cursor: not-allowed !important;
-		}
-
-		.btn-primary.disabled,
-		.btn-primary:disabled {
-		  color: #000;
-		  background-color: #e9ecef !important;
-		  border-color: rgba(0, 0, 0, 0);
-		  cursor: not-allowed;
-		}
-
-		.disable {
-		  background-color: #e9ecef !important;
-		  opacity: 1 !important;
-		  cursor: not-allowed !important;
-		}
-
-		.field-required:after {
-		  content: " *" !important;
-		  color: transparent !important;
-		}
-		.form-control.is-invalid, .was-validated .form-control:invalid {
-		  background-position: right calc(.375em + 0.8875rem) center !important;
-		}
-		.choices[data-type*=select-one] .choices__button {
-			margin-right: 35px;
-		}
-		.bg-primary {
-			background-color: #154877!important;
-		}
-		i.fa.fa-remove {
-			display: contents !important;
-			font-size: 25px !important;
-			color: red !important;
-			font-weight: normal !important;
-		}
-		.btn-success.disabled, .btn-success:disabled {
-			color: #000;
-			background-color: #e9ecef;
-			border-color: #d0d0d0;
-		}
-		
-		button[disabled], input[disabled] {
-		  cursor: not-allowed !important;
-		}
-		
-		input[type="radio"]:disabled {
-		  background-color: black !important;
-		}
-		input[type="radio"][disabled] + label 
-		 {
-			 color: Gray;
-		 }
-      </style>
+      <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
+	  <script src='../assets/dist/js/main.js'></script>
+	  <link href="../assets/dist/css/main.css" rel="stylesheet">
       <script>
 		var globalForm = null;
 		var flutterPlatformReady = false;
@@ -238,9 +34,9 @@
 
 		$(document).ready(function () {
 		
-			var formDefinitionDept = "Membership_formio";
-			var docvars = getUrlVars();
 			
+			var docvars = getUrlVars();
+			var formDefinitionDept = docvars.departmentName;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
@@ -297,9 +93,6 @@
 					}
 					
 					form.submission = { data: userObj };
-					setTimeout(function(){ 
-						form.triggerChange();
-					}, 300);
 					
 					console.log('userObj',form.submission);
 					
@@ -308,6 +101,7 @@
 					form.nosubmit = true;
 					form.on('submit', function (submission) {
 						$('#formSubmit').attr('disabled','disabled');
+						showLoader('show');
 						var userObject = submission.data;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
 
@@ -339,8 +133,10 @@
 						var handlerName =  'handlerMembershipWithArgs';
 						
 						if(!isMember){
+							showLoader('show');
 							userObject["membershipStatus"] = "Under Review";
 							fetchAPI(filing_URL, options(JSON.stringify(userObject), isMember), handlerName).then(response => {
+								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Create Success')
 								}else{
@@ -350,7 +146,9 @@
 								console.log("error fetch",error);
 							});
 						}else{
+							showLoader('show');
 							fetchAPI(filing_URL +"/"+ userObject.membershipId, options(JSON.stringify(userObject), isMember), handlerName).then(response => {
+								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Update Success')
 								}else{
@@ -473,11 +271,10 @@
 					$.each($('div[class*="selectize-dropdown"]'), function () {
 						$(this).removeClass("form-control");
 					});
+					form.on('redraw', () => {
+						form.triggerChange();
+					});
 				});
-				
-			setTimeout(function(){ 
-				$("[ref=toggleCameraMode]").remove();
-			}, 300);
 
 		});
 
@@ -521,10 +318,6 @@
 					json["socialMedia"] = json.referredByValue;
 					json["person"] = json.referredByValue;
 					json["termsAndCondition"] = true;
-					//if (json.receiptNo != null || json.receiptNo != "" && json.receiptNo != undefined && json.paymentMode != null || json.paymentMode != "" && json.paymentMode != undefined ) {
-						//json["paymentStatus"] = "Success";
-						//json["payment"] = true;
-					//}
 					
 					if(json.registeredNurseDocument != null){
 						json["registeredNurseDocument1"] = JSON.parse(json.registeredNurseDocument);
@@ -566,7 +359,7 @@
 					json["maritalStatus1"] = "others";
 					json["others"] = json.maritalStatus;
 				}
-				if(json.receiptNo != null && json.receiptNo != '' && json.paymentMode != null && json.paymentMode != ''){
+				if(json.receiptNo != null && json.receiptNo != ''){
 					json["payment"] = true;
 					json["paymentStatus"] = "success";
 				}
@@ -638,7 +431,7 @@
 						//window.alert(receiptNo);
 						transaction = { "receiptNo" :receiptNo, "paymentMode" :paymentMode, "paymentStatus" :transactionStatus };
 						
-					});
+						});
 					//window.alert("transaction " + JSON.stringify(transaction));
 					return transaction;
 				}else{
@@ -676,7 +469,13 @@
 				  type : "GET",
 				  async : false,
 				  success: function(result){
-				  formDefinition =  JSON.parse(result.membershipDefinition)
+				  var parsedForm = result.formioDefinition.Definition
+				  for (i = 0; i < parsedForm.length; i++) {
+					  var form = parsedForm[i];
+					  if(form.formName == 'membership'){
+						 formDefinition =  JSON.parse(form.formDefinition);
+					  }
+					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
 			}});
 			return formDefinition;
@@ -742,8 +541,6 @@
 			  $('input[type="radio"][value="'+value+'"]').prop('disabled', true);
 			}
 		}
-		function disableButton(){
-		}
 		
 		function enable(id) {
 			document.addEventListener("DOMContentLoaded", function(event) {
@@ -751,16 +548,26 @@
 			  $('#'+id).removeClass('disable');
 			});
 		}
+				
+		function showLoader(loader){
+			if(loader == 'show'){
+				$(".loader").show();
+				$("#builder").addClass('hide');
+			}else{
+				$(".loader").hide();
+				$("#builder").removeClass('hide');
+			}
+		}
+		
       </script>
-      <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
+	  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
+      <!-- <link href="../assets/dist/css/poopins/poopins.css" rel="stylesheet"> -->
    </head>
    <body style="padding:10px;background-color: #dde0e0;">
       <div id="wrapper">
-         <div id="loader" class="hidden">
-            <div id="loaderCircle"></div>
-         </div>
          <div id="initScreen" style="display: block;">
             <div class="section" id="a67a329f1c344dfd887b3efc8a413ed3">
+			   <span class="loader"></span>
                <div class="screen" id="survey-screen-1" style="background-color: rgb(245, 249, 250);">
                   <div class="main-container">
                      <div id="survey-section" class="">
