@@ -36,8 +36,8 @@
 		$(document).ready(function () {
 		
 			var docvars = getUrlVars();
+			var formDefinitionDept = "USEmbassyTT";
 			//var formDefinitionDept = docvars.departmentName;
-                        var formDefinitionDept = "USEmbassyTT";
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
@@ -102,6 +102,7 @@
 						
 						//userObject["roleName"] = "User";
 						userObject["departmentName"] = docvars.departmentName;
+						userObject["additionalInfo"] = JSON.stringify(userObject.additionalInfo);
 						userObject["source"] = "MOBILE";
 						userObject["active"] = true;
 						console.log("AF : userObject : " + JSON.stringify(userObject))
@@ -267,6 +268,10 @@
 			});
 		});
 		
+		$(window).on('load', function () {
+			showLoader('hide');
+		});
+		
 		function editObject(obj){
 				var json = JSON.parse(obj.data);
 				console.log(json);
@@ -336,6 +341,12 @@
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
 				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  },
 				  error: function (textStatus) {
 					  console.log(textStatus);
 					  if(textStatus.status == 0){
@@ -363,7 +374,13 @@
 					  }
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
-			}});
+			      },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  }});
 			return formDefinition;
 		}
 		
