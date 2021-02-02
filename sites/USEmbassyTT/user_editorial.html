@@ -42,8 +42,8 @@
 				flutterPlatformReady = true;
 			});
 			
-			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
-			//var adminURL = "http://localhost:9100/admin/departments/formio/";
+			//var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
+			var adminURL = "http://localhost:9100/admin/departments/formio/";
 			var formObj = null;
 			var isUser = true;
 			var userUrl = adminURL + docvars.departmentName + "/users/" +docvars.userName;
@@ -101,8 +101,9 @@
 						delete userObject["others"];
 						
 						//userObject["roleName"] = "User";
+						console.log("AF : additionalInfo : " , userObject.additionalInfos);
 						userObject["departmentName"] = docvars.departmentName;
-						userObject["additionalInfo"] = JSON.stringify(userObject.additionalInfo);
+						userObject["additionalInfo"] = JSON.stringify(userObject.additionalInfos);
 						userObject["source"] = "MOBILE";
 						userObject["active"] = true;
 						console.log("AF : userObject : " + JSON.stringify(userObject))
@@ -318,6 +319,16 @@
 					"countryName": json.countryName.charAt(0).toUpperCase() + json.countryName.slice(1),
 					"countryCodeValue": json.countryCodeValue
 				};
+				if(json.additionalInfo){
+					var addInfo = JSON.parse(json.additionalInfo);
+					if(addInfo){
+						for (var i in addInfo) {
+							json[i] = addInfo[i];
+							console.log(i, addInfo[i]);
+						}
+					}
+				}
+				
 			return json;
 		}
 		
