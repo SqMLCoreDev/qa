@@ -320,15 +320,15 @@
 				var id2 = json.secondMobileNo;
 				
 					
-				if (id1 && id1.length > 10) {
+				if (id1 && id1.length > 7) {
 				
-					json["phoneNo"] = id1.substr(id1.length - 10);
+					json["phoneNo"] = id1.substr(id1.length - 7);
 				}else{
 				json["phoneNo"] = json.mobileNo ;
 				}
-				if (id2 && id2.length > 10) {
+				if (id2 && id2.length > 7) {
 			//	alert(id2);
-					json["secondPhoneNo"] = id2.substr(id2.length - 10);
+					json["secondPhoneNo"] = id2.substr(id2.length - 7);
 					//alert(id2.substr(id2.length - 10));
 				}else{
 				json["secondPhoneNo"] = json.secondMobileNo ;
