@@ -42,8 +42,11 @@
 				flutterPlatformReady = true;
 			});
 			
-			//var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
-			var adminURL = "http://localhost:9100/admin/departments/formio/";
+			var mobileNo;
+			var secondPhoneNo;
+			
+			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
+			//var adminURL = "http://localhost:9100/admin/departments/formio/";
 			var formObj = null;
 			var isUser = true;
 			var userUrl = adminURL + docvars.departmentName + "/users/" +docvars.userName;
@@ -80,6 +83,9 @@
 					form.on('submit', function (submission) {
 						$('#formSubmit').attr('disabled','disabled');
 						var userObject = submission.data;
+						//alert(userObject.phoneNo);
+						mobileNo= userObject.phoneNo;
+						secondPhoneNo = userObject.secondPhoneNo;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
 
 						delete userObject["submit"];
@@ -109,9 +115,14 @@
 						console.log("AF : userObject : " + JSON.stringify(userObject))
 
 						var handlerName =  'userHandlerWithArgs';
-						
+						userObject.mobileNo= mobileNo;
+						userObject.secondMobileNo = secondPhoneNo;
 						if(!isUser){
+						
 							showLoader('show');
+							console.log("******************************************");
+							console.log(JSON.stringify(userObject))
+							console.log(userObject)
 							fetchAPI(adminURL + docvars.departmentName + "/users", options(JSON.stringify(userObject), isUser), handlerName).then(response => {
 								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
@@ -123,6 +134,9 @@
 								console.log("error fetch",error);
 							});
 						}else{
+						
+
+							console.log("******************************************");
 							showLoader('show');
 							fetchAPI(adminURL + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser), handlerName).then(response => {
 								showLoader('hide');
@@ -299,6 +313,8 @@
 				json["specialSkills"] = otherInterests;
 				json["birthDate1"] = json.birthDate;
 				json["anniversaryDate1"] = json.anniversaryDate;
+				json["phoneNo"] = json.mobileNo ;
+				json["secondPhoneNo"] = json.secondMobileNo ;
 				
 				if(json.maritalStatus != "married" && json.maritalStatus != "unmarried" && json.maritalStatus != "divorced" ){
 					json["maritalStatus1"] = "others";
