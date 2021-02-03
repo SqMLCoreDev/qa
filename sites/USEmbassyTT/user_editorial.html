@@ -90,21 +90,17 @@
 						mobileNo= userObject.phoneNo;
 						secondPhoneNo = userObject.secondPhoneNo;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
-						if(userObject.phoneCountryCode2 !=="null"){
+						if(userObject.phoneCountryCode2 !==""){
+						alert(userObject.phoneCountryCode2);
+						alert(userObject.secondPhoneNo);	
 						secondaryMobilenoCallCode = userObject.phoneCountryCode2;
 						secondaryMobileCountryDetails = JSON.parse(countryDetails("https://restcountries.eu/rest/v2/callingcode/"+userObject.phoneCountryCode2));
+						userObject.mobilenoCountry=secondaryMobileCountryDetails[0].alpha2Code;
 						}
 						primaryCallCode = userObject.phoneCountryCode;
 						var primaryMobileCOuntryDetails = JSON.parse(countryDetails("https://restcountries.eu/rest/v2/callingcode/"+userObject.phoneCountryCode));
 						//alert(primaryMobileCOuntryDetails[0].alpha2Code)
-						if(userObject.phoneCountryCode2 !=="null"){
 						
-						secondaryMobilenoCallCode = userObject.phoneCountryCode2;
-						//alert(secondaryMobilenoCallCode)
-						secondaryMobileCountryDetails = JSON.parse(countryDetails("https://restcountries.eu/rest/v2/callingcode/"+secondaryMobilenoCallCode));
-						userObject.mobilenoCountry=secondaryMobileCountryDetails[0].alpha2Code;
-						
-						}
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
