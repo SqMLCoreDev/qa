@@ -44,6 +44,11 @@
 			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
 			//var adminURL = "http://localhost:9100/admin/departments/formio/";
 			
+			var mobileNo;
+            var secondPhoneNo;
+            var primaryCallCode;
+            var secondaryMobilenoCallCode;
+			
 			var formObj = null;
 			var isUser = true;
 			var userUrl = adminURL + docvars.departmentName + "/users/" +docvars.userName;
@@ -81,7 +86,20 @@
 						$('#formSubmit').attr('disabled','disabled');
 						
 						var userObject = submission.data;
+						var secondaryMobileCountryDetails ;
+						//alert(userObject.phoneNo);
+						mobileNo= userObject.phoneNo;
+						secondPhoneNo = userObject.secondPhoneNo;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
+						if(userObject.phoneCountryCode2 !==""){
+						secondaryMobilenoCallCode = userObject.phoneCountryCode2;
+						secondaryMobileCountryDetails = JSON.parse(countryDetails("https://restcountries.eu/rest/v2/callingcode/"+userObject.phoneCountryCode2));
+						userObject.mobilenoCountry=secondaryMobileCountryDetails[0].alpha2Code;
+						}
+						primaryCallCode = userObject.phoneCountryCode;
+						var primaryMobileCOuntryDetails = JSON.parse(countryDetails("https://restcountries.eu/rest/v2/callingcode/"+userObject.phoneCountryCode));
+						
+						
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
@@ -108,6 +126,17 @@
 						console.log("AF : userObject : " + JSON.stringify(userObject))
 
 						var handlerName =  'userHandlerWithArgs';
+						userObject.mobileNo= mobileNo;
+						userObject.secondMobileNo = secondPhoneNo;
+						userObject.mobilenoCallCode = primaryCallCode;
+						if(secondaryMobilenoCallCode !=="null"){
+						userObject.secondaryMobilenoCallCode = secondaryMobilenoCallCode;
+						userObject.secondaryMobilenoCountry=secondaryMobileCountryDetails[0].alpha2Code;
+						}
+						userObject.mobilenoCountry=primaryMobileCOuntryDetails[0].alpha2Code;
+						
+						
+						
 						
 						if(!isUser){
 							showLoader('show');
@@ -271,13 +300,23 @@
 				console.log(json);
 				var id1 = json.mobileNo;
 				var id2 = json.secondMobileNo;
-					
-					if (id1 && id1.length > 10) {
-					json["phoneNo"] = id1.substr(id1.length - 10);
+
+
+				if (id1 && id1.length > 7) {
+
+				json["phoneNo"] = id1.substr(id1.length - 7);
+				}else{
+				json["phoneNo"] = json.mobileNo ;
 				}
-				if (id2 && id2.length > 10) {
-					json["secondPhoneNo"] = id2.substr(id2.length - 10);
+				if (id2 && id2.length > 7) {
+				// alert(id2);
+				json["secondPhoneNo"] = id2.substr(id2.length - 7);
+				//alert(id2.substr(id2.length - 10));
+				}else{
+				json["secondPhoneNo"] = json.secondMobileNo ;
 				}
+				
+				
 				
 				if(json.addressProofPic != null){
 						json["addressProofPic1"] = JSON.parse(json.addressProofPic);
@@ -319,6 +358,10 @@
 					"countryName": json.countryName.charAt(0).toUpperCase() + json.countryName.slice(1),
 					"countryCodeValue": json.countryCodeValue
 				};
+				
+				json["phoneCountryCode"] = json.mobilenoCallCode;
+                json["phoneCountryCode2"] = json.secondaryMobilenoCallCode;
+				
 			return json;
 		}
 		
@@ -372,6 +415,15 @@
 			}});
 			return formDefinition;
 		}
+		
+		
+		function countryDetails(theUrl)
+			{
+			var xmlHttp = new XMLHttpRequest();
+			xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
+			xmlHttp.send( null );
+			return xmlHttp.responseText;
+			}
 		
 		function options(formdata, isUser){
 			var restMethod;	
