@@ -298,6 +298,15 @@
 				console.log(json);
 				var docvars = getUrlVars();
 				
+				var id1 = json.cellNumber;
+				
+				if (id1 && id1.length > 7) {
+				
+					json["homeNumber"] = id1.substr(id1.length - 7);
+				}else{
+				json["homeNumber"] = json.cellNumber ;
+				}
+				
 				if (!isMember) {
 					console.log('if');
 					if (docvars.loggedInRole.toLowerCase() == "user") {
