@@ -91,8 +91,6 @@
 						secondPhoneNo = userObject.secondPhoneNo;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
 						if(userObject.phoneCountryCode2 !==""){
-						alert(userObject.phoneCountryCode2);
-						alert(userObject.secondPhoneNo);	
 						secondaryMobilenoCallCode = userObject.phoneCountryCode2;
 						secondaryMobileCountryDetails = JSON.parse(countryDetails("https://restcountries.eu/rest/v2/callingcode/"+userObject.phoneCountryCode2));
 						userObject.mobilenoCountry=secondaryMobileCountryDetails[0].alpha2Code;
