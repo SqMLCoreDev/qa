@@ -42,7 +42,7 @@
 				flutterPlatformReady = true;
 			});
 			
-			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
+			var adminURL = "https://prod.servicedx.com/admin/departments/formio/";
 			//var adminURL = "http://localhost:9100/admin/departments/formio/";
 			var formObj = null;
 			var isUser = true;
@@ -58,7 +58,7 @@
 				isUser = false;
 			}
 			
-			var formDefinition = getFormComp("https://qa.servicedx.com/admin/departments/" + formDefinitionDept);
+			var formDefinition = getFormComp("https://prod.servicedx.com/admin/departments/" + formDefinitionDept);
 			
 			Formio.createForm(document.getElementById('builder'), formDefinition)
 				.then(function (form) {
@@ -319,7 +319,7 @@
 				json["secondaryCountrys"] = {
 					"country": json.secondaryCountry,
 					"countryName": json.secondaryCountryName
-											  
+				}						  
 			return json;
 		}
 		
@@ -450,7 +450,7 @@
 				$(".loader").hide();
 				$("#builder").removeClass('hide');
 			}
-											   
+		}								   
        </script>
        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
     </head>
