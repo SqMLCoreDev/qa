@@ -80,6 +80,14 @@
 						$('#formSubmit').attr('disabled','disabled');
 						var userObject = submission.data;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
+						if(userObject.countryCode){
+							userObject["countryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["mobileNo"] = userObject["countryCodeValue"] + userObject["mobileNo"];
+						}
+						if(userObject.secondaryCountryCode){
+							userObject["secondaryCountryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
+						}
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
@@ -274,28 +282,19 @@
 				var id1 = json.mobileNo;
 				var id2 = json.secondMobileNo;
 				
-				if (id1 && id1.length > 7 && id1.length < 10) {
-					json["phoneNo"] = id1.substr(id1.length - 7);
-				}else if( id1 && id1.length > 10 ){
-					json["phoneNo"] = id1.substr(id1.length - 10);
-				}else{
-					json["phoneNo"] = json.mobileNo;
+				if (json.countryCodeValue){
+					json["mobileNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
 				}
 				
-				if (id2 && id2.length > 7 && id2.length < 10) {
-					json["secondPhoneNo"] = id2.substr(id2.length - 7);
-				}else if (id2 && id2.length > 10){
-					json["secondPhoneNo"] = id2.substr(id2.length - 10);
-				}
-				else{
-					json["secondPhoneNo"] = json.secondMobileNo;
+				if (json.secondaryCountryCodeValue){
+					json["secondmobileNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
 				}
 				
 				if(json.addressProofPic != null){
-						json["addressProofPic1"] = JSON.parse(json.addressProofPic);
-					}else{
-						json["addressProofPic1"] = [];
-					}
+					json["addressProofPic1"] = JSON.parse(json.addressProofPic);
+				}else{
+					json["addressProofPic1"] = [];
+				}
 				 
 				var otherInterests = {};
 				for (i = 0; i < json.otherInterests.length; i++) {
@@ -394,6 +393,17 @@
 					showLoader('hide');
 				  }});
 			return formDefinition;
+		}
+		
+		function getCountries(code) {
+			var url = "https://restcountries.eu/rest/v2/alpha/"+code;
+			var options = { method: 'GET' };
+			var xmlHttp = new XMLHttpRequest();
+				xmlHttp.open( "GET", url, false );
+				xmlHttp.send( null );
+				var code = JSON.parse(xmlHttp.responseText);
+				console.log(code);
+			return code.callingCodes[0];
 		}
 		
 		function options(formdata, isUser){
