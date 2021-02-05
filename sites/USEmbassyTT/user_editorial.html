@@ -283,11 +283,11 @@
 				var id2 = json.secondMobileNo;
 				
 				if (json.countryCodeValue){
-					json["mobileNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
+					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
 				}
 				
 				if (json.secondaryCountryCodeValue){
-					json["secondmobileNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
+					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
 				}
 				
 				if(json.addressProofPic != null){
@@ -297,8 +297,10 @@
 				}
 				 
 				var otherInterests = {};
-				for (i = 0; i < json.otherInterests.length; i++) {
-				  otherInterests[json.otherInterests[i]] = true; 
+				if(json.otherInterests != null && Array.isArray(json.otherInterests)){
+					for (i = 0; i < json.otherInterests.length; i++) {
+					  otherInterests[json.otherInterests[i]] = true; 
+					}
 				}
 				json["specialSkills"] = otherInterests;
 				json["birthDate1"] = json.birthDate;
