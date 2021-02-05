@@ -107,7 +107,9 @@
 						
 						//userObject["roleName"] = "User";
 						userObject["departmentName"] = docvars.departmentName;
-						userObject["additionalInfo"] = JSON.stringify(userObject.additionalInfos);
+						if(getUrlVars().page != "signup"){
+							userObject["additionalInfo"] = JSON.stringify(userObject.additionalInfos);
+						}
 						userObject["source"] = "MOBILE";
 						userObject["active"] = true;
 						console.log("AF : userObject : " + JSON.stringify(userObject))
