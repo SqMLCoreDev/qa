@@ -109,6 +109,8 @@
 						userObject["departmentName"] = docvars.departmentName;
 						if(getUrlVars().page != "signup"){
 							userObject["additionalInfo"] = JSON.stringify(userObject.additionalInfos);
+						}else{
+							userObject["additionalInfo"] = JSON.stringify({"school_Attending":""});
 						}
 						userObject["source"] = "MOBILE";
 						userObject["active"] = true;
