@@ -42,7 +42,7 @@
 				flutterPlatformReady = true;
 			});
 			
-			var adminURL = "https://prod.servicedx.com/admin/departments/formio/";
+			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
 			//var adminURL = "http://localhost:9100/admin/departments/formio/";
 			var formObj = null;
 			var isUser = true;
@@ -58,7 +58,7 @@
 				isUser = false;
 			}
 			
-			var formDefinition = getFormComp("https://prod.servicedx.com/admin/departments/" + formDefinitionDept);
+			var formDefinition = getFormComp("https://qa.servicedx.com/admin/departments/" + formDefinitionDept);
 			
 			Formio.createForm(document.getElementById('builder'), formDefinition)
 				.then(function (form) {
@@ -79,7 +79,15 @@
 					form.on('submit', function (submission) {
 						$('#formSubmit').attr('disabled','disabled');
 						var userObject = submission.data;
-						console.log("B4 : userObject : " + JSON.stringify(userObject));												   
+						console.log("B4 : userObject : " + JSON.stringify(userObject));
+						if(userObject.countryCode){
+							userObject["countryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["mobileNo"] = userObject["countryCodeValue"] + userObject["mobileNo"];
+						}
+						if(userObject.secondaryCountryCode){
+							userObject["secondaryCountryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
+						}		 
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
@@ -102,7 +110,8 @@
 						userObject["source"] = "MOBILE";
 						userObject["active"] = true;
 						console.log("AF : userObject : " + JSON.stringify(userObject))
-						
+
+
 						var handlerName =  'userHandlerWithArgs';
 						
 						if(!isUser){
@@ -115,9 +124,9 @@
 									form.emit('submitError', response.message);
 								}
 							}).catch(function(error) {
-								window.alert(error);
 								console.log("error fetch",error);
 							});
+							//fetchAPI("http://localhost:9100/admin/departments/formio/" + docvars.departmentName + "/users", options(JSON.stringify(userObject), isUser));
 						}else{
 							showLoader('show');
 							fetchAPI(adminURL + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser), handlerName).then(response => {
@@ -130,6 +139,7 @@
 							}).catch(function(error) {
 								console.log("error fetch",error);
 							});
+							//fetchAPI("http://localhost:9100/admin/departments/formio/" + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser));
 						}
 					});
 
@@ -159,6 +169,10 @@
 								hideSelected : true,
 								placeholder : 'Select',
 								allowEmptyOption : false,
+								/* mode: function(){
+									console.log("MODE "+formComponent.component.attributes["data-mode"]);
+									return formComponent.component.attributes["data-mode"];
+								}, */
 								persist: false,
 								onChange: function(value, isOnInitialize) {
 									globalForm.submission.data[this.$input[0].id.split("-")[1]] = value;
@@ -273,33 +287,27 @@
 				var id1 = json.mobileNo;
 				var id2 = json.secondMobileNo;
 					
-				if (id1 && id1.length > 7 && id1.length < 10) {
-					json["phoneNo"] = id1.substr(id1.length - 7);
-				}else if( id1 && id1.length > 10 ){
-					json["phoneNo"] = id1.substr(id1.length - 10);
-				}else{
-					json["phoneNo"] = json.mobileNo;
+				if (json.countryCodeValue){
+					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
 				}
 				
-				if (id2 && id2.length > 7 && id2.length < 10) {
-					json["secondPhoneNo"] = id2.substr(id2.length - 7);
-				}else if (id2 && id2.length > 10){
-					json["secondPhoneNo"] = id2.substr(id2.length - 10);
-				}
-				else{
-					json["secondPhoneNo"] = json.secondMobileNo;
+				if (json.secondaryCountryCodeValue){
+					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
 				}
 				
 				if(json.addressProofPic != null){
-						json["addressProofPic1"] = JSON.parse(json.addressProofPic);
-					}else{
-						json["addressProofPic1"] = [];
-					}
+					json["addressProofPic1"] = JSON.parse(json.addressProofPic);
+				}else{
+					json["addressProofPic1"] = [];
+				}
 				 
 				var otherInterests = {};
-				for (i = 0; i < json.otherInterests.length; i++) {
-				  otherInterests[json.otherInterests[i]] = true; 
+				if(json.otherInterests != null && Array.isArray(json.otherInterests)){
+					for (i = 0; i < json.otherInterests.length; i++) {
+					  otherInterests[json.otherInterests[i]] = true; 
+					}
 				}
+				
 				json["specialSkills"] = otherInterests;
 				json["birthDate1"] = json.birthDate;
 				json["anniversaryDate1"] = json.anniversaryDate;
@@ -319,7 +327,8 @@
 				json["secondaryCountrys"] = {
 					"country": json.secondaryCountry,
 					"countryName": json.secondaryCountryName
-				}						  
+											  
+				};
 			return json;
 		}
 		
@@ -384,7 +393,18 @@
 					showLoader('hide');
 				  }});
 			return formDefinition;
-		}															
+		}
+		
+		function getCountries(code) {
+			var url = "https://restcountries.eu/rest/v2/alpha/"+code;
+			var options = { method: 'GET' };
+			var xmlHttp = new XMLHttpRequest();
+				xmlHttp.open( "GET", url, false );
+				xmlHttp.send( null );
+				var code = JSON.parse(xmlHttp.responseText);
+				console.log(code);
+			return code.callingCodes[0];
+		}
 		
 		function options(formdata, isUser){
 			var restMethod;	
@@ -450,7 +470,8 @@
 				$(".loader").hide();
 				$("#builder").removeClass('hide');
 			}
-		}								   
+		}
+		
        </script>
        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
     </head>
