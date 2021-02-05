@@ -395,15 +395,20 @@
 			return formDefinition;
 		}
 		
-		function getCountries(code) {
-			var url = "https://restcountries.eu/rest/v2/alpha/"+code;
+		function getCountries(alphaCode) {
+			var callingCode = '';
+			var url = "https://qa-memberly.github.io/qa/sites/assets/dist/countries.json";
 			var options = { method: 'GET' };
 			var xmlHttp = new XMLHttpRequest();
 				xmlHttp.open( "GET", url, false );
 				xmlHttp.send( null );
 				var code = JSON.parse(xmlHttp.responseText);
-				console.log(code);
-			return code.callingCodes[0];
+				for(var i in code){
+				  if(code[i].alphaCode == alphaCode){
+					 callingCode = code[i].callingCode;
+				  }
+				}
+			return callingCode;
 		}
 		
 		function options(formdata, isUser){
