@@ -44,11 +44,6 @@
 			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
 			//var adminURL = "http://localhost:9100/admin/departments/formio/";
 			
-			var mobileNo;
-            var secondPhoneNo;
-            var primaryCallCode;
-            var secondaryMobilenoCallCode;
-			
 			var formObj = null;
 			var isUser = true;
 			var userUrl = adminURL + docvars.departmentName + "/users/" +docvars.userName;
@@ -86,27 +81,21 @@
 						$('#formSubmit').attr('disabled','disabled');
 						
 						var userObject = submission.data;
-						var secondaryMobileCountryDetails ;
-						//alert(userObject.phoneNo);
-						mobileNo= userObject.phoneNo;
-						secondPhoneNo = userObject.secondPhoneNo;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
-						if(userObject.phoneCountryCode2 !==""){
-						secondaryMobilenoCallCode = userObject.phoneCountryCode2;
-						secondaryMobileCountryDetails = JSON.parse(countryDetails("https://restcountries.eu/rest/v2/callingcode/"+userObject.phoneCountryCode2));
-						userObject.mobilenoCountry=secondaryMobileCountryDetails[0].alpha2Code;
+						if(userObject.countryCode){
+							userObject["countryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["mobileNo"] = userObject["countryCodeValue"] + userObject["mobileNo"];
 						}
-						primaryCallCode = userObject.phoneCountryCode;
-						var primaryMobileCOuntryDetails = JSON.parse(countryDetails("https://restcountries.eu/rest/v2/callingcode/"+userObject.phoneCountryCode));
-						
-						
+						if(userObject.secondaryCountryCode){
+							userObject["secondaryCountryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
+						}
+	 
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
 						delete userObject["hobbies"];
 						delete userObject["sameAsPresentAddress"];
-						delete userObject["phoneCountryCode"];
-						delete userObject["phoneCountryCode2"];
 						delete userObject["phoneNo"];
 						delete userObject["secondPhoneNo"];
 						delete userObject["countrys"];
@@ -126,17 +115,6 @@
 						console.log("AF : userObject : " + JSON.stringify(userObject))
 
 						var handlerName =  'userHandlerWithArgs';
-						userObject.mobileNo= mobileNo;
-						userObject.secondMobileNo = secondPhoneNo;
-						userObject.mobilenoCallCode = primaryCallCode;
-						if(secondaryMobilenoCallCode !=="null"){
-						userObject.secondaryMobilenoCallCode = secondaryMobilenoCallCode;
-						userObject.secondaryMobilenoCountry=secondaryMobileCountryDetails[0].alpha2Code;
-						}
-						userObject.mobilenoCountry=primaryMobileCOuntryDetails[0].alpha2Code;
-						
-						
-						
 						
 						if(!isUser){
 							showLoader('show');
@@ -295,34 +273,29 @@
 			});
 		});
 		
+		$(window).on('load', function () {
+			showLoader('hide');
+		});
+
 		function editObject(obj){
 				var json = JSON.parse(obj.data);
 				console.log(json);
 				var id1 = json.mobileNo;
 				var id2 = json.secondMobileNo;
-
-
-				if (id1 && id1.length > 7) {
-
-				json["phoneNo"] = id1.substr(id1.length - 7);
-				}else{
-				json["phoneNo"] = json.mobileNo ;
-				}
-				if (id2 && id2.length > 7) {
-				// alert(id2);
-				json["secondPhoneNo"] = id2.substr(id2.length - 7);
-				//alert(id2.substr(id2.length - 10));
-				}else{
-				json["secondPhoneNo"] = json.secondMobileNo ;
+					
+				if (json.countryCodeValue){
+					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
 				}
 				
-				
+				if (json.secondaryCountryCodeValue){
+					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
+				}
 				
 				if(json.addressProofPic != null){
-						json["addressProofPic1"] = JSON.parse(json.addressProofPic);
-					}else{
-						json["addressProofPic1"] = [];
-					}
+					json["addressProofPic1"] = JSON.parse(json.addressProofPic);
+				}else{
+					json["addressProofPic1"] = [];
+				}
 				 
 				var otherInterests = {};
 				if(json.otherInterests != null && Array.isArray(json.otherInterests)){
@@ -342,26 +315,17 @@
 					json["maritalStatus1"] = json.maritalStatus;
 				}
 				
-				json["phoneCountryCode"] = json.countryCodeValue;
 				json["countrys"] = {
-					"countryCode": json.countryCode,
-					"countryName": json.countryName.charAt(0).toUpperCase() + json.countryName.slice(1),
-					"countryCodeValue": json.countryCodeValue
+					"country": json.country,
+					"countryName": json.countryName
+											  
 				};
-				
-				if(json.secondaryCountryCodeValue){
-					json["phoneCountryCode2"] = json.secondaryCountryCodeValue;
-				}
 				
 				json["secondaryCountrys"] = {
-					"countryCode": json.countryCode,
-					"countryName": json.countryName.charAt(0).toUpperCase() + json.countryName.slice(1),
-					"countryCodeValue": json.countryCodeValue
+					"country": json.secondaryCountry,
+					"countryName": json.secondaryCountryName
+											  
 				};
-				
-				json["phoneCountryCode"] = json.mobilenoCallCode;
-                json["phoneCountryCode2"] = json.secondaryMobilenoCallCode;
-				
 			return json;
 		}
 		
@@ -383,7 +347,13 @@
 				  type : "GET",
 				  async : false,
 				  success: function(result){
-					  formObj['data'] =  JSON.stringify(result);
+					formObj['data'] =  JSON.stringify(result);
+				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
 				  },
 				  error: function (textStatus) {
 					  console.log(textStatus);
@@ -412,22 +382,29 @@
 					  }
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
-			}});
+				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  }});
 			return formDefinition;
 		}
 		
-		
-		function countryDetails(theUrl)
-			{
+		function getCountries(code) {
+			var url = "https://restcountries.eu/rest/v2/alpha/"+code;
+			var options = { method: 'GET' };
 			var xmlHttp = new XMLHttpRequest();
-			xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-			xmlHttp.send( null );
-			return xmlHttp.responseText;
-			}
-		
+				xmlHttp.open( "GET", url, false );
+				xmlHttp.send( null );
+				var code = JSON.parse(xmlHttp.responseText);
+				console.log(code);
+			return code.callingCodes[0];
+		}					   
 		function options(formdata, isUser){
 			var restMethod;	
-			var clientId = 'DATT';
+			var clientId;
 			if(getUrlVars().hasOwnProperty('clientId')){
 				clientId = getUrlVars().clientId;
 			}
