@@ -81,13 +81,19 @@
 						showLoader('show');
 						var userObject = submission.data;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
+						if(userObject.countryCode){
+							userObject["countryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["mobileNo"] = userObject["countryCodeValue"] + userObject["mobileNo"];
+						}
+						if(userObject.secondaryCountryCode){
+							userObject["secondaryCountryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
+						}		 
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
 						delete userObject["hobbies"];
 						delete userObject["sameAsPresentAddress"];
-						delete userObject["phoneCountryCode"];
-						delete userObject["phoneCountryCode2"];
 						delete userObject["phoneNo"];
 						delete userObject["secondPhoneNo"];
 						delete userObject["countrys"];
@@ -109,6 +115,7 @@
 						var handlerName =  'userHandlerWithArgs';
 						
 						if(!isUser){
+						    showLoader('show');
 							fetchAPI(adminURL + docvars.departmentName + "/users", options(JSON.stringify(userObject), isUser), handlerName).then(response => {
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Create Success')
@@ -119,6 +126,7 @@
 								console.log("error fetch",error);
 							});
 						}else{
+						    showLoader('show');
 							fetchAPI(adminURL + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser), handlerName).then(response => {
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Update Success')
@@ -260,29 +268,37 @@
 			});
 		});
 		
+		$(window).on('load', function () {
+			showLoader('hide');
+		});
+		
 		function editObject(obj){
 				var json = JSON.parse(obj.data);
 				console.log(json);
 				var id1 = json.mobileNo;
 				var id2 = json.secondMobileNo;
 					
-					if (id1 && id1.length > 10) {
-					json["phoneNo"] = id1.substr(id1.length - 10);
+				if (json.countryCodeValue){
+					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
 				}
-				if (id2 && id2.length > 10) {
-					json["secondPhoneNo"] = id2.substr(id2.length - 10);
+				
+				if (json.secondaryCountryCodeValue){
+					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
 				}
 				
 				if(json.addressProofPic != null){
-						json["addressProofPic1"] = JSON.parse(json.addressProofPic);
-					}else{
-						json["addressProofPic1"] = [];
-					}
+					json["addressProofPic1"] = JSON.parse(json.addressProofPic);
+				}else{
+					json["addressProofPic1"] = [];
+				}
 				 
 				var otherInterests = {};
-				for (i = 0; i < json.otherInterests.length; i++) {
-				  otherInterests[json.otherInterests[i]] = true; 
+				if(json.otherInterests != null && Array.isArray(json.otherInterests)){
+					for (i = 0; i < json.otherInterests.length; i++) {
+					  otherInterests[json.otherInterests[i]] = true; 
+					}
 				}
+				
 				json["specialSkills"] = otherInterests;
 				json["birthDate1"] = json.birthDate;
 				json["anniversaryDate1"] = json.anniversaryDate;
@@ -294,17 +310,15 @@
 					json["maritalStatus1"] = json.maritalStatus;
 				}
 				
-				json["phoneCountryCode"] = json.countryCodeValue;
-				json["phoneCountryCode2"] = json.secondaryCountryCodeValue;
 				json["countrys"] = {
-					"countryCode": json.countryCode,
-					"countryName": json.countryName.charAt(0).toUpperCase() + json.countryName.slice(1),
-					"countryCodeValue": json.countryCodeValue
+					"country": json.country,
+					"countryName": json.countryName
+											  
 				};
 				json["secondaryCountrys"] = {
-					"countryCode": json.countryCode,
-					"countryName": json.countryName.charAt(0).toUpperCase() + json.countryName.slice(1),
-					"countryCodeValue": json.countryCodeValue
+					"country": json.secondaryCountry,
+					"countryName": json.secondaryCountryName
+											  
 				};
 			return json;
 		}
@@ -328,6 +342,12 @@
 				  async : false,
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
+				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
 				  },
 				  error: function (textStatus) {
 					  console.log(textStatus);
@@ -356,13 +376,29 @@
 					  }
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
-			}});
+				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  }});
 			return formDefinition;
 		}
 		
+		function getCountries(code) {
+			var url = "https://restcountries.eu/rest/v2/alpha/"+code;
+			var options = { method: 'GET' };
+			var xmlHttp = new XMLHttpRequest();
+				xmlHttp.open( "GET", url, false );
+				xmlHttp.send( null );
+				var code = JSON.parse(xmlHttp.responseText);
+				console.log(code);
+			return code.callingCodes[0];
+		}				   
 		function options(formdata, isUser){
 			var restMethod;	
-			var clientId = 'USET';
+			var clientId;
 			if(getUrlVars().hasOwnProperty('clientId')){
 				clientId = getUrlVars().clientId;
 			}
