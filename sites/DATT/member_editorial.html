@@ -1,5 +1,5 @@
 <html>
-   <head>
+	<head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
       <meta name="description" content="">
@@ -115,7 +115,7 @@
 						delete userObject["payment"];
 						delete userObject["paymentStatus"];
 						delete userObject["role"];
-						delete userObject["specialSkills"];
+						delete userObject["specialSkill"];
 						delete userObject["maritalStatus1"];
 						delete userObject["birthDate1"];
 						delete userObject["anniversaryDate1"];
@@ -362,11 +362,19 @@
 					}
 				}
 				
+				var specialSkills = {};
+				if(json.specialSkills != null && Array.isArray(json.specialSkills)){
+					for (i = 0; i < json.specialSkills.length; i++) {
+					  specialSkills[json.specialSkills[i]] = true; 
+					}
+				}
+				
 				json["anniversaryDate1"] = json.anniversaryDate;
 				json["birthDate1"] = json.birthDate;
 				json["personName"] = json.referredByValue;
 				json["socialMedia"] = json.referredByValue;
 				json["specialSkills"] = otherInterests;
+				json["specialSkill"] = specialSkills;
 				json["memberStatus"] = json.membershipStatus;
 				if(json.maritalStatus != "married" && json.maritalStatus != "unmarried" && json.maritalStatus != "divorced" ){
 					json["maritalStatus1"] = "others";
@@ -508,7 +516,7 @@
 
 		function options(formdata, isMember){
 			var restMethod;	
-			var clientId = 'DATT';
+			var clientId;
 			if(getUrlVars().hasOwnProperty('clientId')){
 				clientId = getUrlVars().clientId;
 			}
@@ -551,6 +559,7 @@
 		}
 		
 		function disable(id) {
+		console.log(id);
 			var comp = document.querySelectorAll("[id^="+id+"]");
 			for (var i = 0; i < comp.length; i++) {
 				comp[i].disabled = true;
