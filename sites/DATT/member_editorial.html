@@ -293,6 +293,10 @@
 			});
 		});
 		
+		$(window).on('load', function () {
+			showLoader('hide');
+		});
+		
 		function editObject(formObj, isMember){
 				var json = JSON.parse(formObj.data);
 				console.log(json);
@@ -357,9 +361,6 @@
 					  otherInterests[json.otherInterests[i]] = true; 
 					}
 				}
-				
-				json["countryCodeValueHome"] = json.mobilenoCallCode
-				json["countryCodeValueCell"] = json.secondaryMobilenoCallCode
 				
 				json["anniversaryDate1"] = json.anniversaryDate;
 				json["birthDate1"] = json.birthDate;
@@ -462,6 +463,12 @@
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
 				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  },
 				  error: function (textStatus) {
 					  console.log(textStatus);
 					  if(textStatus.status == 0){
@@ -489,7 +496,13 @@
 					  }
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
-			}});
+				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  }});
 			return formDefinition;
 		}
 
