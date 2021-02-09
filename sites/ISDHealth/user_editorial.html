@@ -310,16 +310,20 @@
 					json["maritalStatus1"] = json.maritalStatus;
 				}
 				
-				json["countrys"] = {
-					"country": json.country,
-					"countryName": json.countryName
-											  
-				};
-				json["secondaryCountrys"] = {
-					"country": json.secondaryCountry,
-					"countryName": json.secondaryCountryName
-											  
-				};
+				if(json.country && json.countryName){
+					json["countrys"] = {
+						"country": json.country,
+						"countryName": json.countryName
+												  
+					};
+				}
+				if(json.secondaryCountry && json.secondaryCountryName){
+					json["secondaryCountrys"] = {
+						"country": json.secondaryCountry,
+						"countryName": json.secondaryCountryName
+					};
+				}
+				
 			return json;
 		}
 		
