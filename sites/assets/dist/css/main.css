@@ -185,7 +185,6 @@ input[type="radio"][disabled]+label {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  display: none;
   border: 0px;
   border-top: 4px solid #ff0000;
   border-right: 4px solid transparent;
@@ -218,6 +217,14 @@ input[type="radio"][disabled]+label {
 
 .hide {
   display: none;
+}
+
+#survey-screen-1 {
+    padding-bottom: 0px !important;
+}
+
+.footer-row{
+	display: none !important;
 }
 
 /* loader */
