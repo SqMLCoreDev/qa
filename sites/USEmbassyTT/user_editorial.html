@@ -319,14 +319,13 @@
 				
 				if(json.country && json.countryName){
 					json["countrys"] = {
-						"country": json.country,
+						"countryCode": json.country,
 						"countryName": json.countryName
-												  
 					};
 				}
 				if(json.secondaryCountry && json.secondaryCountryName){
 					json["secondaryCountrys"] = {
-						"country": json.secondaryCountry,
+						"countryCode": json.secondaryCountry,
 						"countryName": json.secondaryCountryName
 					};
 				}
