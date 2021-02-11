@@ -88,7 +88,15 @@
 						if(userObject.secondaryCountryCode){
 							userObject["secondaryCountryCodeValue"] = getCountries(userObject.secondaryCountryCode);
 							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
-						}		 
+						}
+						if(userObject.countryCodeWork){
+							userObject["countryCodeValueWork"] = getCountries(userObject.countryCodeWork);
+							userObject["workNumber"] = userObject["countryCodeValueWork"] + userObject["workNumber"];
+						}
+						if(userObject.countryCodeFax){
+							userObject["countryCodeValueFax"] = getCountries(userObject.countryCodeFax);
+							userObject["faxNumber"] = userObject["countryCodeValueFax"] + userObject["faxNumber"];
+						}
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
@@ -280,6 +288,8 @@
 				console.log(json);
 				var id1 = json.mobileNo;
 				var id2 = json.secondMobileNo;
+				var id3 = json.workNumber;
+				var id4 = json.faxNumber;
 					
 				if (json.countryCodeValue){
 					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
@@ -287,6 +297,14 @@
 				
 				if (json.secondaryCountryCodeValue){
 					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
+				}
+				
+				if (json.countryCodeValueWork){
+					json["workNo"] = id3.substr(id3.length - id3.length + json.countryCodeValueWork.length);
+				}
+				
+				if (json.countryCodeValueFax){
+					json["faxNo"] = id4.substr(id4.length - id4.length + json.countryCodeValueFax.length);
 				}
 				
 				if(json.addressProofPic != null){
@@ -312,17 +330,16 @@
 				}else{
 					json["maritalStatus1"] = json.maritalStatus;
 				}
-				
+				console.log(json.country, ' : ' ,json.countryName );
 				if(json.country && json.countryName){
 					json["countrys"] = {
-						"country": json.country,
-						"countryName": json.countryName
-												  
+						"countryCode": json.country,
+						"countryName": json.countryName			  
 					};
 				}
 				if(json.secondaryCountry && json.secondaryCountryName){
 					json["secondaryCountrys"] = {
-						"country": json.secondaryCountry,
+						"countryCode": json.secondaryCountry,
 						"countryName": json.secondaryCountryName
 					};
 				}
