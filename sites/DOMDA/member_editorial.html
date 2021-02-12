@@ -100,8 +100,12 @@
 					form.nosubmit = true;
 					form.on('submit', function (submission) {
 						$('#formSubmit').attr('disabled','disabled');
-						showLoader('show');
+						
 						var userObject = submission.data;
+						
+						if(userObject.countryCodeValueCell){
+							userObject["cellNumber"] = userObject["countryCodeValueCell"] + userObject["cellNumber"];
+						}
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
 
 						delete userObject["submit"];
@@ -115,7 +119,7 @@
 						delete userObject["payment"];
 						delete userObject["paymentStatus"];
 						delete userObject["role"];
-						delete userObject["specialSkills"];
+						delete userObject["specialSkill"];
 						delete userObject["maritalStatus1"];
 						delete userObject["birthDate1"];
 						delete userObject["anniversaryDate1"];
@@ -337,6 +341,16 @@
 					}else{
 						json["addressProof1"] = [];
 					}
+					if(json.identifyProofFront != null){
+						json["identifyProofFront1"] = JSON.parse(json.identifyProofFront);
+					}else{
+						json["identifyProofFront1"] = [];
+					}
+					if(json.identifyProofBack != null){
+						json["identifyProofBack1"] = JSON.parse(json.identifyProofBack);
+					}else{
+						json["identifyProofBack1"] = [];
+					}					 
 					
 					if (docvars.loggedInRole.toLowerCase() == "user") {
 						json["recommendedBy"] = "User";
@@ -352,11 +366,19 @@
 					}
 				}
 				
+				var specialSkills = {};
+				if(json.specialSkills != null && Array.isArray(json.specialSkills)){
+					for (i = 0; i < json.specialSkills.length; i++) {
+					  specialSkills[json.specialSkills[i]] = true; 
+					}
+				}
+				
 				json["anniversaryDate1"] = json.anniversaryDate;
 				json["birthDate1"] = json.birthDate;
 				json["personName"] = json.referredByValue;
 				json["socialMedia"] = json.referredByValue;
 				json["specialSkills"] = otherInterests;
+				json["specialSkill"] = specialSkills;
 				json["memberStatus"] = json.membershipStatus;
 				if(json.maritalStatus != "married" && json.maritalStatus != "unmarried" && json.maritalStatus != "divorced" ){
 					json["maritalStatus1"] = "others";
@@ -498,7 +520,7 @@
 
 		function options(formdata, isMember){
 			var restMethod;	
-			var clientId = 'DOMDA';
+			var clientId;
 			if(getUrlVars().hasOwnProperty('clientId')){
 				clientId = getUrlVars().clientId;
 			}
