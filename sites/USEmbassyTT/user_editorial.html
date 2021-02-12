@@ -317,16 +317,22 @@
 					json["maritalStatus1"] = json.maritalStatus;
 				}
 				
-				if(json.country && json.countryName){
-					json["countrys"] = {
-						"countryCode": json.country,
-						"countryName": json.countryName
+				if(json.wfParentCountry){
+					json["ParentCountrys"] = {
+						"countryCode": json.wfParentCountryCode,
+						"countryName": json.wfParentCountry
 					};
 				}
 				if(json.secondaryCountry && json.secondaryCountryName){
 					json["secondaryCountrys"] = {
 						"countryCode": json.secondaryCountry,
 						"countryName": json.secondaryCountryName
+					};
+				}
+				if(json.country && json.countryName){
+					json["countrys"] = {
+						"countryCode": json.country,
+						"countryName": json.countryName
 					};
 				}
 				if(json.additionalInfo){
@@ -355,6 +361,10 @@
 		function getFormObj(URL){
 			var formObj = {};
 			var Success;
+			var clientId;
+			if(getUrlVars().hasOwnProperty('clientId')){
+				clientId = getUrlVars().clientId;
+			}
 			$.ajax({
 				  url: URL,
 				  type : "GET",
@@ -362,7 +372,8 @@
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
 				  },
-				  beforeSend: function(){
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
 					showLoader('show');
 				  },
 				  complete: function(){
