@@ -367,9 +367,14 @@
 				}
 				
 				var specialSkills = {};
+				var skillsList = [ "Sports", "Blogging", "Traveling", "Art & Design", "Music (Dancing & Singing)", "Reading", "Video Gaming", "Others" ];
 				if(json.specialSkills != null && Array.isArray(json.specialSkills)){
 					for (i = 0; i < json.specialSkills.length; i++) {
 					  specialSkills[json.specialSkills[i]] = true; 
+					  if(!skillsList.includes(json.specialSkills[i])){
+						console.log("not inc",json.specialSkills[i]);
+						json["otherHobbies"] = json.specialSkills[i];
+					  }
 					}
 				}
 				
@@ -384,6 +389,7 @@
 					json["maritalStatus1"] = "others";
 					json["others"] = json.maritalStatus;
 				}
+				
 				if(json.receiptNo != null && json.receiptNo != ''){
 					json["payment"] = true;
 					json["paymentStatus"] = "success";
