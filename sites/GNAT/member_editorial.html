@@ -101,7 +101,7 @@
 					form.nosubmit = true;
 					form.on('submit', function (submission) {
 						$('#formSubmit').attr('disabled','disabled');
-						showLoader('show');
+						
 						var userObject = submission.data;
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
 
@@ -294,6 +294,10 @@
 			});
 		});
 		
+		$(window).on('load', function () {
+			showLoader('hide');
+		});
+		
 		function editObject(formObj, isMember){
 				var json = JSON.parse(formObj.data);
 				console.log(json);
@@ -334,6 +338,16 @@
 					}else{
 						json["addressProof1"] = [];
 					}
+					if(json.identifyProofFront != null){
+						json["identifyProofFront1"] = JSON.parse(json.identifyProofFront);
+					}else{
+						json["identifyProofFront1"] = [];
+					}
+					if(json.identifyProofBack != null){
+						json["identifyProofBack1"] = JSON.parse(json.identifyProofBack);
+					}else{
+						json["identifyProofBack1"] = [];
+					}					 
 					
 					if (docvars.loggedInRole.toLowerCase() == "user") {
 						json["recommendedBy"] = "User";
@@ -450,6 +464,12 @@
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
 				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  },
 				  error: function (textStatus) {
 					  console.log(textStatus);
 					  if(textStatus.status == 0){
@@ -477,13 +497,19 @@
 					  }
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
-			}});
+				  },
+				  beforeSend: function(){
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  }});
 			return formDefinition;
 		}
 
 		function options(formdata, isMember){
 			var restMethod;	
-			var clientId = 'GNAT';
+			var clientId;
 			if(getUrlVars().hasOwnProperty('clientId')){
 				clientId = getUrlVars().clientId;
 			}
