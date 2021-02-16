@@ -24,6 +24,7 @@
        <script>
 		var globalForm = null;
 		var flutterPlatformReady = false;
+		var clientId;
 		
 		function getUrlVars() {
 			var vars = {};
@@ -41,6 +42,10 @@
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
+			
+			if(docvars.hasOwnProperty('clientId')){
+				clientId = docvars.clientId;
+			}
 			
 			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
 			//var adminURL = "http://localhost:9100/admin/departments/formio/";
@@ -109,6 +114,8 @@
 						userObject["departmentName"] = docvars.departmentName;
 						if(getUrlVars().page != "signup"){
 							userObject["additionalInfo"] = JSON.stringify(userObject.additionalInfos);
+						}else{
+							userObject["additionalInfo"] = JSON.stringify({"school_Attending":""});
 						}
 						userObject["source"] = "MOBILE";
 						userObject["active"] = true;
@@ -315,14 +322,24 @@
 					json["maritalStatus1"] = json.maritalStatus;
 				}
 				
-				json["countrys"] = {
-					"country": json.country,
-					"countryName": json.countryName
-				};
-				json["secondaryCountrys"] = {
-					"country": json.secondaryCountry,
-					"countryName": json.secondaryCountryName
-				};
+				if(json.wfParentCountry){
+					json["ParentCountrys"] = {
+						"countryCode": json.wfParentCountryCode,
+						"countryName": json.wfParentCountry
+					};
+				}
+				if(json.secondaryCountry && json.secondaryCountryName){
+					json["secondaryCountrys"] = {
+						"countryCode": json.secondaryCountry,
+						"countryName": json.secondaryCountryName
+					};
+				}
+				if(json.country && json.countryName){
+					json["countrys"] = {
+						"countryCode": json.country,
+						"countryName": json.countryName
+					};
+				}
 				if(json.additionalInfo){
 					var addInfo = JSON.parse(json.additionalInfo);
 					if(addInfo){
@@ -356,7 +373,8 @@
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
 				  },
-				  beforeSend: function(){
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
 					showLoader('show');
 				  },
 				  complete: function(){
@@ -390,7 +408,8 @@
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
 			      },
-				  beforeSend: function(){
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
 					showLoader('show');
 				  },
 				  complete: function(){
@@ -416,11 +435,7 @@
 		}
 		
 		function options(formdata, isUser){
-			var restMethod;	
-			var clientId;
-			if(getUrlVars().hasOwnProperty('clientId')){
-				clientId = getUrlVars().clientId;
-			}
+			var restMethod;
 			if(isUser){
 				restMethod = 'PUT';
 			}else{
