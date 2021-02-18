@@ -134,6 +134,12 @@ body {
   cursor: not-allowed !important;
 }
 
+.submit-fail:disabled{
+   color: #fff;
+   background-color: #bd2130 !important;
+   border-color: #b21f2d;
+}
+
 .field-required:after {
   content: " *" !important;
   color: transparent !important;													  
