@@ -24,6 +24,8 @@
       <script>
 		var globalForm = null;
 		var flutterPlatformReady = false;
+		var clientId;
+		
 		function getUrlVars() {
 			var vars = {};
 			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -34,12 +36,15 @@
 
 		$(document).ready(function () {
 		
-			
 			var docvars = getUrlVars();
 			var formDefinitionDept = docvars.departmentName;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
+			
+			if(docvars.hasOwnProperty('clientId')){
+				clientId = docvars.clientId;
+			}
 			
 			var filing_URL = "https://qa.servicedx.com/filing/membership/formio";
 			//var filing_URL = "http://localhost:9104/filing/membership/formio";
@@ -408,7 +413,7 @@
 		var payee =  async function payButton(data) {
 			console.log('payButton',data);
 			var description;
-			var oneTimeRegistrationFees = 250;
+			var oneTimeRegistrationFees = 0;
 			if(data.renewalEligible){
 				oneTimeRegistrationFees = 0;
 				description = "Membership Renewal Fee for "+ data.userFullName;
@@ -471,7 +476,8 @@
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
 				  },
-				  beforeSend: function(){
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
 					showLoader('show');
 				  },
 				  complete: function(){
@@ -505,7 +511,8 @@
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
 				  },
-				  beforeSend: function(){
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
 					showLoader('show');
 				  },
 				  complete: function(){
@@ -515,11 +522,7 @@
 		}
 
 		function options(formdata, isMember){
-			var restMethod;	
-			var clientId;
-			if(getUrlVars().hasOwnProperty('clientId')){
-				clientId = getUrlVars().clientId;
-			}
+			var restMethod;
 			if(isMember){
 				restMethod = 'PUT';
 			}else{
