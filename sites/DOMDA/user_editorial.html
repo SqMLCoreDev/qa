@@ -102,6 +102,39 @@
 							userObject["countryCodeValueFax"] = getCountries(userObject.countryCodeFax);
 							userObject["faxNumber"] = userObject["countryCodeValueFax"] + userObject["faxNumber"];
 						}
+						
+						if(userObject.countryCodeHomePhoneNo){
+							userObject["countryCodeValueHomePhoneNo"] = getCountries(userObject.countryCodeHomePhoneNo);
+							userObject["lowProfileUserHomePhoneNo"] = userObject["countryCodeValueHomePhoneNo"] + userObject["lowProfileUserHomePhoneNo"];
+						}
+						
+						if(userObject.countryCodeMobileNo){
+							userObject["countryCodeValueMobileNo"] = getCountries(userObject.countryCodeMobileNo);
+							userObject["lowProfileUserMobileNo"] = userObject["countryCodeValueMobileNo"] + userObject["lowProfileUserMobileNo"];
+						}
+						
+						if(userObject.countryCodeWorkPhoneNo){
+							userObject["countryCodeValueWorkPhoneNo"] = getCountries(userObject.countryCodeWorkPhoneNo);
+							userObject["lowProfileUserWorkPhoneNo"] = userObject["countryCodeValueWorkPhoneNo"] + userObject["lowProfileUserWorkPhoneNo"];
+						}
+						
+						var lowProfileUser = {};
+							lowProfileUser["userName"] = docvars.userName;
+							lowProfileUser["departmentName"] = docvars.departmentName;
+							lowProfileUser["contactName"] = userObject.contactName;
+							lowProfileUser["homePhoneNo"] = userObject.lowProfileUserHomePhoneNo;
+							lowProfileUser["mobileNo"] = userObject.lowProfileUserMobileNo;
+							lowProfileUser["workPhoneNo"] = userObject.lowProfileUserWorkPhoneNo; 
+							lowProfileUser["countryCodeHomePhoneNo"] = userObject.countryCodeHomePhoneNo;
+							lowProfileUser["countryCodeMobileNo"] = userObject.countryCodeMobileNo;
+							lowProfileUser["countryCodeWorkPhoneNo"] = userObject.countryCodeWorkPhoneNo;
+							lowProfileUser["countryCodeValueHomePhoneNo"] = userObject.countryCodeValueHomePhoneNo;
+							lowProfileUser["countryCodeValueMobileNo"] = userObject.countryCodeValueMobileNo;
+							lowProfileUser["countryCodeValueWorkPhoneNo"] = userObject.countryCodeValueWorkPhoneNo;
+							lowProfileUser["relationship"] = userObject.lowProfileUserRelationship;
+							lowProfileUser["userSubType"] = userObject.lowProfileUserUserSubType;
+							lowProfileUser["userType"] = userObject.lowProfileUserUserType;
+						userObject["lowProfileUser"] = lowProfileUser;
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
@@ -296,23 +329,51 @@
 				var id2 = json.secondMobileNo;
 				var id3 = json.workNumber;
 				var id4 = json.faxNumber;
+				
+				var id5 = json.lowProfileUser.homePhoneNo;
+				var id6 = json.lowProfileUser.mobileNo;
+				var id7 = json.lowProfileUser.workPhoneNo;
 					
-				if (json.countryCodeValue){
+				if (json.countryCodeValue && json.mobileNo){
 					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
 				}
 				
-				if (json.secondaryCountryCodeValue){
+				if (json.secondaryCountryCodeValue && json.secondMobileNo){
 					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
 				}
 				
-				if (json.countryCodeValueWork){
+				if (json.countryCodeValueWork && json.workNumber){
 					json["workNo"] = id3.substr(id3.length - id3.length + json.countryCodeValueWork.length);
 				}
 				
-				if (json.countryCodeValueFax){
+				if (json.countryCodeValueFax && json.faxNumber){
 					json["faxNo"] = id4.substr(id4.length - id4.length + json.countryCodeValueFax.length);
 				}
 				
+				if (json.lowProfileUser.countryCodeValueHomePhoneNo && json.lowProfileUser.homePhoneNo){
+					json["lowProfileUserHomePhoneNo"] = id5.substr(id5.length - id5.length + json.lowProfileUser.countryCodeValueHomePhoneNo.length);
+				}
+				
+				if (json.lowProfileUser.countryCodeValueMobileNo && json.lowProfileUser.mobileNo){
+					json["lowProfileUserMobileNo"] = id6.substr(id6.length - id6.length + json.lowProfileUser.countryCodeValueMobileNo.length);
+				}
+				
+				if (json.lowProfileUser.countryCodeValueWorkPhoneNo && json.lowProfileUser.workPhoneNo){
+					json["lowProfileUserWorkPhoneNo"] = id7.substr(id7.length - id7.length + json.lowProfileUser.countryCodeValueWorkPhoneNo.length);
+				}
+				
+				json["contactName"] = json.lowProfileUser.contactName;
+				
+				json["countryCodeHomePhoneNo"] = json.lowProfileUser.countryCodeHomePhoneNo;
+				json["countryCodeMobileNo"] = json.lowProfileUser.countryCodeMobileNo;
+				json["countryCodeWorkPhoneNo"] = json.lowProfileUser.countryCodeWorkPhoneNo;
+				json["countryCodeValueHomePhoneNo"] = json.lowProfileUser.countryCodeValueHomePhoneNo;
+				json["countryCodeValueMobileNo"] = json.lowProfileUser.countryCodeValueMobileNo;
+				json["countryCodeValueWorkPhoneNo"] = json.lowProfileUser.countryCodeValueWorkPhoneNo;
+				json["lowProfileUserRelationship"] = json.lowProfileUser.relationship;
+				json["lowProfileUserUserSubType"] = json.lowProfileUser.userSubType;
+				json["lowProfileUserUserType"] = json.lowProfileUser.userType;
+							
 				if(json.addressProofPic != null){
 					json["addressProofPic1"] = JSON.parse(json.addressProofPic);
 				}else{
