@@ -119,7 +119,6 @@
 						}
 						
 						var lowProfileUser = {};
-							lowProfileUser["userName"] = docvars.userName;
 							lowProfileUser["departmentName"] = docvars.departmentName;
 							lowProfileUser["contactName"] = userObject.contactName;
 							lowProfileUser["homePhoneNo"] = userObject.lowProfileUserHomePhoneNo;
@@ -175,6 +174,7 @@
 							});
 						}else{
 							showLoader('show');
+							userObject.lowProfileUser["userName"] = userObject.userName;
 							fetchAPI(adminURL + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser), handlerName).then(response => {
 								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
