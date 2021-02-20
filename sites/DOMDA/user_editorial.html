@@ -329,10 +329,6 @@
 				var id2 = json.secondMobileNo;
 				var id3 = json.workNumber;
 				var id4 = json.faxNumber;
-				
-				var id5 = json.lowProfileUser.homePhoneNo;
-				var id6 = json.lowProfileUser.mobileNo;
-				var id7 = json.lowProfileUser.workPhoneNo;
 					
 				if (json.countryCodeValue && json.mobileNo){
 					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
@@ -350,18 +346,23 @@
 					json["faxNo"] = id4.substr(id4.length - id4.length + json.countryCodeValueFax.length);
 				}
 				
-				if (json.lowProfileUser.countryCodeValueHomePhoneNo && json.lowProfileUser.homePhoneNo){
-					json["lowProfileUserHomePhoneNo"] = id5.substr(id5.length - id5.length + json.lowProfileUser.countryCodeValueHomePhoneNo.length);
-				}
-				
-				if (json.lowProfileUser.countryCodeValueMobileNo && json.lowProfileUser.mobileNo){
-					json["lowProfileUserMobileNo"] = id6.substr(id6.length - id6.length + json.lowProfileUser.countryCodeValueMobileNo.length);
-				}
-				
-				if (json.lowProfileUser.countryCodeValueWorkPhoneNo && json.lowProfileUser.workPhoneNo){
-					json["lowProfileUserWorkPhoneNo"] = id7.substr(id7.length - id7.length + json.lowProfileUser.countryCodeValueWorkPhoneNo.length);
-				}
 				if(json.lowProfileUser){
+					var id5 = json.lowProfileUser.homePhoneNo;
+					var id6 = json.lowProfileUser.mobileNo;
+					var id7 = json.lowProfileUser.workPhoneNo;
+					
+					if (json.lowProfileUser.countryCodeValueHomePhoneNo && json.lowProfileUser.homePhoneNo){
+						json["lowProfileUserHomePhoneNo"] = id5.substr(id5.length - id5.length + json.lowProfileUser.countryCodeValueHomePhoneNo.length);
+					}
+					
+					if (json.lowProfileUser.countryCodeValueMobileNo && json.lowProfileUser.mobileNo){
+						json["lowProfileUserMobileNo"] = id6.substr(id6.length - id6.length + json.lowProfileUser.countryCodeValueMobileNo.length);
+					}
+					
+					if (json.lowProfileUser.countryCodeValueWorkPhoneNo && json.lowProfileUser.workPhoneNo){
+						json["lowProfileUserWorkPhoneNo"] = id7.substr(id7.length - id7.length + json.lowProfileUser.countryCodeValueWorkPhoneNo.length);
+					}
+				
 					json["contactName"] = json.lowProfileUser.contactName;
 					json["countryCodeHomePhoneNo"] = json.lowProfileUser.countryCodeHomePhoneNo;
 					json["countryCodeMobileNo"] = json.lowProfileUser.countryCodeMobileNo;
@@ -373,6 +374,7 @@
 					json["lowProfileUserUserSubType"] = json.lowProfileUser.userSubType;
 					json["lowProfileUserUserType"] = json.lowProfileUser.userType;
 				}	
+				
 				if(json.addressProofPic != null){
 					json["addressProofPic1"] = JSON.parse(json.addressProofPic);
 				}else{
