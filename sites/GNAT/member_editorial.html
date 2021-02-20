@@ -429,21 +429,17 @@
 						var receiptNo = null;
 						var paymentMode = null;
 						var transactionStatus = null;
-						if(data.response != null){
+						if(data.response){
 							receiptNo = data.response.transactionId;
 							paymentMode = data.response.paymentMode;
 							transactionStatus = data.response.transactionStatus;
 						}
-						
-						if(!data.isCancelled && getUrlVars().loggedInRole == 'user'){
-							//window.alert('not cancelled it an user');
+						if(!data.response && !data.isCancelled && getUrlVars().loggedInRole == 'user'){
 							paymentMode = 'CASH';
 							transactionStatus = 'success';
-						}else{
-							//window.alert('cancelled'+ data.isCancelled + getUrlVars().loggedInRole );
 						}
 						
-						if(data.receiptNumber != null){
+						if(data.receiptNumber){
 							//window.alert("null"+data.receiptNumber);
 							receiptNo = data.receiptNumber;
 						}
