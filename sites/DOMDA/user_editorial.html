@@ -361,19 +361,18 @@
 				if (json.lowProfileUser.countryCodeValueWorkPhoneNo && json.lowProfileUser.workPhoneNo){
 					json["lowProfileUserWorkPhoneNo"] = id7.substr(id7.length - id7.length + json.lowProfileUser.countryCodeValueWorkPhoneNo.length);
 				}
-				
-				json["contactName"] = json.lowProfileUser.contactName;
-				
-				json["countryCodeHomePhoneNo"] = json.lowProfileUser.countryCodeHomePhoneNo;
-				json["countryCodeMobileNo"] = json.lowProfileUser.countryCodeMobileNo;
-				json["countryCodeWorkPhoneNo"] = json.lowProfileUser.countryCodeWorkPhoneNo;
-				json["countryCodeValueHomePhoneNo"] = json.lowProfileUser.countryCodeValueHomePhoneNo;
-				json["countryCodeValueMobileNo"] = json.lowProfileUser.countryCodeValueMobileNo;
-				json["countryCodeValueWorkPhoneNo"] = json.lowProfileUser.countryCodeValueWorkPhoneNo;
-				json["lowProfileUserRelationship"] = json.lowProfileUser.relationship;
-				json["lowProfileUserUserSubType"] = json.lowProfileUser.userSubType;
-				json["lowProfileUserUserType"] = json.lowProfileUser.userType;
-							
+				if(json.lowProfileUser){
+					json["contactName"] = json.lowProfileUser.contactName;
+					json["countryCodeHomePhoneNo"] = json.lowProfileUser.countryCodeHomePhoneNo;
+					json["countryCodeMobileNo"] = json.lowProfileUser.countryCodeMobileNo;
+					json["countryCodeWorkPhoneNo"] = json.lowProfileUser.countryCodeWorkPhoneNo;
+					json["countryCodeValueHomePhoneNo"] = json.lowProfileUser.countryCodeValueHomePhoneNo;
+					json["countryCodeValueMobileNo"] = json.lowProfileUser.countryCodeValueMobileNo;
+					json["countryCodeValueWorkPhoneNo"] = json.lowProfileUser.countryCodeValueWorkPhoneNo;
+					json["lowProfileUserRelationship"] = json.lowProfileUser.relationship;
+					json["lowProfileUserUserSubType"] = json.lowProfileUser.userSubType;
+					json["lowProfileUserUserType"] = json.lowProfileUser.userType;
+				}	
 				if(json.addressProofPic != null){
 					json["addressProofPic1"] = JSON.parse(json.addressProofPic);
 				}else{
