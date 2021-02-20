@@ -454,17 +454,17 @@
 						});
 						data["receiptNo"] = transaction.receiptNo;
 						data["paymentMode"] = transaction.paymentMode;
-						data["paymentStatus"] = transaction.transactionStatus;
+						data["paymentStatus"] = transaction.paymentStatus;
 						if(data.paymentStatus === 'success'){
 							data["membershipStatus"] = 'Pending Approval';
 							data["memberStatus"] = 'Pending Approval';
 						}
 					return data;
 				}else{
-					data["receiptNo"] = "12345";
-					data["paymentMode"] = "CASH";
-					data["paymentStatus"] = "success";
-					console.log('in2 response',data);
+					transaction = { "receiptNo" :"12345", "paymentMode" :"CASH", "paymentStatus" :"success" };
+					data["receiptNo"] = transaction.receiptNo;
+					data["paymentMode"] = transaction.paymentMode;
+					data["paymentStatus"] = transaction.paymentStatus;
 					if(data.paymentStatus === 'success'){
 						data["membershipStatus"] = 'Pending Approval';
 						data["memberStatus"] = 'Pending Approval';
