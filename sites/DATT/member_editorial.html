@@ -435,21 +435,17 @@
 						var receiptNo = null;
 						var paymentMode = null;
 						var transactionStatus = null;
-						if(data.response != null){
+						if(data.response){
 							receiptNo = data.response.transactionId;
 							paymentMode = data.response.paymentMode;
 							transactionStatus = data.response.transactionStatus;
 						}
-						
-						if(!data.isCancelled && getUrlVars().loggedInRole == 'user'){
-							//window.alert('not cancelled it an user');
+						if(!data.response && !data.isCancelled && getUrlVars().loggedInRole == 'user'){
 							paymentMode = 'CASH';
 							transactionStatus = 'success';
-						}else{
-							//window.alert('cancelled'+ data.isCancelled + getUrlVars().loggedInRole );
 						}
 						
-						if(data.receiptNumber != null){
+						if(data.receiptNumber){
 							//window.alert("null"+data.receiptNumber);
 							receiptNo = data.receiptNumber;
 						}
@@ -457,12 +453,25 @@
 						//window.alert(receiptNo);
 						transaction = { "receiptNo" :receiptNo, "paymentMode" :paymentMode, "paymentStatus" :transactionStatus };
 						
-					});
-					//window.alert("transaction " + JSON.stringify(transaction));
-					return transaction;
+						});
+						data["receiptNo"] = transaction.receiptNo;
+						data["paymentMode"] = transaction.paymentMode;
+						data["paymentStatus"] = transaction.paymentStatus;
+						if(data.paymentStatus === 'success'){
+							data["membershipStatus"] = 'Pending Approval';
+							data["memberStatus"] = 'Pending Approval';
+						}
+					return data;
 				}else{
-					//window.alert('else');
-					return { "receiptNo" :"1234567", "paymentMode" :"CASH", "paymentStatus" :"success" };
+					transaction = { "receiptNo" :"12345", "paymentMode" :"CASH", "paymentStatus" :"success" };
+					data["receiptNo"] = transaction.receiptNo;
+					data["paymentMode"] = transaction.paymentMode;
+					data["paymentStatus"] = transaction.paymentStatus;
+					if(data.paymentStatus === 'success'){
+						data["membershipStatus"] = 'Pending Approval';
+						data["memberStatus"] = 'Pending Approval';
+					}
+					return data;
 				}
 		}
 		
