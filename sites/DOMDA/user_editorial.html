@@ -162,6 +162,7 @@
 						
 						if(!isUser){
 							showLoader('show');
+							userObject.lowProfileUser["userName"] = userObject.userName;
 							fetchAPI(adminURL + docvars.departmentName + "/users", options(JSON.stringify(userObject), isUser), handlerName).then(response => {
 								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
@@ -174,7 +175,7 @@
 							});
 						}else{
 							showLoader('show');
-							userObject.lowProfileUser["userName"] = userObject.userName;
+							userObject.lowProfileUser["userName"] = docvars.userName;
 							fetchAPI(adminURL + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser), handlerName).then(response => {
 								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
