@@ -25,6 +25,7 @@
        <script>
 		var globalForm = null;
 		var flutterPlatformReady = false;
+		var clientId;
 		
 		function getUrlVars() {
 			var vars = {};
@@ -41,6 +42,10 @@
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
+			
+			if(docvars.hasOwnProperty('clientId')){
+				clientId = docvars.clientId;
+			}
 			
 			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
 			//var adminURL = "http://localhost:9100/admin/departments/formio/";
@@ -287,11 +292,11 @@
 				var id1 = json.mobileNo;
 				var id2 = json.secondMobileNo;
 					
-				if (json.countryCodeValue){
+				if (json.countryCodeValue && json.mobileNo){
 					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
 				}
 				
-				if (json.secondaryCountryCodeValue){
+				if (json.secondaryCountryCodeValue && json.secondMobileNo){
 					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
 				}
 				
@@ -355,7 +360,8 @@
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
 				  },
-				  beforeSend: function(){
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
 					showLoader('show');
 				  },
 				  complete: function(){
@@ -389,7 +395,8 @@
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
 				  },
-				  beforeSend: function(){
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
 					showLoader('show');
 				  },
 				  complete: function(){
@@ -415,11 +422,7 @@
 		}
 		
 		function options(formdata, isUser){
-			var restMethod;	
-			var clientId;
-			if(getUrlVars().hasOwnProperty('clientId')){
-				clientId = getUrlVars().clientId;
-			}
+			var restMethod;
 			if(isUser){
 				restMethod = 'PUT';
 			}else{

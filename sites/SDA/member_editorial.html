@@ -24,6 +24,8 @@
       <script>
 		var globalForm = null;
 		var flutterPlatformReady = false;
+		var clientId;
+		
 		function getUrlVars() {
 			var vars = {};
 			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -39,6 +41,10 @@
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
+			
+			if(docvars.hasOwnProperty('clientId')){
+				clientId = docvars.clientId;
+			}
 			
 			var filing_URL = "https://qa.servicedx.com/filing/membership/formio";
 			var formDefinitionUrl = "https://qa.servicedx.com/admin/departments/" + formDefinitionDept;
@@ -129,9 +135,10 @@
 						
 						console.log("AF : userObject : " + JSON.stringify(userObject))
 					
+						var handlerName =  'handlerMembershipWithArgs';							 
 						if(!isMember){
 							showLoader('show');
-							fetchAPI(filing_URL, options(JSON.stringify(userObject), isMember)).then(response => {
+							fetchAPI(filing_URL, options(JSON.stringify(userObject), isMember), handlerName).then(response => {
 								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Create Success')
@@ -139,13 +146,12 @@
 									form.emit('submitError', response.message);
 								}
 							}).catch(function(error) {
-								window.alert(error);
 								console.log("error fetch",error);
 							});
 							//fetchAPI("http://localhost:9104/filing/membership/formio/", options(JSON.stringify(userObject), isMember));
 						}else{
 							showLoader('show');
-							fetchAPI(filing_URL +"/" + userObject.membershipId, options(JSON.stringify(userObject), isMember)).then(response => {
+							fetchAPI(filing_URL +"/" + userObject.membershipId, options(JSON.stringify(userObject), isMember), handlerName).then(response => {
 								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Update Success')
@@ -153,7 +159,6 @@
 									form.emit('submitError', response.message);
 								}
 							}).catch(function(error) {
-								window.alert(error);
 								console.log("error fetch",error);
 							});
 							//fetchAPI("http://localhost:9104/filing/membership/formio/" + docvars.membershipId, options(JSON.stringify(userObject), isMember));
@@ -297,6 +302,10 @@
 			});
 		});
 		
+		$(window).on('load', function () {
+			showLoader('hide');
+		});
+		
 		function editObject(formObj, isMember){
 				var json = JSON.parse(formObj.data);
 				console.log(json);
@@ -313,7 +322,7 @@
 					if(json.addressProof != null){
 						json["addressProof1"] = JSON.parse(json.addressProof);
 					}else{
-					json["addressProof1"] = [];
+						json["addressProof1"] = [];
 					}
 					
 				}else {
@@ -337,6 +346,16 @@
 					}else{
 						json["addressProof1"] = [];
 					}
+					if(json.identifyProofFront != null){
+						json["identifyProofFront1"] = JSON.parse(json.identifyProofFront);
+					}else{
+						json["identifyProofFront1"] = [];
+					}
+					if(json.identifyProofBack != null){
+						json["identifyProofBack1"] = JSON.parse(json.identifyProofBack);
+					}else{
+						json["identifyProofBack1"] = [];
+					}					 
 					
 					if (docvars.loggedInRole.toLowerCase() == "user") {
 						json["recommendedBy"] = "User";
@@ -346,8 +365,10 @@
 				}
 				
 				var otherInterests = {};
-				for (i = 0; i < json.otherInterests.length; i++) {
-				  otherInterests[json.otherInterests[i]] = true; 
+				if(json.otherInterests != null && Array.isArray(json.otherInterests)){
+					for (i = 0; i < json.otherInterests.length; i++) {
+					  otherInterests[json.otherInterests[i]] = true; 
+					}
 				}
 				
 				json["anniversaryDate1"] = json.anniversaryDate;
@@ -355,6 +376,7 @@
 				json["personName"] = json.referredByValue;
 				json["socialMedia"] = json.referredByValue;
 				json["specialSkills"] = otherInterests;
+				json["memberStatus"] = json.membershipStatus;								 
 				if(json.maritalStatus != "married" && json.maritalStatus != "unmarried" && json.maritalStatus != "divorced" ){
 					json["maritalStatus1"] = "others";
 					json["others"] = json.maritalStatus;
@@ -386,36 +408,69 @@
 			return new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0];
 		}
 		
-		 function payButton(data) {
+		var payee =  async function payButton(data) {
 			console.log('payButton',data);
 			var description;
-			if(!data.isMember){
-                description = "Membership Fee for "+ data.userFullName;
-			}else{
+			var oneTimeRegistrationFees = 250;
+			if(data.renewalEligible){
+				oneTimeRegistrationFees = 0;
+		 
 				description = "Membership Renewal Fee for "+ data.userFullName;
+			}else{
+				description = "Membership Fee for "+ data.userFullName;
 			}
-			var json = {"totalAmount":data.fees,"payeePhoneNumber":data.countryCodeValueHome + data.homeNumber,"payeeName":data.userFullName,"payeeEmail":data.emailId,"paymentDescription":description};
-			console.log(json);
+			var json = {"totalAmount":data.fees + oneTimeRegistrationFees, "payeePhoneNumber":data.countryCodeValueHome + data.homeNumber,"payeeName":data.userFullName,"payeeEmail":data.emailId,"paymentDescription":description};
+			console.log(json, data.isMember);
 			console.log('flutterPlatformReady',flutterPlatformReady);
 			let transaction = null;
 				if(flutterPlatformReady){
-					window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(function(response) {
-					window.alert(JSON.stringify(response));
-						console.log("handlerPayResponseWithArgs" + JSON.stringify(response));  
-						let PayResponse = fetch("https://qa.servicedx.com/payments/order?request_id="+response.receiptId, { method: 'GET'})
-						transaction = { 'receiptId' :PayResponse[0].transactionId, 'paymentMode' :response.paymentMode, 'paymentStatus' :response.paymentStatus };
-					});
-					return transaction;
-				}else{
-					fetch("https://qa.servicedx.com/payments/order?request_id="+"c1f42fcf-458d-4a1d-a323-08c7a3349f93", { method: 'GET'}).then(async function(response) {
-						
-						if (response.ok) {
-							let json = await response.json();
-							console.log(json);
+					await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await function(data) {
+						console.log("handlerPayResponseWithArgs" + JSON.stringify(data)); 
+						//window.alert("data" + JSON.stringify(data));
+						if(Array.isArray(data.response)){
+							data["response"] = data.response[0];
+								//window.alert('array'+data);
+							}
+						var receiptNo = null;
+						var paymentMode = null;
+						var transactionStatus = null;
+						if(data.response){
+							receiptNo = data.response.transactionId;
+							paymentMode = data.response.paymentMode;
+							transactionStatus = data.response.transactionStatus;
 						}
-						return { 'receiptId' :response[0].transactionId, 'paymentMode' :null, 'paymentStatus' :null };
-					});
+						if(!data.response && !data.isCancelled && getUrlVars().loggedInRole == 'user'){
+							paymentMode = 'CASH';
+							transactionStatus = 'success';
+						}
 						
+						if(data.receiptNumber){
+							//window.alert("null"+data.receiptNumber);
+							receiptNo = data.receiptNumber;
+						}
+						
+						//window.alert(receiptNo);
+						transaction = { "receiptNo" :receiptNo, "paymentMode" :paymentMode, "paymentStatus" :transactionStatus };
+						
+						});
+						data["receiptNo"] = transaction.receiptNo;
+						data["paymentMode"] = transaction.paymentMode;
+						data["paymentStatus"] = transaction.paymentStatus;
+						if(data.paymentStatus === 'success'){
+							data["membershipStatus"] = 'Pending Approval';
+							data["memberStatus"] = 'Pending Approval';
+						}
+					return data;
+				}else{
+					transaction = { "receiptNo" :"12345", "paymentMode" :"CASH", "paymentStatus" :"success" };
+					data["receiptNo"] = transaction.receiptNo;
+					data["paymentMode"] = transaction.paymentMode;
+					data["paymentStatus"] = transaction.paymentStatus;
+					if(data.paymentStatus === 'success'){
+						data["membershipStatus"] = 'Pending Approval';
+						data["memberStatus"] = 'Pending Approval';
+					}
+					return data;
 				}
 		}
 		
@@ -428,6 +483,13 @@
 				  async : false,
 				  success: function(result){
 					  formObj['data'] =  JSON.stringify(result);
+				  },
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
 				  },
 				  error: function (textStatus) {
 					  console.log(textStatus);
@@ -456,18 +518,19 @@
 					  }
 					}
 				  console.log("formDefinition "+JSON.stringify(formDefinition));
-			}});
+				  },
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  }});
 			return formDefinition;
 		}
 
 		function options(formdata, isMember){
-			var restMethod;	
-			var clientId;
-			if(getUrlVars().hasOwnProperty('clientId')){
-				clientId = getUrlVars().clientId;
-			}else{
-				clientId = 'SDA'
-			}
+			var restMethod;
 			if(isMember){
 				restMethod = 'PUT';
 			}else{
@@ -478,7 +541,7 @@
 			return options;
 		}
 
-		var fetchAPI = async function (url, requestOptions) {
+		var fetchAPI = async function (url, requestOptions, handlerName) {
 			let response = await fetch(url, requestOptions)
 			console.log('response', JSON.stringify(response));
 			if (response.ok) {
@@ -486,7 +549,7 @@
 				console.log('response body', json);
 				try {
 					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler('handlerMembershipWithArgs', response.status, json);
+						window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 					}
 				} catch (e) {
 					console.log("flutter_inappwebview error");
@@ -497,7 +560,7 @@
 				console.log('error', json.message, json.errorCode);
 				try {
 					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler('handlerMembershipWithArgs', response.status, json);
+						window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 					}
 				} catch (e) {
 					console.log("flutter_inappwebview error");
@@ -507,8 +570,20 @@
 		}
 		
 		function disable(id) {
+			var comp = document.querySelectorAll("[id^="+id+"]");
+			for (var i = 0; i < comp.length; i++) {
+				comp[i].disabled = true;
+			}
 			document.getElementById(id).disabled = true;
 			$('#'+id).addClass('disable');
+		}
+		
+		function showComponent(value, status) {
+			if(status){
+			  $('input[type="radio"][value="'+value+'"]').prop('disabled', false);
+			}else{
+			  $('input[type="radio"][value="'+value+'"]').prop('disabled', true);
+			}
 		}
 		
 		function enable(id) {
