@@ -291,11 +291,11 @@
 				var id1 = json.mobileNo;
 				var id2 = json.secondMobileNo;
 				
-				if (json.countryCodeValue){
+				if (json.countryCodeValue && json.mobileNo){
 					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
 				}
 				
-				if (json.secondaryCountryCodeValue){
+				if (json.secondaryCountryCodeValue && json.secondMobileNo){
 					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
 				}
 				
@@ -339,15 +339,6 @@
 						"countryCode": json.country,
 						"countryName": json.countryName
 					};
-				}
-				if(json.additionalInfo){
-					var addInfo = JSON.parse(json.additionalInfo);
-					if(addInfo){
-						for (var i in addInfo) {
-							json[i] = addInfo[i];
-							console.log(i, addInfo[i]);
-						}
-					}
 				}
 				
 			return json;
