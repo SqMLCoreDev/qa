@@ -312,6 +312,12 @@
 				json["specialSkills"] = otherInterests;
 				json["birthDate1"] = json.birthDate;
 				json["anniversaryDate1"] = json.anniversaryDate;
+			
+				if(json.vaccinationConsent && json.vaccinationConsent == "true"){
+					json["vaccinationConsent"] = true;
+				}else{
+					json["vaccinationConsent"] = false;
+				}
 				
 				if(json.maritalStatus != "married" && json.maritalStatus != "unmarried" && json.maritalStatus != "divorced" ){
 					json["maritalStatus1"] = "others";
@@ -324,7 +330,6 @@
 					json["countrys"] = {
 						"countryCode": json.country,
 						"countryName": json.countryName
-												  
 					};
 				}
 				if(json.secondaryCountry && json.secondaryCountryName){
