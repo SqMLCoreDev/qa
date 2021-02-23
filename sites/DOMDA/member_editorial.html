@@ -143,7 +143,9 @@
 						
 						if(!isMember){
 							showLoader('show');
-							userObject["membershipStatus"] = "Under Review";
+							if(!userObject.membershipStatus){
+								userObject["membershipStatus"] = "Under Review";
+							}
 							fetchAPI(filing_URL, options(JSON.stringify(userObject), isMember), handlerName).then(response => {
 								showLoader('hide');
 								if(!response.hasOwnProperty('errorCode')){
