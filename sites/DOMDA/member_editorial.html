@@ -438,7 +438,6 @@
 				if(flutterPlatformReady){
 					await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await function(data) {
 						console.log("handlerPayResponseWithArgs" + JSON.stringify(data));
-						window.alert("handlerPayResponseWithArgs" + JSON.stringify(data));
 						//window.alert("data" + JSON.stringify(data));
 						if(Array.isArray(data.response)){
 							data["response"] = data.response[0];
@@ -473,7 +472,6 @@
 							data["membershipStatus"] = 'Pending Approval';
 							data["memberStatus"] = 'Pending Approval';
 						}
-						window.alert('transaction '+JSON.stringify(transaction));
 					return data;
 				}else{
 					transaction = { "receiptNo" :"12345", "paymentMode" :"CASH", "paymentStatus" :"success" };
