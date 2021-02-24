@@ -37,7 +37,7 @@
 		$(document).ready(function () {
 		
 			var docvars = getUrlVars();
-			var formDefinitionDept = docvars.departmentName;
+			var formDefinitionDept = "Diabetes Assoc";
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
@@ -126,7 +126,8 @@
 						delete userObject["anniversaryDate1"];
 						delete userObject["isMember"];
 						
-						userObject["departmentName"] = docvars.departmentName;
+						userObject["oldDepartmentName"] = userObject.departmentName;
+						userObject["departmentName"] = userObject["subDepartment"];
 						userObject["userName"] = docvars.userName;
 						userObject["approvedDate"] = now();
 						//userObject["receiptNo"] = "";
@@ -308,6 +309,8 @@
 				var json = JSON.parse(formObj.data);
 				console.log(json);
 				var docvars = getUrlVars();
+				json["subDepartment"] = json.departmentName;
+				json["subDepartments"] = getSubList();
 				
 				if (!isMember) {
 					console.log('if');
@@ -531,6 +534,23 @@
 				  }});
 			return formDefinition;
 		}
+		
+		function getSubList(){
+			//var url = "https://qa.servicedx.com/admin/departments/" + getUrlVars().departmentName + "/subdepartments?include_parent=true&minimum_info=true";
+			var url = "https://qa.servicedx.com/admin/departments/" + "Diabetes Assoc" + "/subdepartments?include_parent=true&minimum_info=true";
+			var subList = [];
+			var subDept = getFormObj(url);
+			if(!subDept.data.hasOwnProperty('errorCode')){
+				var subDeptObj = JSON.parse(subDept.data);
+				subDeptObj.forEach(function(data) {
+					var subObj = {};
+					subObj["departmentName"] = data.departmentName;
+					subList.push(subObj);
+				});
+			}
+			console.log('subList',subList);
+			return subList;
+		}
 
 		function options(formdata, isMember){
 			var restMethod;
@@ -573,7 +593,6 @@
 		}
 		
 		function disable(id) {
-		console.log(id);
 			var comp = document.querySelectorAll("[id^="+id+"]");
 			for (var i = 0; i < comp.length; i++) {
 				comp[i].disabled = true;
