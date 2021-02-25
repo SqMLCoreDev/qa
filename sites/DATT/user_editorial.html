@@ -38,10 +38,9 @@
 		
 			var docvars = getUrlVars();
 			var defDept = docvars.departmentName; 
-			if(docvars.rootdepartmentName){
+			if(docvars.rootdepartmentName != "null"){
 				defDept = docvars.rootdepartmentName;
 			}
-			window.alert(JSON.stringify(docvars));
 			var formDefinitionDept = defDept;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
