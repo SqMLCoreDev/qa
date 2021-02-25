@@ -37,7 +37,11 @@
 		$(document).ready(function () {
 		
 			var docvars = getUrlVars();
-			var formDefinitionDept = docvars.departmentName;
+			var defDept = docvars.departmentName; 
+			if(docvars.rootdepartmentName){
+				defDept = docvars.rootdepartmentName;
+			}
+			var formDefinitionDept = defDept;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
@@ -95,8 +99,7 @@
 							userObject["secondaryCountryCodeValue"] = getCountries(userObject.secondaryCountryCode);
 							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
 						}
-	 
-
+						
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
 						delete userObject["hobbies"];
@@ -324,7 +327,6 @@
 					json["countrys"] = {
 						"countryCode": json.country,
 						"countryName": json.countryName
-												  
 					};
 				}
 				if(json.secondaryCountry && json.secondaryCountryName){
