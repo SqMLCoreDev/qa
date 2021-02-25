@@ -37,7 +37,11 @@
 		$(document).ready(function () {
 		
 			var docvars = getUrlVars();
-			var formDefinitionDept = "Diabetes Assoc";
+			var defDept = docvars.departmentName;
+			if(docvars.rootdepartmentName){
+				defDept = docvars.rootdepartmentName;
+			}
+			var formDefinitionDept = defDept;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
@@ -95,7 +99,7 @@
 						userObj = {};
 					}else{
 						userObj = {};
-					}
+						}
 					
 					form.submission = { data: userObj };
 					
@@ -536,8 +540,12 @@
 		}
 		
 		function getSubList(){
-			//var url = "https://qa.servicedx.com/admin/departments/" + getUrlVars().departmentName + "/subdepartments?include_parent=true&minimum_info=true";
-			var url = "https://qa.servicedx.com/admin/departments/" + "Diabetes Assoc" + "/subdepartments?include_parent=true&minimum_info=true";
+			var docvars = getUrlVars();
+			var defDept = docvars.departmentName; 
+			if(docvars.rootdepartmentName){
+				defDept = docvars.rootdepartmentName;
+			}
+			var url = "https://qa.servicedx.com/admin/departments/" + defDept + "/subdepartments?include_parent=true&minimum_info=true";
 			var subList = [];
 			var subDept = getFormObj(url);
 			if(!subDept.data.hasOwnProperty('errorCode')){
