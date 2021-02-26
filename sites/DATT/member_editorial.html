@@ -41,6 +41,7 @@
 			if(docvars.rootdepartmentName != "null"){
 				defDept = docvars.rootdepartmentName;
 			}
+			window.alert(JSON.stringify(docvars));
 			var formDefinitionDept = defDept;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
@@ -542,7 +543,7 @@
 		function getSubList(){
 			var docvars = getUrlVars();
 			var defDept = docvars.departmentName; 
-			if(docvars.rootdepartmentName){
+			if(docvars.rootdepartmentName != "null"){
 				defDept = docvars.rootdepartmentName;
 			}
 			var url = "https://qa.servicedx.com/admin/departments/" + defDept + "/subdepartments?include_parent=true&minimum_info=true";
