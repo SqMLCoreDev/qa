@@ -37,11 +37,7 @@
 		$(document).ready(function () {
 		
 			var docvars = getUrlVars();
-			var defDept = docvars.departmentName; 
-			if(docvars.rootdepartmentName != "null"){
-				defDept = docvars.rootdepartmentName;
-			}
-			var formDefinitionDept = defDept;
+			var formDefinitionDept = docvars.rootdepartmentName;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});

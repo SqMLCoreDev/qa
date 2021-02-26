@@ -37,12 +37,7 @@
 		$(document).ready(function () {
 		
 			var docvars = getUrlVars();
-			var defDept = docvars.departmentName;
-			if(docvars.rootdepartmentName != "null"){
-				defDept = docvars.rootdepartmentName;
-			}
-			window.alert(JSON.stringify(docvars));
-			var formDefinitionDept = defDept;
+			var formDefinitionDept = docvars.rootdepartmentName;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
 			});
@@ -131,7 +126,14 @@
 						delete userObject["anniversaryDate1"];
 						delete userObject["isMember"];
 						
-						userObject["oldDepartmentName"] = userObject.departmentName;
+						//delete userObject["identifyProofFront1"];
+						//delete userObject["identifyProofBack1"];
+						//delete userObject["identifyProofFront"];
+						//delete userObject["identifyProofBack"];
+						
+						if(userObject.departmentName != userObject.subDepartment){
+							userObject["oldDepartmentName"] = userObject.departmentName;
+						}
 						userObject["departmentName"] = userObject["subDepartment"];
 						userObject["userName"] = docvars.userName;
 						userObject["approvedDate"] = now();
@@ -541,11 +543,7 @@
 		}
 		
 		function getSubList(){
-			var docvars = getUrlVars();
-			var defDept = docvars.departmentName; 
-			if(docvars.rootdepartmentName != "null"){
-				defDept = docvars.rootdepartmentName;
-			}
+			var defDept = getUrlVars().rootdepartmentName;
 			var url = "https://qa.servicedx.com/admin/departments/" + defDept + "/subdepartments?include_parent=true&minimum_info=true";
 			var subList = [];
 			var subDept = getFormObj(url);
