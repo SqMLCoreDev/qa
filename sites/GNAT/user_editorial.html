@@ -34,7 +34,7 @@
 			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
 				vars[key] = decodeURI(value);
 			});
-			return {"page": "addUser", "userName": "null", "departmentName": "GNAT", "clientId": "GNAT"};
+			return vars;
 		}
 
 		$(document).ready(function () {
