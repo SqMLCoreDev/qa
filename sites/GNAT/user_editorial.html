@@ -70,7 +70,20 @@
 				.then(function (form) {
 					alert('form'+form);
 					console.log(formObj,isUser);
+					var userObj;
+					if(formObj != null){
+						userObj = editObject(formObj);
+					}else{
+					userObj = {};
+					}
+					userObj["page"] = docvars.page;
+					form.submission = { data: userObj };
 					
+					console.log(userObj);
+					globalForm = form;
+					//form.setPristine(false);
+					form.nosubmit = true;
+					alert('form1');
 				});
 			
 		});
