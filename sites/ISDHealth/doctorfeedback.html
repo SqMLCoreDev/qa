@@ -379,7 +379,7 @@
 				console.log('response body', json);
 				try {
 					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler('HandlerQuestionnaireWithArgs', response.status, json);
+						window.flutter_inappwebview.callHandler('DoctorFeedBackHandler', response.status, json);
 					}
 				} catch (e) {
 					console.log("flutter_inappwebview error");
@@ -390,7 +390,7 @@
 				console.log('error', json.message, json.errorCode);
 				try {
 					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler('HandlerQuestionnaireWithArgs', response.status, json);
+						window.flutter_inappwebview.callHandler('DoctorFeedBackHandler', response.status, json);
 					}
 				} catch (e) {
 					console.log("flutter_inappwebview error");
