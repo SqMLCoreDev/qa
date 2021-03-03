@@ -39,6 +39,7 @@
 
 		$(document).ready(function () {
 			
+			
 			var docvars = getUrlVars();
 			var formDefinitionDept = docvars.departmentName;
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
@@ -75,7 +76,7 @@
 					if(formObj != null){
 						userObj = editObject(formObj);
 					}else{
-					userObj = {};
+						userObj = {};
 					}
 					userObj["page"] = docvars.page;
 					form.submission = { data: userObj };
@@ -148,28 +149,12 @@
 							});
 						}
 					});
-					
+
 					form.on('redraw', () => {
 						form.triggerChange();
 					});
 				});
 			
-		});
-
-		$(window).on('load', function () {
-			$('input[data-toggle="selectize"]').attrchange({
-				trackValues: true,
-				callback: function (event) {
-					if (event.attributeName === "class") {
-						console.log("Changed " + event.attributeName + ", from " + event.oldValue + " - " + event.newValue);
-						if ($(this).hasClass("is-invalid")) {
-							$("#" + this.id + "-selectized").parent().addClass("selectize-custom-err");
-						} else {
-							$("#" + this.id + "-selectized").parent().removeClass("selectize-custom-err");
-						}
-						}
-				}
-			});
 		});
 		
 		$(window).on('load', function () {
@@ -218,7 +203,6 @@
 					json["countrys"] = {
 						"countryCode": json.country,
 						"countryName": json.countryName
-												  
 					};
 				}
 				if(json.secondaryCountry && json.secondaryCountryName){

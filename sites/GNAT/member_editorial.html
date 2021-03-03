@@ -151,7 +151,7 @@
 									form.emit('submitDone', 'Create Success')
 								}else{
 									form.emit('submitError', response.message);
-								}
+									}
 							}).catch(function(error) {
 								console.log("error fetch",error);
 							});
@@ -170,28 +170,12 @@
 						}
 
 					});
-					
+
 					form.on('redraw', () => {
 						form.triggerChange();
 					});
 				});
 
-		});
-
-		$(window).on('load', function () {
-			$('input[data-toggle="selectize"]').attrchange({
-				trackValues: true,
-				callback: function (event) {
-					if (event.attributeName === "class") {
-						console.log("Changed " + event.attributeName + ", from " + event.oldValue + " - " + event.newValue);
-						if ($(this).hasClass("is-invalid")) {
-							$("#" + this.id + "-selectized").parent().addClass("selectize-custom-err");
-						} else {
-							$("#" + this.id + "-selectized").parent().removeClass("selectize-custom-err");
-						}
-					}
-				}
-			});
 		});
 		
 		$(window).on('load', function () {
@@ -493,7 +477,7 @@
 		}
 		
       </script>
-      <link href="../assets/dist/css/poopins/poopins.css" rel="stylesheet">
+	  <link href="../assets/dist/css/poopins/poopins.css" rel="stylesheet">
    </head>
    <body style="padding:10px;background-color: #dde0e0;">
       <div id="wrapper">
