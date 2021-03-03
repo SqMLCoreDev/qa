@@ -66,6 +66,200 @@
 			var formDefinition = getFormComp("https://qa.servicedx.com/admin/departments/" + formDefinitionDept);
 			alert('formDefinition'+formDefinition);
 			
+			Formio.createForm(document.getElementById('builder'), formDefinition)
+				.then(function (form) {
+					alert('form'+form);
+					console.log(formObj,isUser);
+					var userObj;
+					if(formObj != null){
+						userObj = editObject(formObj);
+					}else{
+					userObj = {};
+					}
+					userObj["page"] = docvars.page;
+					form.submission = { data: userObj };
+					
+					console.log(userObj);
+					globalForm = form;
+					//form.setPristine(false);
+					form.nosubmit = true;
+					form.on('submit', function (submission) {
+						$('#formSubmit').attr('disabled','disabled');
+						
+						var userObject = submission.data;
+						console.log("B4 : userObject : " + JSON.stringify(userObject));
+						if(userObject.countryCode){
+							userObject["countryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["mobileNo"] = userObject["countryCodeValue"] + userObject["mobileNo"];
+						}
+						if(userObject.secondaryCountryCode){
+							userObject["secondaryCountryCodeValue"] = getCountries(userObject.secondaryCountryCode);
+							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
+						}		 
+
+						delete userObject["submit"];
+						delete userObject["confirmPassword"];
+						delete userObject["hobbies"];
+						delete userObject["sameAsPresentAddress"];
+						delete userObject["phoneNo"];
+						delete userObject["secondPhoneNo"];
+						delete userObject["countrys"];
+						delete userObject["secondaryCountrys"];
+						delete userObject["page"];
+						delete userObject["anniversaryDate1"];
+						delete userObject["birthDate1"];
+						delete userObject["addressProofPic1"];
+						delete userObject["specialSkills"];
+						delete userObject["maritalStatus1"];
+						delete userObject["others"];
+						
+						//userObject["roleName"] = "User";
+						userObject["departmentName"] = docvars.departmentName;
+						userObject["source"] = "MOBILE";
+						userObject["active"] = true;
+						console.log("AF : userObject : " + JSON.stringify(userObject))
+
+						var handlerName =  'userHandlerWithArgs';
+						
+						if(!isUser){
+							showLoader('show');
+							fetchAPI(adminURL + docvars.departmentName + "/users", options(JSON.stringify(userObject), isUser), handlerName).then(response => {
+								showLoader('hide');
+								if(!response.hasOwnProperty('errorCode')){
+									form.emit('submitDone', 'Create Success')
+								}else{
+									form.emit('submitError', response.message);
+								}
+							}).catch(function(error) {
+								console.log("error fetch",error);
+							});
+						}else{
+							showLoader('show');
+							fetchAPI(adminURL + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser), handlerName).then(response => {
+								showLoader('hide');
+								if(!response.hasOwnProperty('errorCode')){
+									form.emit('submitDone', 'Update Success')
+								}else{
+									form.emit('submitError', response.message)
+								}
+							}).catch(function(error) {
+								console.log("error fetch",error);
+							});
+						}
+					});
+
+					$('[data-toggle="selectize"]').each(function(){
+						 var srcElement = this;
+						 
+						 var formComponent 	= form.getComponent(srcElement.id.split("-")[1]);
+						 var allowEmptyObj 	= true;
+						 var maxItemsObj 	= 1;
+						 var pluginsObj  	= [];
+						 
+						 var dataModeObj    = formComponent.component.attributes["data-mode"];
+						 var labelFieldObj  = formComponent.component.properties.labelField 	?? 'label';
+						 var valueFieldObj  = formComponent.component.properties.valueField 	?? 'value';
+						 var searchFieldObj = formComponent.component.properties.searchField ? formComponent.component.properties.searchField.split(','): ['label','id'];
+						 var renderExtObj	= formComponent.component.properties.renderextra 	?? null;
+						 
+						 if (dataModeObj ==="multi"){
+								maxItemsObj = null;
+								pluginsObj.push("remove_button");
+								allowEmptyObj = false;
+						 }
+						
+						 $(this).selectize({
+								plugins: pluginsObj,
+								maxItems: maxItemsObj,
+								hideSelected : true,
+								placeholder : 'Select',
+								allowEmptyOption : false,
+								persist: false,
+								onChange: function(value, isOnInitialize) {
+									globalForm.submission.data[this.$input[0].id.split("-")[1]] = value;
+									
+									if($('label[for="'+this.$input[0].id+'-selectized"]').hasClass("field-required")){
+										form.checkValidity(form.submission.data);
+									} 
+								},
+								create: false,
+								labelField: labelFieldObj,
+								valueField: valueFieldObj,
+								searchField : searchFieldObj,
+								options : JSON.parse(formComponent.component.properties.datasource),
+								render: {
+									item: function(item, escape) {
+										if (renderExtObj && isValidJSON(renderExtObj)) {
+											parsedRender = JSON.parse(renderExtObj);
+											ctnt = "";
+											ctnt += "<span>";
+											$.each(parsedRender, function(index,value){
+												if (value.active){
+													if (value.type==='img'){
+														ctnt += '<img src="'+escape(item[value.field])+'" style="'+escape(value.style)+'">';
+													} else if (value.type==='span'){
+														ctnt += '<span style="'+escape(value.style)+'"> ';
+														ctnt += value.appender ?? "";
+														ctnt += escape(item[value.field]);
+														ctnt += '</span>';
+													}
+												}
+											});
+											ctnt += "&nbsp;"
+											ctnt += escape(item[labelFieldObj])
+											ctnt += "</span>";
+											console.log("ctnt "+ctnt);
+											return dataModeObj ==="multi" ? "<div>"+ctnt+"</div>" : ctnt;
+										} else {
+											ctnt = (item[labelFieldObj] ? '<span class="name">' + escape(item[labelFieldObj]) + '</span>' : '')
+											return dataModeObj ==="multi" ? "<div>"+ctnt+"</div>" : ctnt;
+										}
+										return 
+										
+									},
+									option: function(item, escape) {
+										if (renderExtObj && isValidJSON(renderExtObj)) {
+											parsedRender = JSON.parse(renderExtObj);
+											ctnt = "";
+											ctnt += "<span>";
+											$.each(parsedRender, function(index,value){
+												if (value.active){
+													if (value.type==='img'){
+														ctnt += '<img src="'+escape(item[value.field])+'" style="'+escape(value.style)+'">';
+													} else if (value.type==='span'){
+														ctnt += '<span style="'+escape(value.style)+'"> ';
+														ctnt += value.appender ?? "";
+														ctnt += escape(item[value.field]);
+														ctnt += '</span>';
+													}
+												}
+											});
+											ctnt += "&nbsp;"
+											ctnt += escape(item[labelFieldObj])
+											ctnt += "</span>";
+											console.log("ctnt "+ctnt);
+											return "<div>"+ctnt+"</div>";
+										} else {
+											ctnt = (item[labelFieldObj] ? '<span class="name">' + escape(item[labelFieldObj]) + '</span>' : '')
+											console.log("ctnt "+ctnt);
+											return "<div>"+ctnt+"</div>";
+										}
+									}
+								}
+							});
+					 });
+
+					$.each($('div[class*="selectize-control"]'), function () {
+						$(this).removeClass("form-control");
+					});
+					$.each($('div[class*="selectize-dropdown"]'), function () {
+						$(this).removeClass("form-control");
+					});
+					form.on('redraw', () => {
+						form.triggerChange();
+					});
+				});
+			
 		});
 		
 		
