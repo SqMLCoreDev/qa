@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$(document).ready(function(){
+  $("p").click(function(){
+    alert("The paragraph was clicked.");
+  });
+});
+</script>
+</head>
 <body>
 
-<p>Click the button to display an alert box.</p>
-
-<button onclick="myFunction()">Try it</button>
-
-<script>
-function myFunction() {
-  alert("Hello! I am an alert box!");
-}
-</script>
+<p>Click on this paragraph.</p>
 
 </body>
 </html>
