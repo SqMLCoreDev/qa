@@ -84,6 +84,73 @@
 					//form.setPristine(false);
 					form.nosubmit = true;
 					alert('form1');
+					form.on('submit', function (submission) {
+						alert('submit');
+						$('#formSubmit').attr('disabled','disabled');
+						
+						var userObject = submission.data;
+						console.log("B4 : userObject : " + JSON.stringify(userObject));
+						if(userObject.countryCode){
+							userObject["countryCodeValue"] = getCountries(userObject.countryCode);
+							userObject["mobileNo"] = userObject["countryCodeValue"] + userObject["mobileNo"];
+						}
+						if(userObject.secondaryCountryCode){
+							userObject["secondaryCountryCodeValue"] = getCountries(userObject.secondaryCountryCode);
+							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
+						}		 
+
+						delete userObject["submit"];
+						delete userObject["confirmPassword"];
+						delete userObject["hobbies"];
+						delete userObject["sameAsPresentAddress"];
+						delete userObject["phoneNo"];
+						delete userObject["secondPhoneNo"];
+						delete userObject["countrys"];
+						delete userObject["secondaryCountrys"];
+						delete userObject["page"];
+						delete userObject["anniversaryDate1"];
+						delete userObject["birthDate1"];
+						delete userObject["addressProofPic1"];
+						delete userObject["specialSkills"];
+						delete userObject["maritalStatus1"];
+						delete userObject["others"];
+						
+						//userObject["roleName"] = "User";
+						userObject["departmentName"] = docvars.departmentName;
+						userObject["source"] = "MOBILE";
+						userObject["active"] = true;
+						console.log("AF : userObject : " + JSON.stringify(userObject))
+
+						var handlerName =  'userHandlerWithArgs';
+						
+						if(!isUser){
+							showLoader('show');
+							fetchAPI(adminURL + docvars.departmentName + "/users", options(JSON.stringify(userObject), isUser), handlerName).then(response => {
+								showLoader('hide');
+								if(!response.hasOwnProperty('errorCode')){
+									form.emit('submitDone', 'Create Success')
+								}else{
+									form.emit('submitError', response.message);
+								}
+							}).catch(function(error) {
+								console.log("error fetch",error);
+							});
+						}else{
+							showLoader('show');
+							fetchAPI(adminURL + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser), handlerName).then(response => {
+								showLoader('hide');
+								if(!response.hasOwnProperty('errorCode')){
+									form.emit('submitDone', 'Update Success')
+								}else{
+									form.emit('submitError', response.message)
+								}
+							}).catch(function(error) {
+								console.log("error fetch",error);
+							});
+						}
+					});
+					
+					alert('last');
 				});
 			
 		});
