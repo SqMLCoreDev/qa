@@ -1,0 +1,643 @@
+<html>
+    <head>
+       <meta charset="utf-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+       <meta name="description" content="">
+       <meta name="generator" content="Jekyll v4.1.1">
+       <title>Membership</title>
+	   
+       <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
+       <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
+       <link href="../assets/dist/css/custom-formio/theme.less.css" rel="stylesheet">
+       <link href="../assets/dist/css/font-awesome.min.css" rel="stylesheet">
+	   <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+       <link href="../assets/dist/css/custom-formio/formio.full.min.css" rel="stylesheet">
+	   <link href="../assets/dist/css/main.css" rel="stylesheet">
+	   
+       <script src='../assets/dist/js/lodash/lodash.core.min.js'></script>
+	   <script src='../assets/dist/js/lodash/lodash.min.js'></script>
+	   <script src='../assets/dist/js/jquery-3.5.1.min.js'></script>
+	   <script src='../assets/dist/js/attrchange.js'></script>
+	   <script src='../assets/dist/js/investigate/selectize.js'></script>
+       <script src='../assets/dist/js/bootstrap.bundle.min.js'></script>
+	   <script src='../assets/dist/js/pooper/popper.min.js'></script>
+	   <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
+	   <script src='../assets/dist/js/main.js'></script>
+	   
+       <script>
+		var globalForm = null;
+		var flutterPlatformReady = false;
+		var clientId;
+		
+		function getUrlVars() {
+			var vars = {};
+			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
+				vars[key] = decodeURI(value);
+			});
+			return vars;
+		}
+
+		$(document).ready(function () {
+		
+			var docvars = getUrlVars();
+			var formDefinitionDept = docvars.departmentName;
+			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+				flutterPlatformReady = true;
+			});
+			
+			if(docvars.hasOwnProperty('clientId')){
+				clientId = docvars.clientId;
+			}
+			
+			var filing_URL = "https://qa.servicedx.com/filing/membership/formio";
+			//var filing_URL = "http://localhost:9104/filing/membership/formio";
+			var formDefinitionUrl = "https://qa.servicedx.com/admin/departments/" + formDefinitionDept;
+			var membershipUrl = filing_URL + "/departments/"+docvars.departmentName+"/users/"+docvars.userName;
+			var membershipByIdUrl = filing_URL + "/membership_id/"+docvars.membershipId;
+			
+			var formDefComponent = getFormComp(formDefinitionUrl);
+			var formObj = null;
+			var isMember = true;
+			
+			if (docvars.loggedInRole.toLowerCase() == "user"){
+			  formObj = getFormObj(membershipUrl);
+			  if(!formObj.data.hasOwnProperty('errorCode')){
+				var formObjParsed = JSON.parse(formObj.data);
+				  if(formObjParsed.membershipId == null){ 
+					console.log('non member');
+					console.log(formObj.data.membershipIds)
+					isMember = false;
+				  }
+			  }
+			  
+			}else {
+				if(docvars.membershipId == "null" || docvars.membershipId == ''){
+					formObj = getFormObj(membershipUrl);
+					if(!formObj.data.hasOwnProperty('errorCode')){
+					var formObjParsed = JSON.parse(formObj.data);
+					  if(formObjParsed.membershipId == null){ 
+						console.log('non member');
+						console.log(formObj.data.membershipIds)
+						isMember = false;
+					  }
+				  }
+				}else{
+					formObj = getFormObj(membershipByIdUrl);
+				}
+			}
+			
+			console.log('formObj',formObj);
+			var forIO = Formio.createForm(document.getElementById('builder'), formDefComponent)
+				.then(function (form) {
+					var userObj;
+					if(!formObj.data.hasOwnProperty('errorCode')){
+						userObj = editObject(formObj, isMember);
+						console.log(userObj);
+					}else if(formObj.data.hasOwnProperty('errorCode') && formObj.data.errorCode == ("SDX_FILING_110")){
+						//window.alert('User does not exist in database');
+						userObj = {};
+					}else{
+						userObj = {};
+					}
+					
+					form.submission = { data: userObj };
+					
+					console.log('userObj',form.submission);
+					
+					globalForm = form;
+					//form.setPristine(false);
+					form.nosubmit = true;
+					form.on('submit', function (submission) {
+						$('#formSubmit').attr('disabled','disabled');
+						
+						var userObject = submission.data;
+						console.log("B4 : userObject : " + JSON.stringify(userObject));
+
+						delete userObject["submit"];
+						delete userObject["addressProof1"];
+						delete userObject["registeredNurseDocument1"];
+						delete userObject["recentPicture1"];
+						delete userObject["addressProofPic"];
+						delete userObject["termsAndCondition"];
+						delete userObject["socialMedia"];
+						delete userObject["person"];
+						delete userObject["payment"];
+						delete userObject["paymentStatus"];
+						delete userObject["role"];
+						delete userObject["specialSkills"];
+						delete userObject["maritalStatus1"];
+						delete userObject["birthDate1"];
+						delete userObject["anniversaryDate1"];
+						delete userObject["isMember"];
+						
+						userObject["departmentName"] = docvars.departmentName;
+						userObject["userName"] = docvars.userName;
+						userObject["approvedDate"] = now();
+						//userObject["receiptNo"] = "";
+						userObject["active"] = true;
+						
+						console.log("AF : userObject : " + JSON.stringify(userObject))
+						
+						var handlerName =  'handlerMembershipWithArgs';
+						
+						if(!isMember){
+							showLoader('show');
+							if(!userObject.membershipStatus){
+								userObject["membershipStatus"] = "Under Review";
+							}
+							fetchAPI(filing_URL, options(JSON.stringify(userObject), isMember), handlerName).then(response => {
+								showLoader('hide');
+								if(!response.hasOwnProperty('errorCode')){
+									form.emit('submitDone', 'Create Success')
+								}else{
+									form.emit('submitError', response.message);
+								}
+							}).catch(function(error) {
+								console.log("error fetch",error);
+							});
+						}else{
+							showLoader('show');
+							fetchAPI(filing_URL +"/"+ userObject.membershipId, options(JSON.stringify(userObject), isMember), handlerName).then(response => {
+								showLoader('hide');
+								if(!response.hasOwnProperty('errorCode')){
+									form.emit('submitDone', 'Update Success')
+								}else{
+									form.emit('submitError', response.message)
+								}
+							}).catch(function(error) {
+								console.log("error fetch",error);
+							});
+						}
+
+					});
+
+					$('[data-toggle="selectize"]').each(function(){
+						console.log('selectize');
+						 var srcElement = this;
+						 
+						 var formComponent 	= form.getComponent(srcElement.id.split("-")[1]);
+						 var allowEmptyObj 	= true;
+						 var maxItemsObj 	= 1;
+						 var pluginsObj  	= [];
+						 
+						 var dataModeObj    = formComponent.component.attributes["data-mode"];
+						 var labelFieldObj  = formComponent.component.properties.labelField 	?? 'label';
+						 var valueFieldObj  = formComponent.component.properties.valueField 	?? 'value';
+						 var searchFieldObj = formComponent.component.properties.searchField ? formComponent.component.properties.searchField.split(','): ['label','id'];
+						 var renderExtObj	= formComponent.component.properties.renderextra 	?? null;
+						 
+						 if (dataModeObj ==="multi"){
+								maxItemsObj = null;
+								pluginsObj.push("remove_button");
+								allowEmptyObj = false;
+						 }
+						
+						 $(this).selectize({
+								plugins: pluginsObj,
+								maxItems: maxItemsObj,
+								hideSelected : true,
+								placeholder : 'Select',
+								allowEmptyOption : false,
+								persist: false,
+								onChange: function(value, isOnInitialize) {
+								console.log(value);
+									globalForm.submission.data[this.$input[0].id.split("-")[1]] = value;
+									
+									if($('label[for="'+this.$input[0].id+'-selectized"]').hasClass("field-required")){
+										form.checkValidity(form.submission.data);
+									} 
+								},
+								create: false,
+								labelField: labelFieldObj,
+								valueField: valueFieldObj,
+								searchField : searchFieldObj,
+								options : JSON.parse(formComponent.component.properties.datasource),
+								render: {
+									item: function(item, escape) {
+										if (renderExtObj && isValidJSON(renderExtObj)) {
+											parsedRender = JSON.parse(renderExtObj);
+											ctnt = "";
+											ctnt += "<span>";
+											$.each(parsedRender, function(index,value){
+												if (value.active){
+													if (value.type==='img'){
+														ctnt += '<img src="'+escape(item[value.field])+'" style="'+escape(value.style)+'">';
+													} else if (value.type==='span'){
+														ctnt += '<span style="'+escape(value.style)+'"> ';
+														ctnt += value.appender ?? "";
+														ctnt += escape(item[value.field]);
+														ctnt += '</span>';
+													}
+												}
+											});
+											ctnt += "&nbsp;"
+											ctnt += escape(item[labelFieldObj])
+											ctnt += "</span>";
+											console.log("ctnt "+ctnt);
+											return dataModeObj ==="multi" ? "<div>"+ctnt+"</div>" : ctnt;
+										} else {
+											ctnt = (item[labelFieldObj] ? '<span class="name">' + escape(item[labelFieldObj]) + '</span>' : '')
+											return dataModeObj ==="multi" ? "<div>"+ctnt+"</div>" : ctnt;
+										}
+										return 
+										
+									},
+									option: function(item, escape) {
+										if (renderExtObj && isValidJSON(renderExtObj)) {
+											parsedRender = JSON.parse(renderExtObj);
+											ctnt = "";
+											ctnt += "<span>";
+											$.each(parsedRender, function(index,value){
+												if (value.active){
+													if (value.type==='img'){
+														ctnt += '<img src="'+escape(item[value.field])+'" style="'+escape(value.style)+'">';
+													} else if (value.type==='span'){
+														ctnt += '<span style="'+escape(value.style)+'"> ';
+														ctnt += value.appender ?? "";
+														ctnt += escape(item[value.field]);
+														ctnt += '</span>';
+													}
+												}
+											});
+											ctnt += "&nbsp;"
+											ctnt += escape(item[labelFieldObj])
+											ctnt += "</span>";
+											console.log("ctnt "+ctnt);
+											return "<div>"+ctnt+"</div>";
+										} else {
+											ctnt = (item[labelFieldObj] ? '<span class="name">' + escape(item[labelFieldObj]) + '</span>' : '')
+											console.log("ctnt "+ctnt);
+											return "<div>"+ctnt+"</div>";
+										}
+									}
+								}
+							});
+							console.log('selectize complete');
+					 });
+
+					$.each($('div[class*="selectize-control"]'), function () {
+						$(this).removeClass("form-control");
+					});
+					$.each($('div[class*="selectize-dropdown"]'), function () {
+						$(this).removeClass("form-control");
+					});
+					form.on('redraw', () => {
+						form.triggerChange();
+					});
+				});
+
+		});
+
+		$(window).on('load', function () {
+			$('input[data-toggle="selectize"]').attrchange({
+				trackValues: true,
+				callback: function (event) {
+					if (event.attributeName === "class") {
+						console.log("Changed " + event.attributeName + ", from " + event.oldValue + " - " + event.newValue);
+						if ($(this).hasClass("is-invalid")) {
+							$("#" + this.id + "-selectized").parent().addClass("selectize-custom-err");
+						} else {
+							$("#" + this.id + "-selectized").parent().removeClass("selectize-custom-err");
+						}
+					}
+				}
+			});
+		});
+		
+		$(window).on('load', function () {
+			showLoader('hide');
+		});
+		
+		function editObject(formObj, isMember){
+				var json = JSON.parse(formObj.data);
+				console.log(json);
+				var docvars = getUrlVars();
+				
+				if (!isMember) {
+					console.log('if');
+					if (docvars.loggedInRole.toLowerCase() == "user") {
+						json["recommendedBy"] = "User";
+					} else {
+						json["recommendedBy"] = "Supervisor";
+					}
+					console.log('json.addressProof',json.addressProof);
+					if(json.addressProof != null){
+						json["addressProof1"] = JSON.parse(json.addressProof);
+					}else{
+						json["addressProof1"] = [];
+					}
+					
+				}else {
+					console.log('else');
+					json["socialMedia"] = json.referredByValue;
+					json["person"] = json.referredByValue;
+					json["termsAndCondition"] = true;
+					
+					if(json.registeredNurseDocument != null){
+						json["registeredNurseDocument1"] = JSON.parse(json.registeredNurseDocument);
+					}else{
+						json["registeredNurseDocument1"] = [];
+					}
+					if(json.recentPicture != null){
+						json["recentPicture1"] = JSON.parse(json.recentPicture);
+					}else{
+						json["recentPicture1"] = [];
+					}
+					if(json.addressProof != null){
+						json["addressProof1"] = JSON.parse(json.addressProof);
+					}else{
+						json["addressProof1"] = [];
+					}
+					if(json.identifyProofFront != null){
+						json["identifyProofFront1"] = JSON.parse(json.identifyProofFront);
+					}else{
+						json["identifyProofFront1"] = [];
+					}
+					if(json.identifyProofBack != null){
+						json["identifyProofBack1"] = JSON.parse(json.identifyProofBack);
+					}else{
+						json["identifyProofBack1"] = [];
+					}					 
+					
+					if (docvars.loggedInRole.toLowerCase() == "user") {
+						json["recommendedBy"] = "User";
+					} else {
+						json["recommendedBy"] = "Supervisor";
+					}
+				}
+				
+				var otherInterests = {};
+				if(json.otherInterests != null && Array.isArray(json.otherInterests)){
+					for (i = 0; i < json.otherInterests.length; i++) {
+					  otherInterests[json.otherInterests[i]] = true; 
+					}
+				}
+				
+				json["anniversaryDate1"] = json.anniversaryDate;
+				json["birthDate1"] = json.birthDate;
+				json["personName"] = json.referredByValue;
+				json["socialMedia"] = json.referredByValue;
+				json["specialSkills"] = otherInterests;
+				json["memberStatus"] = json.membershipStatus;
+				if(json.maritalStatus != "married" && json.maritalStatus != "unmarried" && json.maritalStatus != "divorced" ){
+					json["maritalStatus1"] = "others";
+					json["others"] = json.maritalStatus;
+				}
+				if(json.receiptNo != null && json.receiptNo != ''){
+					json["payment"] = true;
+					json["paymentStatus"] = "success";
+				}
+				json["role"] = docvars.loggedInRole;
+				json["isMember"] = isMember;
+				console.log(json);
+			return json;
+		}
+
+		
+		function isValidJSON(str) {
+			try {
+					JSON.parse(str);
+				} catch (e) {
+					console.log("JSON Parsing error ["+str+"]\n"+e);
+					return false;
+				}
+			return true;
+		}
+		
+		function now(){
+			return new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString().split('.')[0];
+		}
+		
+		var payee =  async function payButton(data) {
+			console.log('payButton',data);
+			var description;
+			var oneTimeRegistrationFees = 250;
+			if(data.renewalEligible){
+				oneTimeRegistrationFees = 0;
+				description = "Membership Renewal Fee for "+ data.userFullName;
+			}else{
+				description = "Membership Fee for "+ data.userFullName;
+			}
+			var json = {"totalAmount":data.fees + oneTimeRegistrationFees, "payeePhoneNumber":data.countryCodeValueHome + data.homeNumber,"payeeName":data.userFullName,"payeeEmail":data.emailId,"paymentDescription":description};
+			console.log(json, data.isMember);
+			console.log('flutterPlatformReady',flutterPlatformReady);
+			let transaction = null;
+				if(flutterPlatformReady){
+					await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await function(data) {
+						console.log("handlerPayResponseWithArgs" + JSON.stringify(data)); 
+						//window.alert("data" + JSON.stringify(data));
+						if(Array.isArray(data.response)){
+							data["response"] = data.response[0];
+								//window.alert('array'+data);
+							}
+						var receiptNo = null;
+						var paymentMode = null;
+						var transactionStatus = null;
+						if(data.response){
+							receiptNo = data.response.transactionId;
+							paymentMode = data.response.paymentMode;
+							transactionStatus = data.response.transactionStatus;
+						}
+						if(!data.response && !data.isCancelled && getUrlVars().loggedInRole == 'user'){
+							paymentMode = 'CASH';
+							transactionStatus = 'success';
+						}
+						
+						if(data.receiptNumber){
+							//window.alert("null"+data.receiptNumber);
+							receiptNo = data.receiptNumber;
+						}
+						
+						//window.alert(receiptNo);
+						transaction = { "receiptNo" :receiptNo, "paymentMode" :paymentMode, "paymentStatus" :transactionStatus };
+						
+						});
+						data["receiptNo"] = transaction.receiptNo;
+						data["paymentMode"] = transaction.paymentMode;
+						data["paymentStatus"] = transaction.paymentStatus;
+						if(data.paymentStatus === 'success'){
+							data["membershipStatus"] = 'Pending Approval';
+							data["memberStatus"] = 'Pending Approval';
+						}
+					return data;
+				}else{
+					transaction = { "receiptNo" :"12345", "paymentMode" :"CASH", "paymentStatus" :"success" };
+					data["receiptNo"] = transaction.receiptNo;
+					data["paymentMode"] = transaction.paymentMode;
+					data["paymentStatus"] = transaction.paymentStatus;
+					if(data.paymentStatus === 'success'){
+						data["membershipStatus"] = 'Pending Approval';
+						data["memberStatus"] = 'Pending Approval';
+					}
+					return data;
+				}
+		}
+		
+		function getFormObj(URL){
+			var formObj = {};
+			var Success;
+			$.ajax({
+				  url: URL,
+				  type : "GET",
+				  async : false,
+				  success: function(result){
+					  formObj['data'] =  JSON.stringify(result);
+				  },
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  },
+				  error: function (textStatus) {
+					  console.log(textStatus);
+					  if(textStatus.status == 0){
+						alert("Network error");
+					  }
+					  
+					  formObj['data'] =  textStatus.responseJSON;
+				  }
+			});
+			return formObj;
+		}
+		
+		function getFormComp(URL){
+			var formDefinition = null;
+			$.ajax({
+				  url: URL,
+				  type : "GET",
+				  async : false,
+				  success: function(result){
+				  var parsedForm = result.formioDefinition.Definition
+				  for (i = 0; i < parsedForm.length; i++) {
+					  var form = parsedForm[i];
+					  if(form.formName == 'membership'){
+						 formDefinition =  JSON.parse(form.formDefinition);
+					  }
+					}
+				  console.log("formDefinition "+JSON.stringify(formDefinition));
+				  },
+				  beforeSend: function(request){
+					request.setRequestHeader("clientid", clientId);
+					showLoader('show');
+				  },
+				  complete: function(){
+					showLoader('hide');
+				  }});
+			return formDefinition;
+		}
+
+		function options(formdata, isMember){
+			var restMethod;
+			if(isMember){
+				restMethod = 'PUT';
+			}else{
+				restMethod = 'POST';
+			}
+			var options = { method: restMethod, body: formdata, redirect: 'follow', headers: new Headers({'content-type': 'application/json', 'clientid':clientId}) };
+			console.log('options',options);
+			return options;
+		}
+		
+		var fetchAPI = async function (url, requestOptions, handlerName) {
+			let response = await fetch(url, requestOptions)
+			console.log('response', JSON.stringify(response));
+			if (response.ok) {
+				let json = await response.json();
+				console.log('response body', json);
+				try {
+					if(flutterPlatformReady){
+						window.flutter_inappwebview.callHandler(handlerName, response.status, json);
+					}
+				} catch (e) {
+					console.log("flutter_inappwebview error");
+				}
+				return json;
+			} else {
+				let json = await response.json();
+				console.log('error', json.message, json.errorCode);
+				try {
+					if(flutterPlatformReady){
+						window.flutter_inappwebview.callHandler(handlerName, response.status, json);
+					}
+				} catch (e) {
+					console.log("flutter_inappwebview error");
+				}
+				return json;
+			}
+		}
+		
+		function disable(id) {
+			var comp = document.querySelectorAll("[id^="+id+"]");
+			for (var i = 0; i < comp.length; i++) {
+				comp[i].disabled = true;
+			}
+			document.getElementById(id).disabled = true;
+			$('#'+id).addClass('disable');
+		}
+		
+		function showComponent(value, status) {
+			if(status){
+			  $('input[type="radio"][value="'+value+'"]').prop('disabled', false);
+			}else{
+			  $('input[type="radio"][value="'+value+'"]').prop('disabled', true);
+			}
+		}
+		
+		function enable(id) {
+			document.addEventListener("DOMContentLoaded", function(event) {
+			  document.getElementById(id).disabled = false;
+			  $('#'+id).removeClass('disable');
+			});
+		}
+				
+		function showLoader(loader){
+			if(loader == 'show'){
+				$(".loader").show();
+				$("#builder").addClass('hide');
+			}else{
+				$(".loader").hide();
+				$("#builder").removeClass('hide');
+			}
+		}
+		
+      </script>
+      <link href="../assets/dist/css/poopins/poopins.css" rel="stylesheet">
+   </head>
+   <body style="padding:10px;background-color: #dde0e0;">
+      <div id="wrapper">
+         <div id="initScreen" style="display: block;">
+            <div class="section" id="a67a329f1c344dfd887b3efc8a413ed3">
+			   <span class="loader"></span>
+               <div class="screen" id="survey-screen-1" style="background-color: rgb(245, 249, 250);">
+                  <div class="main-container">
+                     <div id="survey-section" class="">
+                        <div class="survey-sub-screen multiplechoice-question-component" id="survey-sub-screen-half-n-half">
+                           <div class="head">
+                           </div>
+                           <div class="question-answer-row" id="section" style="padding-left:10px;padding-right:10px;">
+                              <div class="question-answer-cell">
+                                 <div id='builder'></div>
+                              </div>
+                           </div>
+                        </div>
+                     </div>
+                     <div class="footer-row">
+                        <div class="footer hide-submit">
+                           <div id="logo-container">
+                              <img style="width:50px;height:40px;" id="logo" src="https://static.wixstatic.com/media/eaa914_9cf3646c1306425db2dc5191490521f2~mv2.png/v1/crop/x_0,y_21,w_340,h_274/fill/w_121,h_96,al_c,q_85,usm_0.66_1.00_0.01/logo_edited.webp" alt="Logo" class="">
+                           </div>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div id="main-error-container" class="hidden">
+            <div id="error-message">Something went wrong. Please retry.</div>
+            <div id="retry-button">Retry</div>
+         </div>
+      </div>
+   </body>
+</html>
