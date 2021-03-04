@@ -116,12 +116,13 @@
 			
 			var formObj = null;
 			var isUser = true;
-			var userUrl = "https://qa.servicedx.com/admin/departments/formio/"+docvars.departmentName+"/users/"+docvars.userName;
-			var formid = docvars.formId;	
+			var formid = 'f22a125e-fbdf-49df-b16b-6da5a0ce8939';
 			var formDefinition = getFormComp("https://qa.servicedx.com/filing/form/{id}?id=" +formid);
-			var userData = getUserData("https://qa.servicedx.com/filing/formInfo/{id}?id="+docvars.id);
+			//var userData = getUserData("https://qa.servicedx.com/filing/formInfo/{id}?id="+docvars.id);
+			var userData = getUserData("https://qa.servicedx.com/filing/formData/userName/"+docvars.userName+"/department/"+docvars.departmentName);
+			var id = userData.id;
 			
-			populateTable(userData);
+			populateTable(JSON.parse(userData.formJson));
 			 
 			Formio.createForm(document.getElementById('builder'), formDefinition)
 				.then(function (form) {
@@ -155,7 +156,7 @@
 				    	};
 						
 						
-							fetchAPI("https://qa.servicedx.com/filing/CampaignFormData/update/"+docvars.id, requestOptions).then(response => {
+							fetchAPI("https://qa.servicedx.com/filing/CampaignFormData/update/"+id, requestOptions).then(response => {
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Create Success')
 									$('#formSubmit').attr('disabled','disabled');
@@ -371,11 +372,8 @@
 				  type : "GET",
 				  async : false,
 				  success: function(result){
-				  userData =  JSON.parse(result.formJson);
-				  console.log(userData.survey.asAPassengerInACarForAnHour);
-				  
-				  console.log(userData);
-		
+				 // userData =  JSON.parse(result.formJson);
+				 userData =  result;
 				  
 			}});
 			return userData;
@@ -634,6 +632,7 @@
 									<td id="restInAfternoon"></td>
 								  </tr>
 								  
+								 
 								  
 								   <tr>
 									<th>Sitting And Talking To Someone</th>
