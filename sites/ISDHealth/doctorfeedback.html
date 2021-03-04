@@ -385,32 +385,32 @@
 		
 		function populateTable(userData){
 		
-		document.getElementById("firstname").innerHTML =  userData.address;
-		document.getElementById("lastname").innerHTML =  userData.lastName;
+		document.getElementById("firstName").innerHTML =  userData.address;
+		document.getElementById("lastName").innerHTML =  userData.lastName;
 		document.getElementById("email").innerHTML =  userData.email;
 		document.getElementById("address").innerHTML =  userData.address;
 		document.getElementById("phone").innerHTML =  userData.cellNumber;
 		document.getElementById("city").innerHTML =  userData.cityTown;
 		document.getElementById("country").innerHTML =  userData.country1;
 		document.getElementById("insurance").innerHTML =  userData.healthInsurance1;
-		document.getElementById("insurancename").innerHTML =  userData.policyNumber;
+		document.getElementById("insuranceName").innerHTML =  userData.policyNumber;
 		document.getElementById("height").innerHTML =  userData.height;
 		document.getElementById("weight").innerHTML =  userData.weight;
 		document.getElementById("age").innerHTML =  userData.age;
 		
-		document.getElementById("sittingandreading").innerHTML =  userData.survey.sittingAndReading;
-		document.getElementById("Watchingtv").innerHTML =  userData.survey.watchingTv;
-		document.getElementById("sittinginpublic").innerHTML =  userData.survey.sittingInactiveInAPublicPlace;
-		document.getElementById("intraffic").innerHTML =  userData.survey.whileStoppedForAFewMinutesInTheTraffic;
-		document.getElementById("passengerincar").innerHTML =  userData.survey.asAPassengerInACarForAnHour;
-		document.getElementById("restinafternoon").innerHTML =  userData.survey.lyingDownToRestInTheAfternoon;
-		document.getElementById("takingtosomeone").innerHTML =  userData.survey.sittingAndTalkingToSomeone;
-		document.getElementById("afterlunch").innerHTML =  userData.survey.sittingAfterALunchWithoutAlcohol;
+		document.getElementById("sittingAndReading").innerHTML =  userData.survey.sittingAndReading;
+		document.getElementById("WatchingTv").innerHTML =  userData.survey.watchingTv;
+		document.getElementById("sittingInPublic").innerHTML =  userData.survey.sittingInactiveInAPublicPlace;
+		document.getElementById("inTraffic").innerHTML =  userData.survey.whileStoppedForAFewMinutesInTheTraffic;
+		document.getElementById("passengerInCar").innerHTML =  userData.survey.asAPassengerInACarForAnHour;
+		document.getElementById("restInAfternoon").innerHTML =  userData.survey.lyingDownToRestInTheAfternoon;
+		document.getElementById("takingToSomeone").innerHTML =  userData.survey.sittingAndTalkingToSomeone;
+		document.getElementById("afterLunch").innerHTML =  userData.survey.sittingAfterALunchWithoutAlcohol;
 		
-		document.getElementById("havepacemaker").innerHTML =  userData.doYouHaveAPaceMaker;
-		document.getElementById("troublestayingawake").innerHTML =  userData.doYouHaveTroubleStayingAwake;
-		document.getElementById("troublestayingasleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
-		document.getElementById("sleepduration").innerHTML =  userData.howLongDoYouSleepInADay;
+		document.getElementById("havePacemaker").innerHTML =  userData.doYouHaveAPaceMaker;
+		document.getElementById("troubleStayingAwake").innerHTML =  userData.doYouHaveTroubleStayingAwake;
+		document.getElementById("troubleStayingAsleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
+		document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
 		
 		  var symptoms = [];
 		   for (var p in userData.doYouCurrentlySufferAnyOfTheFollowingConditions) {
@@ -418,10 +418,13 @@
 	          symptoms.push(p);
 			}
 		  }  
-	
+	  document.getElementById("symptoms").innerHTML = symptoms;
 		
 		}
 		
+		 
+		 
+								 
 		 
 
 		function options(formdata, isUser){
@@ -546,8 +549,8 @@
 								  </tr>
 								  
 								  <tr>
-									<td id="firstname"></td>
-									<td id="lastname"></td>
+									<td id="firstName"></td>
+									<td id="lastName"></td>
 								  </tr>
 								  
 								  <tr>
@@ -597,7 +600,7 @@
 								  
 								   <tr>
 									<td id="insurance"></td>
-									<td id="insurancename"></td>
+									<td id="insuranceName"></td>
 								  </tr>
 								  
 								   <tr>
@@ -606,8 +609,8 @@
 								 </tr>
 								  
 								   <tr>
-									<td id="sittingandreading"></td>
-									<td id="Watchingtv"></td>
+									<td id="sittingAndReading"></td>
+									<td id="WatchingTv"></td>
 								  </tr>
 								  
 								   <tr>
@@ -616,8 +619,8 @@
 								 </tr>
 								  
 								   <tr>
-								   <td id="sittinginpublic"></td>
-									<td id="intraffic"></td>
+								   <td id="sittingInPublic"></td>
+									<td id="inTraffic"></td>
 								  </tr>
 								  
 								  
@@ -627,8 +630,8 @@
 								  </tr>
 								  
 								   <tr>
-									 <td id="passengerincar"></td>
-									<td id="restinafternoon"></td>
+									 <td id="passengerInCar"></td>
+									<td id="restInAfternoon"></td>
 								  </tr>
 								  
 								  
@@ -638,8 +641,8 @@
 								  </tr>
 								  
 								   <tr>
-									 <td id="takingtosomeone"></td>
-									<td id="afterlunch"></td>
+									 <td id="takingToSomeone"></td>
+									<td id="afterLunch"></td>
 								  </tr>
 								  
 								 
@@ -649,8 +652,8 @@
 								  </tr>
 								  
 								   <tr>
-									 <td id="havepacemaker"></td>
-									<td id="troublestayingawake"></td>
+									 <td id="havePacemaker"></td>
+									<td id="troubleStayingAwake"></td>
 								  </tr>
 								  
 								  <tr>
@@ -660,8 +663,8 @@
 								  </tr>
 								  
 								   <tr>
-									 <td id="troublestayingasleep"></td>
-									<td id="sleepduration"></td>
+									 <td id="troubleStayingAsleep"></td>
+									<td id="sleepDuration"></td>
 								  </tr>
 								 
 								   <tr>
