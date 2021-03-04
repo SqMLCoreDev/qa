@@ -48,6 +48,7 @@
 			
 			var filing_URL = "https://qa.servicedx.com/filing/membership/formio";
 			//var filing_URL = "http://localhost:9104/filing/membership/formio";
+			//var filing_URL = "http://localhost:9104/filing/membership/formio";
 			var formDefinitionUrl = "https://qa.servicedx.com/admin/departments/" + formDefinitionDept;
 			var membershipUrl = filing_URL + "/departments/"+docvars.departmentName+"/users/"+docvars.userName;
 			var membershipByIdUrl = filing_URL + "/membership_id/"+docvars.membershipId;
@@ -126,15 +127,7 @@
 						delete userObject["anniversaryDate1"];
 						delete userObject["isMember"];
 						
-						//delete userObject["identifyProofFront1"];
-						//delete userObject["identifyProofBack1"];
-						//delete userObject["identifyProofFront"];
-						//delete userObject["identifyProofBack"];
-						
-						if(userObject.departmentName != userObject.subDepartment){
-							userObject["oldDepartmentName"] = userObject.departmentName;
-						}
-						userObject["departmentName"] = userObject["subDepartment"];
+						userObject["departmentName"] = docvars.departmentName;
 						userObject["userName"] = docvars.userName;
 						userObject["approvedDate"] = now();
 						//userObject["receiptNo"] = "";
@@ -380,9 +373,14 @@
 				}
 				
 				var specialSkills = {};
+				var skillsList = [ "medical", "legal", "accounts", "itGraphicalDesign", "marketingCommunication", "fitnessNutrition", "others" ];
 				if(json.specialSkills != null && Array.isArray(json.specialSkills)){
 					for (i = 0; i < json.specialSkills.length; i++) {
 					  specialSkills[json.specialSkills[i]] = true; 
+					  if(!skillsList.includes(json.specialSkills[i])){
+						console.log("not inc",json.specialSkills[i]);
+						json["otherHobbies"] = json.specialSkills[i];
+					  }
 					}
 				}
 				
@@ -397,6 +395,7 @@
 					json["maritalStatus1"] = "others";
 					json["others"] = json.maritalStatus;
 				}
+				
 				if(json.receiptNo != null && json.receiptNo != ''){
 					json["payment"] = true;
 					json["paymentStatus"] = "success";
