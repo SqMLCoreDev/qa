@@ -82,9 +82,18 @@
 		.form-control.is-invalid, .was-validated .form-control:invalid {
 		  background-position: right calc(.375em + 0.5875rem) center !important;
 		}
+		
+		table, th, td {
+  border: 1px solid black;
+}
+
+
+
        </style>
+	 
 	   
-	   
+	 
+	 
        <script>
 		var globalForm = null;
 		var flutterPlatformReady = false;
@@ -105,13 +114,15 @@
 				flutterPlatformReady = true;
 			});
 			
-			var formDefinitionDept = "US-Embassy-Usersignup";
 			var formObj = null;
 			var isUser = true;
 			var userUrl = "https://qa.servicedx.com/admin/departments/formio/"+docvars.departmentName+"/users/"+docvars.userName;
 			var formid = docvars.formId;	
 			var formDefinition = getFormComp("https://qa.servicedx.com/filing/form/{id}?id=" +formid);
+			var userData = getUserData("https://qa.servicedx.com/filing/formInfo/{id}?id="+docvars.id);
 			
+			populateTable(userData);
+			 
 			Formio.createForm(document.getElementById('builder'), formDefinition)
 				.then(function (form) {
 					console.log(formObj,isUser);
@@ -126,7 +137,7 @@
 					form.on('submit', function (submission) {
 
 						var submissionObject = submission.data;
-						console.log("B4 : submissionObject : " + JSON.stringify(submissionObject));
+						//console.log("B4 : submissionObject : " + JSON.stringify(submissionObject));
 
 						delete submissionObject["submit"];
 						
@@ -347,11 +358,71 @@
 				  async : false,
 				  success: function(result){
 				  formDefinition =  JSON.parse(result.adminFormDefinition);
-				  console.log("formDefinition "+JSON.stringify(formDefinition));
+				 // console.log("formDefinition "+JSON.stringify(formDefinition));
 			}});
 			return formDefinition;
 		}
 		
+		
+		function getUserData(URL){
+			var userData = null;
+			$.ajax({
+				  url: URL,
+				  type : "GET",
+				  async : false,
+				  success: function(result){
+				  userData =  JSON.parse(result.formJson);
+				  console.log(userData.survey.asAPassengerInACarForAnHour);
+				  
+				  console.log(userData);
+		
+				  
+			}});
+			return userData;
+		}
+		
+		
+		
+		function populateTable(userData){
+		
+		document.getElementById("firstname").innerHTML =  userData.address;
+		document.getElementById("lastname").innerHTML =  userData.lastName;
+		document.getElementById("email").innerHTML =  userData.email;
+		document.getElementById("address").innerHTML =  userData.address;
+		document.getElementById("phone").innerHTML =  userData.cellNumber;
+		document.getElementById("city").innerHTML =  userData.cityTown;
+		document.getElementById("country").innerHTML =  userData.country1;
+		document.getElementById("insurance").innerHTML =  userData.healthInsurance1;
+		document.getElementById("insurancename").innerHTML =  userData.policyNumber;
+		document.getElementById("height").innerHTML =  userData.height;
+		document.getElementById("weight").innerHTML =  userData.weight;
+		document.getElementById("age").innerHTML =  userData.age;
+		
+		document.getElementById("sittingandreading").innerHTML =  userData.survey.sittingAndReading;
+		document.getElementById("Watchingtv").innerHTML =  userData.survey.watchingTv;
+		document.getElementById("sittinginpublic").innerHTML =  userData.survey.sittingInactiveInAPublicPlace;
+		document.getElementById("intraffic").innerHTML =  userData.survey.whileStoppedForAFewMinutesInTheTraffic;
+		document.getElementById("passengerincar").innerHTML =  userData.survey.asAPassengerInACarForAnHour;
+		document.getElementById("restinafternoon").innerHTML =  userData.survey.lyingDownToRestInTheAfternoon;
+		document.getElementById("takingtosomeone").innerHTML =  userData.survey.sittingAndTalkingToSomeone;
+		document.getElementById("afterlunch").innerHTML =  userData.survey.sittingAfterALunchWithoutAlcohol;
+		
+		document.getElementById("havepacemaker").innerHTML =  userData.doYouHaveAPaceMaker;
+		document.getElementById("troublestayingawake").innerHTML =  userData.doYouHaveTroubleStayingAwake;
+		document.getElementById("troublestayingasleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
+		document.getElementById("sleepduration").innerHTML =  userData.howLongDoYouSleepInADay;
+		
+		  var symptoms = [];
+		   for (var p in userData.doYouCurrentlySufferAnyOfTheFollowingConditions) {
+		    if(userData.doYouCurrentlySufferAnyOfTheFollowingConditions[p]== true){
+	          symptoms.push(p);
+			}
+		  }  
+	  document.getElementById("symptoms").innerHTML = symptoms;
+		
+		}
+		
+		 
 
 		function options(formdata, isUser){
 			var restMethod;	
@@ -456,6 +527,7 @@
           <div id="loader" class="hidden">
              <div id="loaderCircle"></div>
           </div>
+		  
           <div id="initScreen" style="display: block;">
              <div class="section" id="a67a329f1c344dfd887b3efc8a413ed3">
                 <div class="screen" id="survey-screen-1" style="background-color: rgb(245, 249, 250);">
@@ -464,7 +536,150 @@
                          <div class="survey-sub-screen multiplechoice-question-component" id="survey-sub-screen-half-n-half">
                             <div class="head">
                             </div>
+						
                             <div class="question-answer-row" id="section" style="padding-left:10px;padding-right:10px;">
+							<div style="overflow-x:auto;">
+								<table >
+								  <tr>
+									<th>Firstname</th>
+									<th>Lastname</th> 
+								  </tr>
+								  
+								  <tr>
+									<td id="firstname"></td>
+									<td id="lastname"></td>
+								  </tr>
+								  
+								  <tr>
+								    <th>Email</th>
+									<th>Age</th>
+								  </tr>
+								  
+								  <tr>
+								    <td id="email"></td>
+									<td id="age"></td>
+								  </tr>
+								  
+								  <tr>
+								    <th>Weight</th>
+								    <th>Height</th>
+								 </tr>
+								 
+								 <tr>
+								    <td id="weight"></td>
+									<td id="height"></td>
+								  </tr>
+								  
+								   <tr>
+								   <th>Address</th>
+									<th>country</th>
+								 </tr>
+								 
+								 <tr>
+									<td id="address"></td>
+									<td id="country"></td>
+								  </tr>
+								  
+								  <tr>
+									<th>City</th>
+								    <th>Cell Phone</th>
+								 </tr>
+								  
+								   <tr>
+									<td id="city"></td>
+									<td id="phone"></td>
+								  </tr>
+								 
+								   <tr>
+									<th>Health insurance</th>
+									<th>Health insurance Name</th>
+								 </tr>
+								  
+								   <tr>
+									<td id="insurance"></td>
+									<td id="insurancename"></td>
+								  </tr>
+								  
+								   <tr>
+									 <th>Sitting and reading</th>
+									<th>Watching TV</th>
+								 </tr>
+								  
+								   <tr>
+									<td id="sittingandreading"></td>
+									<td id="Watchingtv"></td>
+								  </tr>
+								  
+								   <tr>
+									<th>Sitting, inactive in a public place</th>
+									<th>While stopped for a few minutes in the traffic</th>
+								 </tr>
+								  
+								   <tr>
+								   <td id="sittinginpublic"></td>
+									<td id="intraffic"></td>
+								  </tr>
+								  
+								  
+								  <tr>
+									<th>As a passenger in a car for an hour</th>
+									<th>Lying down to rest in the afternoon</th>
+								  </tr>
+								  
+								   <tr>
+									 <td id="passengerincar"></td>
+									<td id="restinafternoon"></td>
+								  </tr>
+								  
+								  
+								   <tr>
+									<th>Sitting And Talking To Someone</th>
+									<th>Sitting After A Lunch Without Alcohol</th>
+								  </tr>
+								  
+								   <tr>
+									 <td id="takingtosomeone"></td>
+									<td id="afterlunch"></td>
+								  </tr>
+								  
+								 
+								  <tr>
+								   <th>Using Pace Maker?</th>
+									<th>Trouble staying awake?</th>
+								  </tr>
+								  
+								   <tr>
+									 <td id="havepacemaker"></td>
+									<td id="troublestayingawake"></td>
+								  </tr>
+								  
+								  <tr>
+									<th>Trouble staying asleep?</th>
+									<th>How long do you sleep in a day?</th>
+									
+								  </tr>
+								  
+								   <tr>
+									 <td id="troublestayingasleep"></td>
+									<td id="sleepduration"></td>
+								  </tr>
+								 
+								   <tr>
+								   <th colspan="5">other symptoms</th>
+								  </tr>
+								  
+								  <tr>
+									 <td colspan="5" id = "symptoms"> </td>
+								  </tr>
+									
+								  
+								  
+								</table>
+								</div>
+															
+															
+							
+							
                                <div class="question-answer-cell">
                                   <div id='builder'></div>
                                </div>
