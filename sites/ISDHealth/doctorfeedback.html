@@ -273,6 +273,7 @@ font-size: 13.5px;
 		  document.getElementById("troubleStayingAwake").innerHTML =  userData.doYouHaveTroubleStayingAwake;
 		  document.getElementById("troubleStayingAsleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
 		  document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
+	       	  document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
       
         var symptoms = [];
          for (var p in userData.doYouCurrentlySufferAnyOfTheFollowingConditions) {
@@ -474,6 +475,12 @@ font-size: 13.5px;
 							</tr>
 							<tr>
 							  <td colspan="5" id = "symptoms"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">Any other symptoms</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "anyOtherSymptoms"> </td>
 							</tr>
 						  </table>
 						</div>
