@@ -66,7 +66,8 @@ font-size: 13.5px;
       	var formObj = null;
 		
       	var isUser = true;
-      	var formid = 'f22a125e-fbdf-49df-b16b-6da5a0ce8939';
+      	//var formid = 'f22a125e-fbdf-49df-b16b-6da5a0ce8939';
+		var formid = docvars.formID;
       	var formDefinition = getFormComp("https://qa.servicedx.com/filing/form/{id}?id=" +formid);
       	//var userData = getUserData("https://qa.servicedx.com/filing/formInfo/{id}?id="+docvars.id);
       	var userData = getUserData("https://qa.servicedx.com/filing/formData/userName/"+docvars.userName+"/department/"+docvars.departmentName);
@@ -83,6 +84,13 @@ font-size: 13.5px;
       	
       	populateTable(JSON.parse(userData.formJson));
       	
+		 if((docvars.userCategory) == "PATIENT"){
+ 
+         document.getElementById('builder').setAttribute("style", "display:none");
+		 
+          }
+		
+		
       	Formio.createForm(document.getElementById('builder'), formDefinition)
       		.then(function (form) {
       			console.log(doctorObj,isUser);
