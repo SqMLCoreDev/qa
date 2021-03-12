@@ -278,6 +278,9 @@
 					json["paymentStatus"] = "success";
 				}
 				json["role"] = docvars.loggedInRole;
+				if(docvars.hasOwnProperty('mode')){
+					json["mode"] = docvars.mode;
+				}
 				json["isMember"] = isMember;
 				console.log(json);
 			return json;
