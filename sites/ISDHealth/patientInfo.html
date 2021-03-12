@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="generator" content="Jekyll v4.1.1">
-    <title>Doctor FeedBack</title>
+    <title>Patient Info</title>
     <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
     <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
     <link href="../assets/dist/css/custom-formio/theme.less.css" rel="stylesheet">
@@ -273,7 +273,7 @@ font-size: 13.5px;
 		  document.getElementById("troubleStayingAwake").innerHTML =  userData.doYouHaveTroubleStayingAwake;
 		  document.getElementById("troubleStayingAsleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
 		  document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
-	       	  document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
+		   document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
       
         var symptoms = [];
          for (var p in userData.doYouCurrentlySufferAnyOfTheFollowingConditions) {
@@ -471,12 +471,12 @@ font-size: 13.5px;
 							  <td id="sleepDuration"></td>
 							</tr>
 							<tr>
-							  <th colspan="5">Other Symptoms</th>
+							  <th colspan="5">other symptoms</th>
 							</tr>
 							<tr>
 							  <td colspan="5" id = "symptoms"> </td>
 							</tr>
-							<tr>
+									<tr>
 							  <th colspan="5">Any other symptoms</th>
 							</tr>
 							<tr>
@@ -487,7 +487,7 @@ font-size: 13.5px;
 					</div>
 					 <p style="height:20px!important">
                     <div class="question-answer-cell">
-                      <div id='builder'></div>
+                     
                     </div>
                   </div>
                 </div>
