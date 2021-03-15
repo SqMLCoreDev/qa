@@ -84,6 +84,7 @@ font-size: 13.5px;
       	var id = userData.id;
       	
       	populateTable(JSON.parse(userData.formJson));
+		populateDoctorTable(JSON.parse(userData.adminFormJson));
       		
 		 if((docvars.userCategory) == "PATIENT"){
  
@@ -292,6 +293,38 @@ font-size: 13.5px;
         }  
       	document.getElementById("symptoms").innerHTML = symptoms;
       }
+
+
+  
+	   function populateDoctorTable(userData){
+		  document.getElementById("referringPhysician").innerHTML =  userData.referringPhysician;
+		  document.getElementById("doctorAddress").innerHTML =  userData.address;
+		  document.getElementById("doctorCity").innerHTML =  userData.cityTown1;
+		  document.getElementById("doctorCountry").innerHTML =  userData.country;
+		  document.getElementById("doctorTelephone").innerHTML =  userData.telephone1;
+		  var studyRqst = [];
+         for (var p in userData.studyRequested) {
+          if(userData.studyRequested[p]== true){
+               studyRqst.push(p);
+      	}
+        }  
+		  
+		  document.getElementById("studyRequested").innerHTML =  studyRqst;
+		  
+		  
+		  var therapyRqst = [];
+         for (var p in userData.therapyRequested) {
+          if(userData.therapyRequested[p]== true){
+               therapyRqst.push(p);
+      	}
+        }  
+		  document.getElementById("therapyRequested").innerHTML =  therapyRqst;
+		  document.getElementById("referringPhysicianSignature").innerHTML =  userData.referringPhysicianSignature;
+		  document.getElementById("doctorDate").innerHTML =  userData.date;
+		 
+   
+      }
+
       
       function options(formdata, isUser){
       	var restMethod;
@@ -490,6 +523,64 @@ font-size: 13.5px;
 							</tr>
 							<tr>
 							  <td colspan="5" id = "anyOtherSymptoms"> </td>
+							</tr>
+														<tr>
+							  <th colspan="5">Doctor Information:</th>
+							</tr><br>
+							
+							<tr>
+							  <th colspan="5">Referring Physician</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "referringPhysician"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">Address</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "doctorAddress"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">City</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "doctorCity"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">Country</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "doctorCountry"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">Telephone</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "doctorTelephone"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">Study Requested</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "studyRequested"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">Therapy Requested</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "therapyRequested"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">Referring Physician Signature</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "referringPhysicianSignature"> </td>
+							</tr>
+							<tr>
+							  <th colspan="5">Date</th>
+							</tr>
+							<tr>
+							  <td colspan="5" id = "doctorDate"> </td>
 							</tr>
 						  </table>
 						</div>
