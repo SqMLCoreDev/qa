@@ -29,6 +29,7 @@
 		var globalForm = null;
 		var flutterPlatformReady = false;
 		var clientId;
+		var env = "qa";
 		
 		function getUrlVars() {
 			var vars = {};
@@ -50,7 +51,7 @@
 				clientId = docvars.clientId;
 			}
 			
-			var adminURL = "https://qa.servicedx.com/admin/departments/formio/";
+			var adminURL = "https://" + env + ".servicedx.com/admin/departments/formio/";
 			//var adminURL = "http://localhost:9100/admin/departments/formio/";
 			var formObj = null;
 			var isUser = true;
@@ -66,7 +67,7 @@
 				isUser = false;
 			}
 			
-			var formDefinition = getFormComp("https://qa.servicedx.com/admin/departments/" + formDefinitionDept);
+			var formDefinition = getFormComp("https://" + env + ".servicedx.com/admin/departments/" + formDefinitionDept);
 			
 			Formio.createForm(document.getElementById('builder'), formDefinition)
 				.then(function (form) {

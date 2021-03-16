@@ -28,6 +28,7 @@
 		var globalForm = null;
 		var flutterPlatformReady = false;
 		var clientId;
+		var env = "qa";
 		
 		function getUrlVars() {
 			var vars = {};
@@ -49,10 +50,10 @@
 				clientId = docvars.clientId;
 			}
 			
-			var filing_URL = "https://qa.servicedx.com/filing/membership/formio";
+			var filing_URL = "https://" + env + ".servicedx.com/filing/membership/formio";
 			//var filing_URL = "http://localhost:9104/filing/membership/formio";
 			//var filing_URL = "http://localhost:9104/filing/membership/formio";
-			var formDefinitionUrl = "https://qa.servicedx.com/admin/departments/" + formDefinitionDept;
+			var formDefinitionUrl = "https://" + env + ".servicedx.com/admin/departments/" + formDefinitionDept;
 			var membershipUrl = filing_URL + "/departments/"+docvars.departmentName+"/users/"+docvars.userName;
 			var membershipByIdUrl = filing_URL + "/membership_id/"+docvars.membershipId;
 			
@@ -423,7 +424,7 @@
 		
 		function getSubList(){
 			var defDept = getUrlVars().rootdepartmentName;
-			var url = "https://qa.servicedx.com/admin/departments/" + defDept + "/subdepartments?include_parent=true&minimum_info=true";
+			var url = "https://" + env + ".servicedx.com/admin/departments/" + defDept + "/subdepartments?include_parent=true&minimum_info=true";
 			var subList = [];
 			var subDept = getFormObj(url);
 			if(!subDept.data.hasOwnProperty('errorCode')){
