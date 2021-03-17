@@ -35,6 +35,12 @@ padding: 5px;
 text-align: center;
 }
 
+#doctorHeader {
+color: black;
+padding: 5px;
+text-align: center;
+}
+
 td {
 border-bottom-width: 5px!important;
 border-bottom-color: #dde0e02e;
@@ -90,6 +96,12 @@ font-size: 13.5px;
 		 if((docvars.userCategory) == "PATIENT"){
  
          document.getElementById('builder').setAttribute("style", "display:none");
+		 
+          }
+		  
+		  if((docvars.userCategory) == "DOCTOR"){
+ 
+         document.getElementById('doctorHeader').setAttribute("style", "display:none");
 		 
           }
 		
@@ -528,8 +540,8 @@ font-size: 13.5px;
 						
 						  </table>
 						</div>
-						<div id="patientHeader">Doctor FeedBack Form</div>
-						<div style="overflow-x:auto;">
+						<div id="doctorHeader">Doctor FeedBack Form
+						<div   style="overflow-x:auto;">
 						  <table>
 							<tr>
 							  <th colspan="5">Referring Physician</th>
@@ -577,6 +589,7 @@ font-size: 13.5px;
 							</tr>
 							
 						  </table>
+						</div>
 						</div>
 					</div>
 					 <p style="height:20px!important">
