@@ -99,13 +99,17 @@ font-size: 13.5px;
 		 
           }
 		  
-		  if((docvars.userCategory) == "DOCTOR"){
+		  if((docvars.userCategory) == "DOCTOR" && (docvars.feedback) != "edit"){
+ 
+         document.getElementById('builder').setAttribute("style", "display:none");
+		 
+          }
+		
+		 if((docvars.userCategory) == "DOCTOR" && (docvars.feedback) == "edit"){
  
          document.getElementById('doctorHeader').setAttribute("style", "display:none");
 		 
           }
-		
-		
       	Formio.createForm(document.getElementById('builder'), formDefinition)
       		.then(function (form) {
       			console.log(doctorObj,isUser);
