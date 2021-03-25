@@ -35,6 +35,12 @@ padding: 5px;
 text-align: center;
 }
 
+#doctorHeader {
+color: black;
+padding: 5px;
+text-align: center;
+}
+
 td {
 border-bottom-width: 5px!important;
 border-bottom-color: #dde0e02e;
@@ -92,8 +98,18 @@ font-size: 13.5px;
          document.getElementById('builder').setAttribute("style", "display:none");
 		 
           }
+		  
+		  if((docvars.userCategory) == "DOCTOR" && (docvars.feedback) != "edit"){
+ 
+         document.getElementById('builder').setAttribute("style", "display:none");
+		 
+          }
 		
-		
+		 if((docvars.userCategory) == "DOCTOR" && (docvars.feedback) == "edit"){
+ 
+         document.getElementById('doctorHeader').setAttribute("style", "display:none");
+		 
+          }
       	Formio.createForm(document.getElementById('builder'), formDefinition)
       		.then(function (form) {
       			console.log(doctorObj,isUser);
@@ -301,7 +317,7 @@ font-size: 13.5px;
 		  document.getElementById("referringPhysician").innerHTML =  userData.referringPhysician;
 		  document.getElementById("doctorAddress").innerHTML =  userData.address;
 		  document.getElementById("doctorCity").innerHTML =  userData.cityTown1;
-		  document.getElementById("doctorCountry").innerHTML =  userData.country;
+		  document.getElementById("doctorCountry").innerHTML =  userData.country.name;
 		  document.getElementById("doctorTelephone").innerHTML =  userData.telephone1;
 		  var studyRqst = [];
          for (var p in userData.studyRequested) {
@@ -525,10 +541,12 @@ font-size: 13.5px;
 							<tr>
 							  <td colspan="5" id = "anyOtherSymptoms"> </td>
 							</tr>
-														<tr>
-							  <th colspan="5">Doctor Information:</th>
-							</tr><br>
-							
+						
+						  </table>
+						</div>
+						<div id="doctorHeader">Doctor FeedBack Form
+						<div   style="overflow-x:auto;">
+						  <table>
 							<tr>
 							  <th colspan="5">Referring Physician</th>
 							</tr>
@@ -536,29 +554,23 @@ font-size: 13.5px;
 							  <td colspan="5" id = "referringPhysician"> </td>
 							</tr>
 							<tr>
-							  <th colspan="5">Address</th>
+							  <th>Address</th>
+							   <th>City</th>
 							</tr>
 							<tr>
-							  <td colspan="5" id = "doctorAddress"> </td>
+							  <td id = "doctorAddress"> </td>
+							   <td id = "doctorCity"> </td>
+							</tr>
+							
+							<tr>
+							  <th >Country</th>
+							  <th >Telephone</th>
 							</tr>
 							<tr>
-							  <th colspan="5">City</th>
+							  <td id = "doctorCountry"> </td>
+							   <td id = "doctorTelephone"> </td>
 							</tr>
-							<tr>
-							  <td colspan="5" id = "doctorCity"> </td>
-							</tr>
-							<tr>
-							  <th colspan="5">Country</th>
-							</tr>
-							<tr>
-							  <td colspan="5" id = "doctorCountry"> </td>
-							</tr>
-							<tr>
-							  <th colspan="5">Telephone</th>
-							</tr>
-							<tr>
-							  <td colspan="5" id = "doctorTelephone"> </td>
-							</tr>
+							
 							<tr>
 							  <th colspan="5">Study Requested</th>
 							</tr>
@@ -572,18 +584,16 @@ font-size: 13.5px;
 							  <td colspan="5" id = "therapyRequested"> </td>
 							</tr>
 							<tr>
-							  <th colspan="5">Referring Physician Signature</th>
+							  <th>Referring Physician Signature</th>
+							  <th >Date</th>
 							</tr>
 							<tr>
-							  <td colspan="5" id = "referringPhysicianSignature"> </td>
+							  <td  id = "referringPhysicianSignature"> </td>
+							   <td  id = "doctorDate"> </td>
 							</tr>
-							<tr>
-							  <th colspan="5">Date</th>
-							</tr>
-							<tr>
-							  <td colspan="5" id = "doctorDate"> </td>
-							</tr>
+							
 						  </table>
+						</div>
 						</div>
 					</div>
 					 <p style="height:20px!important">
