@@ -4,7 +4,7 @@
        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
        <meta name="description" content="">
        <meta name="generator" content="Jekyll v4.1.1">
-       <title>User</title>
+       <title>User Membership</title>
 	   
        <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
        <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
@@ -24,80 +24,42 @@
 	   <script src='../assets/dist/js/pooper/popper.min.js'></script>
 	   <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
 	   <script src='../assets/dist/js/main.js'></script>
+	   
        <script>
-		var globalForm = null;
-		var flutterPlatformReady = false;
 		var clientId;
 		var env = "qa";
-		var cards = [{"createdBy":"SuperAdmin","createdOn":"2021-01-17T08:14:40.548","modifiedBy":"SuperAdmin","modifiedOn":"2021-01-17T08:14:40.548","active":true,"comments":"Test Entry","clientId":"DATT","departmentName":"ADMIN","schemeId":"c5e4ab58-3644-4ad5-90e4-f49d24f5c0a3","schemeName":"Basic","schemeContent":"LIFETIME","schemeType":"DAILY","schemeCurrency":"$","schemeActualPrice":90,"schemeActivePrice":100,"schemeTaxation":null,"schemeDuration":"Month","schemeBilingType":"Billed every 30 days","schemeBenefitsHighlights":"NA","schemeOfferEnforced":"Save 64%","schemeExtraOfferEnforced":null,"schemeStash":null,"schemeSimpleGUIWidgetProps":null,"schemeDetailedGUIWidgetProps":null,"schemeSnapshot":null},{"createdBy":"SuperAdmin","createdOn":"2021-03-17T10:29:01.251","modifiedBy":"SuperAdmin","modifiedOn":"2021-03-17T10:29:01.251","active":true,"comments":"Test Entry","clientId":"DATT","departmentName":"Diabetes Assoc","schemeId":"08673128-4a3d-415a-9681-87ff8339b9c1","schemeName":"Plus","schemeContent":"Yearly","schemeType":"DAILY","schemeCurrency":"$","schemeActualPrice":140,"schemeActivePrice":150,"schemeTaxation":null,"schemeDuration":"Month","schemeBilingType":"Billed every 180 days","schemeBenefitsHighlights":"NA","schemeOfferEnforced":"Save 20%","schemeExtraOfferEnforced":null,"schemeStash":null,"schemeSimpleGUIWidgetProps":null,"schemeDetailedGUIWidgetProps":null,"schemeSnapshot":null},{"createdBy":"SuperAdmin","createdOn":"2021-01-17T08:14:40.548","modifiedBy":"SuperAdmin","modifiedOn":"2021-01-17T08:14:40.548","active":true,"comments":"Test Entry","clientId":"DATT","departmentName":"ADMIN","schemeId":"c5e4ab58-3644-4ad5-90e4-f49d24f5c0a3","schemeName":"Basic","schemeContent":"LIFETIME","schemeType":"DAILY","schemeCurrency":"$","schemeActualPrice":90,"schemeActivePrice":100,"schemeTaxation":null,"schemeDuration":"Month","schemeBilingType":"Billed every 30 days","schemeBenefitsHighlights":"NA","schemeOfferEnforced":"Save 64%","schemeExtraOfferEnforced":null,"schemeStash":null,"schemeSimpleGUIWidgetProps":null,"schemeDetailedGUIWidgetProps":null,"schemeSnapshot":null},{"createdBy":"SuperAdmin","createdOn":"2021-03-17T10:29:01.251","modifiedBy":"SuperAdmin","modifiedOn":"2021-03-17T10:29:01.251","active":true,"comments":"Test Entry","clientId":"DATT","departmentName":"Diabetes Assoc","schemeId":"08673128-4a3d-415a-9681-87ff8339b9c1","schemeName":"Plus","schemeContent":"Monthly","schemeType":"DAILY","schemeCurrency":"$","schemeActualPrice":140,"schemeActivePrice":150,"schemeTaxation":null,"schemeDuration":"Month","schemeBilingType":"Billed every 180 days","schemeBenefitsHighlights":"NA","schemeOfferEnforced":"Save 20%","schemeExtraOfferEnforced":null,"schemeStash":null,"schemeSimpleGUIWidgetProps":null,"schemeDetailedGUIWidgetProps":null,"schemeSnapshot":null}];
-
-		function getUrlVars() {
-			var vars = {};
-			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
-				vars[key] = decodeURI(value);
-			});
-			return vars;
-		}
-
+		
 		$(document).ready(function () {
-			membershipCard(cards);
+			
 			var docvars = getUrlVars();
-			var formDefinitionDept = docvars.departmentName;
-			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
-				flutterPlatformReady = true;
-			});
 			
 			if(docvars.hasOwnProperty('clientId')){
 				clientId = docvars.clientId;
 			}
+			//var URL = "https://" + env + ".servicedx.com/filing/dynamicForm/userMembership";
+			var URL = "http://localhost:9104/filing/dynamicForm/userMembership";
 			
-			var adminURL = "https://" + env + ".servicedx.com/admin/departments/formio/";
-			//var adminURL = "http://localhost:9100/admin/departments/formio/";
-			var formObj = null;
-			var isUser = true;
-			var userUrl = adminURL + docvars.departmentName + "/users/" +docvars.userName;
-			
-			if (docvars.page.toLowerCase() == "edituser"){
-				formObj = getFormObj(userUrl);
-			  if(formObj.data.hasOwnProperty('errorCode') && formObj.data.errorCode == "SDX_ADMIN_100" || formObj.data.errorCode =="SDX_ADMIN_EXCEPTION"){
-				isUser = false;
-				formObj = null
-			  }
-			}else {
-				isUser = false;
-			}
-			
-			var formDefinition = getFormComp("https://" + env + ".servicedx.com/admin/departments/" + formDefinitionDept);
-			
-			Formio.createForm(document.getElementById('builder'), formDefinition)
+			var info = getFormInfo(URL, docvars.departmentName, docvars.userName);
+			console.log('info',info);
+			membershipCard(info.schemeDefinition);
+			var def = getParentForm(info);
+			console.log(def);
+			Formio.createForm(document.getElementById('builder'), def)
 				.then(function (form) {
-					console.log(formObj,isUser);
-					var userObj;
-					if(formObj != null){
-						userObj = editObject(formObj);
-					}else{
-						userObj = {};
+					var userObj = {};
+					if(info.formData != null){
+						userObj = editObject(info.formData);
 					}
 					userObj["page"] = docvars.page;
 					form.submission = { data: userObj };
 					
 					console.log(userObj);
-					globalForm = form;
-					//form.setPristine(false);
 					form.nosubmit = true;
 					form.on('submit', function (submission) {
 						$('#formSubmit').attr('disabled','disabled');
 						
 						var userObject = submission.data;
-						console.log("B4 : userObject : " + JSON.stringify(userObject));
-						if(userObject.countryCode){
-							userObject["countryCodeValue"] = getCountries(userObject.countryCode);
-							userObject["mobileNo"] = userObject["countryCodeValue"] + userObject["mobileNo"];
-						}
-						if(userObject.secondaryCountryCode){
-							userObject["secondaryCountryCodeValue"] = getCountries(userObject.secondaryCountryCode);
-							userObject["secondMobileNo"] = userObject["secondaryCountryCodeValue"] + userObject["secondMobileNo"];
-						}		 
+						console.log("B4 : userObject : " + JSON.stringify(userObject)); 
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
@@ -115,39 +77,13 @@
 						delete userObject["maritalStatus1"];
 						delete userObject["others"];
 						
-						//userObject["roleName"] = "User";
-						userObject["departmentName"] = docvars.departmentName;
-						userObject["source"] = "MOBILE";
-						userObject["active"] = true;
 						console.log("AF : userObject : " + JSON.stringify(userObject))
 
-						var handlerName =  'userHandlerWithArgs';
+						var handlerName =  'userMembershipHandlerWithArgs';
 						
-						if(!isUser){
-							showLoader('show');
-							fetchAPI(adminURL + docvars.departmentName + "/users", options(JSON.stringify(userObject), isUser), handlerName).then(response => {
-								showLoader('hide');
-								if(!response.hasOwnProperty('errorCode')){
-									form.emit('submitDone', 'Create Success')
-								}else{
-									form.emit('submitError', response.message);
-								}
-							}).catch(function(error) {
-								console.log("error fetch",error);
-							});
-						}else{
-							showLoader('show');
-							fetchAPI(adminURL + docvars.departmentName + "/users/" + docvars.userName, options(JSON.stringify(userObject), isUser), handlerName).then(response => {
-								showLoader('hide');
-								if(!response.hasOwnProperty('errorCode')){
-									form.emit('submitDone', 'Update Success')
-								}else{
-									form.emit('submitError', response.message)
-								}
-							}).catch(function(error) {
-								console.log("error fetch",error);
-							});
-						}
+						var formURL = URLBuilder(URL, docvars, info.existingUser, "user");
+						
+						//var responce = fetchRequest(form, formURL, userObject, handlerName);
 					});
 
 					form.on('redraw', () => {
@@ -157,215 +93,15 @@
 			
 		});
 		
-		$(window).on('load', function () {
-			showLoader('hide');
-		});
-		
-		function editObject(obj){
-				var json = JSON.parse(obj.data);
-				console.log(json);
-				var id1 = json.mobileNo;
-				var id2 = json.secondMobileNo;
-					
-				if (json.countryCodeValue && json.mobileNo){
-					json["phoneNo"] = id1.substr(id1.length - id1.length + json.countryCodeValue.length);
-				}
-				
-				if (json.secondaryCountryCodeValue && json.secondMobileNo){
-					json["secondPhoneNo"] = id2.substr(id2.length - id2.length + json.secondaryCountryCodeValue.length);
-				}
-				
-				if(json.addressProofPic != null){
-					json["addressProofPic1"] = JSON.parse(json.addressProofPic);
-				}else{
-					json["addressProofPic1"] = [];
-				}
-				 
-				var otherInterests = {};
-				if(json.otherInterests != null && Array.isArray(json.otherInterests)){
-					for (i = 0; i < json.otherInterests.length; i++) {
-					  otherInterests[json.otherInterests[i]] = true; 
-					  }
-				}
-				
-				json["specialSkills"] = otherInterests;
-				json["birthDate1"] = json.birthDate;
-				json["anniversaryDate1"] = json.anniversaryDate;
-				
-				if(json.maritalStatus != "married" && json.maritalStatus != "unmarried" && json.maritalStatus != "divorced" ){
-					json["maritalStatus1"] = "others";
-					json["others"] = json.maritalStatus;
-				}else{
-					json["maritalStatus1"] = json.maritalStatus;
-				}
-				
-				if(json.country && json.countryName){
-					json["countrys"] = {
-						"countryCode": json.country,
-						"countryName": json.countryName
-					};
-				}
-				if(json.secondaryCountry && json.secondaryCountryName){
-					json["secondaryCountrys"] = {
-						"countryCode": json.secondaryCountry,
-						"countryName": json.secondaryCountryName
-					};
-				}
+		function editObject(json){
+			console.log(json);
 			return json;
-		}
-		
-		function isValidJSON(str) {
-			try {
-					JSON.parse(str);
-				} catch (e) {
-					console.log("JSON Parsing error ["+str+"]\n"+e);
-					return false;
-				}
-			return true;
-		}
-		
-		function getFormObj(URL){
-			var formObj = {};
-			var Success;
-			$.ajax({
-				  url: URL,
-				  type : "GET",
-				  async : false,
-				  success: function(result){
-					  formObj['data'] =  JSON.stringify(result);
-				  },
-				  beforeSend: function(request){
-					request.setRequestHeader("clientid", clientId);
-					showLoader('show');
-				  },
-				  complete: function(){
-					showLoader('hide');
-				  },
-				  error: function (textStatus) {
-					  console.log(textStatus);
-					  if(textStatus.status == 0){
-						alert("Network error");
-					  }
-					  
-					  formObj['data'] =  textStatus.responseJSON;
-				  }
-			});
-			return formObj;
-		}
-
-		function getFormComp(URL){
-			var formDefinition = null;
-			$.ajax({
-				  url: URL,
-				  type : "GET",
-				  async : false,
-				  success: function(result){
-				  var parsedForm = result.formioDefinition.Definition
-				  for (i = 0; i < parsedForm.length; i++) {
-					  var form = parsedForm[i];
-					  if(form.formName == 'user'){
-						 formDefinition =  JSON.parse(form.formDefinition);
-					  }
-					}
-				  console.log("formDefinition "+JSON.stringify(formDefinition));
-			      },
-				  beforeSend: function(request){
-					request.setRequestHeader("clientid", clientId);
-					showLoader('show');
-				  },
-				  complete: function(){
-					showLoader('hide');
-				  }});
-			return formDefinition;
-		}
-		
-		function getCountries(alphaCode) {
-			var callingCode = '';
-			var url = "https://qa-memberly.github.io/qa/sites/assets/dist/countries.json";
-			var options = { method: 'GET' };
-			var xmlHttp = new XMLHttpRequest();
-				xmlHttp.open( "GET", url, false );
-				xmlHttp.send( null );
-				var code = JSON.parse(xmlHttp.responseText);
-				for(var i in code){
-				  if(code[i].alphaCode == alphaCode){
-					 callingCode = code[i].callingCode;
-				  }
-				}
-			return callingCode;
-		}
-		
-		function options(formdata, isUser){
-			var restMethod;
-			if(isUser){
-				restMethod = 'PUT';
-			}else{
-				restMethod = 'POST';
-			}
-			var options = { method: restMethod, body: formdata, redirect: 'follow', headers: new Headers({'content-type': 'application/json', 'clientid':clientId}) };
-			console.log('options',options);
-			return options;
-		}
-
-		var fetchAPI = async function (url, requestOptions, handlerName) {
-			let response = await fetch(url, requestOptions)
-			console.log('response', JSON.stringify(response));
-			if (response.ok) {
-				let json = await response.json();
-				console.log('response body', json);
-				try {
-					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler(handlerName, response.status, json);
-					}
-				} catch (e) {
-					console.log("flutter_inappwebview error");
-				}
-				return json;
-			} else {
-				let json = await response.json();
-				console.log('error', json.message, json.errorCode);
-				try {
-					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler(handlerName, response.status, json);
-					}
-				} catch (e) {
-					console.log("flutter_inappwebview error");
-				}
-				return json;
-			}
-		}
-		
-		function disable(id) {
-			document.getElementById(id).disabled = true;
-			$('#'+id).addClass('disable');
-		}
-		
-		function enable(id) {
-			document.addEventListener("DOMContentLoaded", function(event) {
-			  document.getElementById(id).disabled = false;
-			  $('#'+id).removeClass('disable');
-			});
-		}
-		
-		function showLoader(loader){
-			if(loader == 'show'){
-				$(".loader").show();
-				$("#builder").addClass('hide');
-			}else{
-				$(".loader").hide();
-				$("#builder").removeClass('hide');
-			}
 		}
 		
        </script>
 	   <link href="../assets/dist/css/poopins/poopins.css" rel="stylesheet">
     </head>
     <body style="padding:10px;background-color: #dde0e0;">
-		<div class="bg-white">
-			<div class="u-d-flex u-d-flex--vc u-b-center bg-white c-nav u-p--8">
-				<img alt="GNAT Logo" class="u-p-l--8" src="../assets/brand/GNAT.png" width="100px" style="max-width: 17%;" />
-			</div>
-		</div>
        <div id="wrapper">
           <div id="initScreen" style="display: block;">
              <div class="section" id="a67a329f1c344dfd887b3efc8a413ed3">
@@ -378,7 +114,7 @@
                             </div>
                             <div class="question-answer-row" id="section" style="padding-left:10px;padding-right:10px;">
                                <div class="question-answer-cell">
-								  <div id='membership-card'></div>
+							      <div id='membership-card'></div>
                                   <div id='builder'></div>
                                </div>
                             </div>
