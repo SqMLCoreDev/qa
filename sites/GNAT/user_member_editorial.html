@@ -36,8 +36,8 @@
 			if(docvars.hasOwnProperty('clientId')){
 				clientId = docvars.clientId;
 			}
-			//var URL = "https://" + env + ".servicedx.com/filing/dynamicForm/userMembership";
-			var URL = "http://localhost:9104/filing/dynamicForm/userMembership";
+			var URL = "https://" + env + ".servicedx.com/filing/dynamicForm/userMembership";
+			//var URL = "http://localhost:9104/filing/dynamicForm/userMembership";
 			
 			var info = getFormInfo(URL, docvars.departmentName, docvars.userName);
 			console.log('info',info);
