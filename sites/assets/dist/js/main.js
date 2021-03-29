@@ -22,6 +22,12 @@ function getUrlVars() {
 		var convert = convertType(decodeURI(value));
 		vars[key] = convert;
 	});
+	if(vars.hasOwnProperty('clientId')){
+		vars["clientId"] = vars.clientId;
+	}
+	if(vars.hasOwnProperty('env_code')){
+		vars["env_code"] = vars.env_code.toLowerCase();
+	}
 	return vars;
 }
 
@@ -151,12 +157,16 @@ var fetchAPI = async function (url, formdata, handlerName) {
 	}
 }
 
-function getFormInfo(URL, departmentName, userName, role) {
+function getFormInfo(URL, data) {
 	var param = {};
-	param["departmentName"] = departmentName;
-	param["role"] = role;
-	if (userName && userName != "null") {
-		param["userName"] = userName;
+	param["departmentName"] = data.departmentName;
+	param["role"] = data.loggedInRole.toLowerCase();
+	
+	if (data.userName && data.userName != "null") {
+		param["userName"] = data.userName;
+	}
+	if (data.membershipId && data.membershipId != "null"){
+		param["membershipId"] = data.membershipId;
 	}
 	var formObj = {};
 	$.ajax({
@@ -167,7 +177,12 @@ function getFormInfo(URL, departmentName, userName, role) {
 		success: function (result) {
 			console.log(result);
 			result["formDefinition"] = JSON.parse(result.formDefinition);
-			result["formData"] = JSON.parse(result.formData);
+			if (data.page.toLowerCase() == "adduser" || data.page.toLowerCase() == "signup" ){
+				result["formData"] = {"hasUser":false, "hasMember":false};
+			}else {
+				result["formData"] = JSON.parse(result.formData);
+			}
+			membershipCard(result.schemeDefinition, data);
 			formObj = result;
 		},
 		beforeSend: function (request) {
@@ -279,13 +294,13 @@ var payee = async function payButton(data, RegistrationFees) {
 	}
 }
 
-function membershipCard(scheme, docvars) {
+function membershipCard(scheme, data) {
 	var basicSchema = {};
 	let card = "<div id='scheme-card' class='container-fluid'>";
 	card += "<div class='u-pos--rel c-banner-container' id='banner'>";
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
 	card += "<img alt='Plus Logo' class='u-columns u-two u-m-b--10 ' effect='blur' src='../assets/brand/plus-logo.png''>";
-	card += "<div class='u-text--bold text-large bg-black'>Unlimited benefits with "+ docvars.departmentName +" Member+";
+	card += "<div class='u-text--bold text-large bg-black'>Unlimited benefits with "+ data.departmentName +" Member+";
 	card += "</div>";
 	card += "</div>";
 	card += "</div>";
@@ -339,11 +354,10 @@ function membershipCard(scheme, docvars) {
 	card += "</div>";
 
 	// Append the new article card to the article section div
-	if(docvars.page != "signup"){
+	if(data.page != "signup"){
 		$("#membership-card").append(card);
-		console.log(basicSchema);
 		cardActivation();
-		$('#' + basicSchema.schemeId).addClass('price-filter-active');
+		$('#'+basicSchema.schemeId).addClass('price-filter-active');
 	}
 }
 
@@ -464,3 +478,19 @@ function getContent(data){
 		return data;
 	}
 }
+
+function membershipFees(data){
+	console.log(data);
+	var fees = "";
+	if(data.schemeBilingType == "MONTHLY"){
+		fees = "1 Month - " + getSymbol(data.schemeCurrency) + " "+ data.schemeActivePrice;
+	}else if(data.schemeBilingType == "QUARTERLY"){
+		fees = "3 Months - " + getSymbol(data.schemeCurrency) + " "+ data.schemeActivePrice;
+	}else if(data.schemeBilingType == "HALFYEARLY"){
+		fees = "6 Months - " + getSymbol(data.schemeCurrency) + " "+ data.schemeActivePrice;
+	}else if(data.schemeBilingType == "YEARLY"){
+		fees = "1 year - " + getSymbol(data.schemeCurrency) + " "+ data.schemeActivePrice;
+	}
+	return fees;
+}
+
