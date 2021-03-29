@@ -4,7 +4,7 @@ $(window).on('load', function () {
 
 $(document).ready(function () {
 	window.addEventListener("flutterInAppWebViewPlatformReady", function (event) {
-		window.platformReady = true;
+		localStorage.platformReady = true;
 		alert('window.platformReady in main');
 	});
 });
@@ -127,9 +127,9 @@ var fetchAPI = async function (url, formdata, handlerName) {
 	console.log('response', JSON.stringify(response));
 	if (response.ok) {
 		let json = await response.json();
-		console.log('response body', json, "flutterPlatformReady ", window.platformReady);
+		console.log('response body', json, "flutterPlatformReady ", localStorage.platformReady);
 		try {
-			if (window.platformReady) {
+			if (localStorage.platformReady) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -140,7 +140,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 		let json = await response.json();
 		console.log('error', json.message, json.errorCode);
 		try {
-			if (window.platformReady) {
+			if (localStorage.platformReady) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -229,10 +229,10 @@ var payee = async function payButton(data, RegistrationFees) {
 		"paymentDescription": description
 	};
 	console.log(json, data.isMember);
-	console.log('flutterPlatformReady', window.platformReady);
-	alert('window.flutterPlatformReady', window.platformReady);
+	console.log('flutterPlatformReady', localStorage.platformReady);
+	alert('window.flutterPlatformReady', localStorage.platformReady);
 	let transaction = null;
-	if (window.platformReady) {
+	if (localStorage.platformReady) {
 		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await
 			function (data) {
 				console.log("handlerPayResponseWithArgs" + JSON.stringify(data));
