@@ -36,12 +36,16 @@
 			if(docvars.hasOwnProperty('clientId')){
 				clientId = docvars.clientId;
 			}
-			var URL = "https://" + env + ".servicedx.com/filing/dynamicForm/userMembership";
-			//var URL = "http://localhost:9104/filing/dynamicForm/userMembership";
+			//var URL = "https://" + env + ".servicedx.com/filing/dynamicForm/userMembership";
+			var URL = "http://localhost:9104/filing/dynamicForm/userMembership";
 			
 			var info = getFormInfo(URL, docvars.departmentName, docvars.userName);
 			console.log('info',info);
-			membershipCard(info.schemeDefinition);
+			if (docvars.page.toLowerCase() == "adduser"){
+				info["formData"] = {"hasUser":false, "hasMember":false};
+			}
+			
+			membershipCard(info.schemeDefinition, docvars);
 			var def = getParentForm(info);
 			console.log(def);
 			Formio.createForm(document.getElementById('builder'), def)
@@ -52,6 +56,14 @@
 					}
 					userObj["page"] = docvars.page;
 					form.submission = { data: userObj };
+					
+					$('.card-pricing').click(function () {
+						var schema = getScheme(this.id, info.schemeDefinition);
+						userObj["scheme"] = schema;
+						userObj["fees"] = schema.schemeActivePrice;
+						form.submission = { data: userObj };
+						console.log(form._data);
+					});
 					
 					console.log(userObj);
 					form.nosubmit = true;
@@ -81,9 +93,9 @@
 
 						var handlerName =  'userMembershipHandlerWithArgs';
 						
-						var formURL = URLBuilder(URL, docvars, info.existingUser, "user");
+						var formURL = URLBuilder(URL, docvars, info.formData.hasUser, info.formData.hasUser);
 						
-						//var responce = fetchRequest(form, formURL, userObject, handlerName);
+						var responce = fetchRequest(form, formURL, userObject, handlerName);
 					});
 
 					form.on('redraw', () => {
