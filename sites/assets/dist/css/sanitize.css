@@ -345,6 +345,9 @@ span.duration {
 .il-f{
 	display: inline-flex;
 }
+.sh-onboard{
+	display: none;
+}
 
 .card {
 	width: 100%;
