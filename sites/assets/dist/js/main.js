@@ -2,19 +2,13 @@ $(window).on('load', function () {
 	showLoader('hide');
 });
 
+var platformReady = false;
+
 $(document).ready(function () {
-
-
+	window.addEventListener("flutterInAppWebViewPlatformReady", function (event) {
+		platformReady = true;
+	});
 });
-
-function flutterPlatformReady() {
-		window.addEventListener("flutterInAppWebViewPlatformReady", function (event) {
-			alert("flutterPlatformReady true");
-			return true;
-		});
-	alert("flutterPlatformReady false");
-	return false;
-}
 
 function getUrlVars() {
 	var vars = {};
@@ -134,9 +128,9 @@ var fetchAPI = async function (url, formdata, handlerName) {
 	console.log('response', JSON.stringify(response));
 	if (response.ok) {
 		let json = await response.json();
-		console.log('response body', json, "flutterPlatformReady ", flutterPlatformReady());
+		console.log('response body', json, "flutterPlatformReady ", platformReady);
 		try {
-			if (flutterPlatformReady()) {
+			if (platformReady) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -147,7 +141,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 		let json = await response.json();
 		console.log('error', json.message, json.errorCode);
 		try {
-			if (flutterPlatformReady()) {
+			if (platformReady) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -236,9 +230,9 @@ var payee = async function payButton(data, RegistrationFees) {
 		"paymentDescription": description
 	};
 	console.log(json, data.isMember);
-	console.log('flutterPlatformReady', flutterPlatformReady());
+	console.log('flutterPlatformReady', platformReady);
 	let transaction = null;
-	if (flutterPlatformReady()) {
+	if (platformReady) {
 		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await
 			function (data) {
 				console.log("handlerPayResponseWithArgs" + JSON.stringify(data));
