@@ -114,6 +114,7 @@ function fetchRequest(form, URL, userObject, handlerName) {
 }
 
 var fetchAPI = async function (url, formdata, handlerName) {
+	var platformReady = true;
 	var options = {
 		method: 'POST',
 		body: formdata,
@@ -127,9 +128,9 @@ var fetchAPI = async function (url, formdata, handlerName) {
 	console.log('response', JSON.stringify(response));
 	if (response.ok) {
 		let json = await response.json();
-		console.log('response body', json, "flutterPlatformReady ", window.platformReady);
+		console.log('response body', json, "flutterPlatformReady ", platformReady);
 		try {
-			if (window.platformReady) {
+			if (platformReady) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -140,7 +141,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 		let json = await response.json();
 		console.log('error', json.message, json.errorCode);
 		try {
-			if (window.platformReady) {
+			if (platformReady) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -215,6 +216,7 @@ function getCountries(alphaCode) {
 var payee = async function payButton(data, RegistrationFees) {
 	console.log('payButton', data);
 	var description;
+	var platformReady = true;
 	if (data.renewalEligible) {
 		RegistrationFees = 0;
 		description = "Membership Renewal Fee for " + data.userFullName;
