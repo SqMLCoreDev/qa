@@ -5,6 +5,7 @@ $(window).on('load', function () {
 $(document).ready(function () {
 	window.addEventListener("flutterInAppWebViewPlatformReady", function (event) {
 		window.platformReady = true;
+		console.log('window.platformReady in main');
 	});
 });
 
