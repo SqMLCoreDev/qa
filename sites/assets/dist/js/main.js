@@ -8,12 +8,10 @@ $(document).ready(function () {
 });
 
 function flutterPlatformReady() {
-	$(document).ready(function () {
 		window.addEventListener("flutterInAppWebViewPlatformReady", function (event) {
 			alert("flutterPlatformReady true");
 			return true;
 		});
-	});
 	alert("flutterPlatformReady false");
 	return false;
 }
