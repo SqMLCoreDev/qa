@@ -38,7 +38,7 @@
 			}
 			var URL = "https://" + env + ".servicedx.com/filing/dynamicForm/userMembership";
 			//var URL = "http://localhost:9104/filing/dynamicForm/userMembership";
-			
+			alert(JSON.stringify(docvars));
 			var info = getFormInfo(URL, docvars.departmentName, docvars.userName);
 			console.log('info',info);
 			if (docvars.page.toLowerCase() == "adduser"){
