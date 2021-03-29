@@ -232,7 +232,7 @@ var payee = async function payButton(data, RegistrationFees) {
 	};
 	console.log(json, data.isMember);
 	console.log('flutterPlatformReady', window.platformReady);
-	alert('window. flutterPlatformReady', platformReady);
+	alert('window flutterPlatformReady', platformReady);
 	let transaction = null;
 	if (platformReady) {
 		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await
@@ -328,7 +328,7 @@ function membershipCard(scheme, data) {
 		card += "<div class=''>"+ data.schemeActualPrice + "</div>";
 		card += "</div>";
 		card += "<div class='card_container'>";
-		card += " <sup class='text-currency-symbol'>"+ getSymbol(data.schemeCurrency) +"</sup><span class='text-delta text-currency text-center u-text--bold u-align--vm cardBlock'>" + data.schemeActivePrice + "</span>";
+		card += "<sup class='text-currency-symbol'>"+ getSymbol(data.schemeCurrency) +"</sup><span class='text-delta text-currency text-center u-text--bold u-align--vm cardBlock'>" + data.schemeActivePrice + "</span>";
 		//card += "<span class='text-theta text-gre u-align--vtt cardBlock'>/ " + data.schemeDuration + "</span>";
 		card += "</div>";
 		card += "<div class='text-green u-m-t--4 text-zeta u-text--bold'>" + data.schemeOfferEnforced + "";
