@@ -6,20 +6,22 @@
        <meta name="description" content="">
        <meta name="generator" content="Jekyll v4.1.1">
        <title>Sleep Apnea</title>
-       <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
-       <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
-       <link href="../assets/dist/css/custom-formio/theme.less.css" rel="stylesheet">
-       <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css'>
-       <link rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css'>
-       <link href="../assets/dist/css/custom-formio/formio.full.min.css" rel="stylesheet">
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.core.min.js" integrity="sha512-w66UYDpfZgAuo4abswC7aUEQ1zdJc8/EwjlwlcOcrK6V6PLcnhWb+hKukf69JyeZ2lwMjeaCPBMpl4ep15d9nA==" crossorigin="anonymous"></script>
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.min.js" integrity="sha512-90vH1Z83AJY9DmlWa8WkjkV79yfS2n2Oxhsi2dZbIv0nC4E6m5AbH8Nh156kkM7JePmqD6tcZsfad1ueoaovww==" crossorigin="anonymous"></script>
-       <script src="https://code.jquery.com/jquery-3.5.1.min.js" integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
-       <script src="https://cdn.rawgit.com/meetselva/attrchange/master/js/attrchange.js"></script>
-       <script src='../assets/dist/js/investigate/selectize.js'></script>
-       <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-       <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
-       <script src='https://unpkg.com/formiojs@latest/dist/formio.full.min.js'></script>
+      <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
+    <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
+    <link href="../assets/dist/css/custom-formio/theme.less.css" rel="stylesheet">
+    <link href="../assets/dist/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../assets/dist/css/custom-formio/formio.full.min.css" rel="stylesheet">
+    <link href="../assets/dist/css/main.css" rel="stylesheet">
+    <script src='../assets/dist/js/lodash/lodash.core.min.js'></script>
+    <script src='../assets/dist/js/lodash/lodash.min.js'></script>
+    <script src='../assets/dist/js/jquery-3.5.1.min.js'></script>
+    <script src='../assets/dist/js/attrchange.js'></script>
+    <script src='../assets/dist/js/investigate/selectize.js'></script>
+    <script src='../assets/dist/js/bootstrap.bundle.min.js'></script>
+    <script src='../assets/dist/js/pooper/popper.min.js'></script>
+    <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
+    <script src='../assets/dist/js/main.js'></script>
        <style>
 		.bd-placeholder-img {
 		  font-size: 1.125rem;
@@ -34,6 +36,12 @@
 		  overflow: hidden;
 		}
 
+
+        select:disabled {
+    background-color: #e9ecef !important;
+    opacity: 1 !important;
+    cursor: not-allowed !important;
+}
 		.select2-selection__rendered {
 		  white-space: normal;
 		  word-break: break-all;
@@ -84,6 +92,7 @@
        <script>
 		var globalForm = null;
 		var flutterPlatformReady = false;
+		 var clientId;
 		
 		function getUrlVars() {
 			var vars = {};
@@ -106,63 +115,121 @@
 			var isUser = true;
 			var userUrl = "https://qa.servicedx.com/admin/departments/formio/"+docvars.departmentName+"/users/"+docvars.userName;
 			var formid = "f22a125e-fbdf-49df-b16b-6da5a0ce8939";
+			var userData = getUserData("https://qa.servicedx.com/filing/campaignData/departmentName/"+docvars.departmentName+"/userName/"+docvars.userName+"/emailId/"+docvars.emailId);
+			
+			console.log(userData);
+			
+			
 			var formDefinition = getFormComp("https://qa.servicedx.com/filing/form/{id}?id=" +formid);
 			
-			Formio.createForm(document.getElementById('builder'), formDefinition)
-				.then(function (form) {
-					console.log(formObj,isUser);
-					
-					form.submission = { data: userObj };
-					globalForm = form;
-					form.nosubmit = true;
-					var userObj={};
-				    userObj["role"] = docvars.role;
-					console.log(userObj);
-					form.submission = { data: userObj };
-					form.on('submit', function (submission) {
-
-						var userObject = submission.data;
-						console.log("B4 : userObject : " + JSON.stringify(userObject));
-
-						delete userObject["submit"];
-						
-						
-						console.log("AF : userObject : " + JSON.stringify(userObject));
-                         var JSONObj = new Object();
-				         JSONObj={ "user" : docvars.userName, "departmentName"  : docvars.departmentName, "formJson"  : JSON.stringify(userObject),"formid" : formid};
-						
-						var requestOptions = {
-				    	  method: 'POST',
-				    	  headers: { 'content-type': 'application/json' },
-				    	  body: JSON.stringify(JSONObj),
-				    	  redirect: 'follow'
-				    	};
-						
-							fetchAPI("https://qa.servicedx.com/filing/FormData/", requestOptions).then(response => {
-								if(!response.hasOwnProperty('errorCode')){
-									form.emit('submitDone', 'Create Success')
-									$('#formSubmit').attr('disabled','disabled');
-								}else{
-									form.emit('submitError', response.message);
-								}
-							}).catch(function(error) {
-								$('#formSubmit').attr('disabled','disabled');
-								console.log("error fetch",error);
-							});
-					});
-
-
-					form.on('submitDone', function (submission) {
-						//window.location = '/app/thanks.html';
-					});
-
-				});
+			
+      	var basicInfo = {};
+      	if(userData[0].formJson!=null){
+      		basicInfo['data'] =  userData[0].formJson;
+			console.log("AAAAAAAAA");
+      		console.log(basicInfo);
+      	}else{
+		var basicInfo=null;
+		}
+      	
+      			
+				Formio.createForm(document.getElementById('builder'), formDefinition)
+      		.then(function (form) {
+      			//console.log(doctorObj,isUser);
+      			var userObj={};
+      			var userObj;
+				//userObj["role"] = docvars.role;
+				userObj["role"] = "nonEdit";
+      			if(basicInfo != null){
+      				userObj = editObject(basicInfo); 
+					//console.log(userObj);
+      			}
+				userObj["role"] = "nonEdit";
+      
+      			form.submission = { data: userObj };
+				console.log(form.submission);
+      			console.log("CMING HER");
+      			
+      			globalForm = form;
+      			//form.setPristine(false);
+      			form.nosubmit = true;
+      			form.on('submit', function (submission) {
+      				$('#formSubmit').attr('disabled','disabled'); 
+      				
+      				var userObject = submission.data;
+      				console.log("B4 : userObject : " + JSON.stringify(userObject));		 
+      
+      				delete userObject["submit"];
+      				
+      				//userObject["roleName"] = "User";
+      				userObject["user"] = docvars.userName;
+      				userObject["departmentName"] = docvars.departmentName;
+      				userObject["formJson"] =  JSON.stringify(userObject);
+      				userObject["formid"] = formid;
+      				userObject["active"] = true;
+      				console.log("AF : userObject : " + JSON.stringify(userObject))
+      				
+      					showLoader('show');
+      					fetchAPI("https://qa.servicedx.com/filing/FormData/", options(JSON.stringify(userObject), false)).then(response => {
+      						showLoader('hide');
+      						if(!response.hasOwnProperty('errorCode')){
+      								form.emit('submitDone', 'FeedBack sumbitted successfully')
+      								$('#formSubmit').attr('disabled','disabled');
+      								
+      						}else{
+      							form.emit('submitError', response.message)
+      						}
+      					}).catch(function(error) {
+      						console.log("error fetch",error);
+      					});
+      			});
+      
+      			form.on('redraw', () => {
+      				form.triggerChange();
+      			});
+      		});
+      	
+				
+				
+				
+				
+				
+				
+				
+			
+				
+				
+				
+				
+				
 		});
 		
 		function editObject(obj){
-				
-			return json;
+		console.log("EDIT OBJECT");
+		var json = JSON.parse(obj.data);
+		json["doYouCurrentlySufferAnyOfTheFollowingConditions"] = null ;
+		json["doYouHaveAPaceMaker"] = null ;
+		json["doYouHaveTroubleStayingAsleep"] = null ;
+		json["doYouHaveTroubleStayingAwake"] = null ;
+		json["survey"] = null ;
+	    json["survey"] = null ;
+	    json["submit"] = false;
+		json["howLongDoYouSleepInADay"] = null ;
+		var how =json["howLongDoYouSleepInADay"] ;
+		//disable(how);
+
+		return json;
+			
 		}
+		
+		 function disable(id) {
+          	document.getElementById(id).disabled = true;
+		
+      	        $('#'+id).addClass('disable');
+		$('#'+id).attr('disabled', 'disabled');
+		//$("#selectId").prop('disabled', 'disabled');
+                }
+		
 		
 		function isValidJSON(str) {
 			try {
@@ -204,29 +271,24 @@
 				  async : false,
 				  success: function(result){
 				  formDefinition =  JSON.parse(result.form)
-				  console.log("formDefinition "+JSON.stringify(formDefinition));
+				  //console.log("formDefinition "+JSON.stringify(formDefinition));
 			}});
 			return formDefinition;
 		}
 		
 
-		function options(formdata, isUser){
-			var restMethod;	
-			var clientId;
-			if(getUrlVars().hasOwnProperty('clientId')){
-				clientId = getUrlVars().clientId;
-			}else{
-				clientId = 'SDX'
-			}
-			if(isUser){
-				restMethod = 'PUT';
-			}else{
-				restMethod = 'POST';
-			}
-			var options = { method: restMethod, body: formdata, redirect: 'follow', headers: new Headers({'content-type': 'application/json', 'clientid':clientId}) };
-			console.log('options',options);
-			return options;
-		}
+		 function options(formdata, isUser){
+      	var restMethod;
+      	if(isUser){
+      		restMethod = 'PUT';
+      	}else{
+      		restMethod = 'POST';
+      	}
+      	var options = { method: restMethod, body: formdata, redirect: 'follow', headers: new Headers({'content-type': 'application/json', 'clientid':clientId}) };
+      	console.log('options',options);
+      	return options;
+      }
+      
 
 		var fetchAPI = async function (url, requestOptions) {
 			let response = await fetch(url, requestOptions)
@@ -256,18 +318,50 @@
 			}
 		}
 		
-		function disable(id) {
-			document.getElementById(id).disabled = true;
-			$('#'+id).addClass('disable');
-		}
 		
-		function enable(id) {
-			document.addEventListener("DOMContentLoaded", function(event) {
-			  document.getElementById(id).disabled = false;
-			  $('#'+id).removeClass('disable');
-			});
-		}
+	
+      
+      function enable(id) {
+      	document.addEventListener("DOMContentLoaded", function(event) {
+      	  document.getElementById(id).disabled = false;
+      	  $('#'+id).removeClass('disable');
+      	});
+      }
 		
+		 function getUserData(URL){
+      	var userData = null;
+      	$.ajax({
+      		  url: URL,
+      		  type : "GET",
+      		  async : false,
+      		  success: function(result){
+      		 // userData =  JSON.parse(result.formJson);
+      			 userData =  result;
+				 
+      			  
+      		  },
+      		  beforeSend: function(request){
+      			//showLoader('show');
+      		  },
+      		  complete: function(){
+      			//showLoader('hide');
+      		  }});
+      	return userData;
+      }
+		
+		
+		
+		function showLoader(loader){
+      	if(loader == 'show'){
+      		$(".loader").show();
+			$(".patientInfo").hide();
+      		$("#builder").addClass('hide');
+      	}else{
+      		$(".loader").hide();
+			$(".patientInfo").show();
+      		$("#builder").removeClass('hide');
+      	}
+      }
 		
        </script>
        <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
