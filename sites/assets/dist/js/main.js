@@ -339,14 +339,11 @@ function membershipCard(scheme, docvars) {
 	card += "</div>";
 
 	// Append the new article card to the article section div
-	$("#membership-card").append(card);
-	console.log(basicSchema);
-	cardActivation();
-
-	$('#' + basicSchema.schemeId).addClass('price-filter-active');
-	
-	if(docvars.page.toLowerCase() == "signup"){
-		$("#membership-card").addClass("sh-onboard");
+	if(docvars.page != "signup"){
+		$("#membership-card").append(card);
+		console.log(basicSchema);
+		cardActivation();
+		$('#' + basicSchema.schemeId).addClass('price-filter-active');
 	}
 }
 
