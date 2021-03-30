@@ -400,6 +400,5 @@ span.duration {
 .card-bg {
 	background-image: url(../../brand/card-bg.png);
 	background-repeat: no-repeat;
-	background-position: left;
 	background-attachment: fixed;
 }
