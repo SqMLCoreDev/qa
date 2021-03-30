@@ -38,7 +38,7 @@
 			
 			var info = getFormInfo(URL, docvars);
 			console.log('info',info);
-			//alert("user membership editorial" + JSON.stringify(docvars));
+			alert("user membership editorial" + JSON.stringify(docvars));
 			Formio.createForm(document.getElementById('builder'), info.formDefinition)
 				.then(function (form) {
 					var userObj = {};
