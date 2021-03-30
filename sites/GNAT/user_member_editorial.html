@@ -55,6 +55,7 @@
 						if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
 							fees = schema.schemeActivePrice + schema.schemeBaseAmount;
 						}
+						userObj["schemeId"] = schema.schemeId;
 						userObj["fees"] = fees;
 						userObj["newMemberFees"] = membershipFees(schema);
 						form.submission = { data: userObj };
