@@ -294,6 +294,7 @@ function membershipCard(scheme, data) {
 	var basicSchema = {};
 	let card = "<div id='scheme-card' class='container-fluid'>";
 	card += "<div class='u-pos--rel c-banner-container' id='banner'>";
+	
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
 	card += "<img alt='Plus Logo' class='u-columns u-two u-m-b--10 ' effect='blur' src='../assets/brand/plus-logo.png''>";
 	card += "<div class='u-text--bold text-large bg-black'>Unlimited benefits with "+ data.departmentName +" Member+";
@@ -307,28 +308,30 @@ function membershipCard(scheme, data) {
 	card += "</div>";
 	card += "</div>"; */
 	card += "<div id='scheme' class='d-flex flex-row flex-nowrap overflow-auto'>";
-	card += "<div class='pricing card-deck flex-column flex-md-row'>";
+	card += "<div class='pricing row flex-column flex-md-row'>";
 	card += "<div class='u-p-v--10 text-center c-card-slider' id='plans' style='overflow: visible;'>";
 	card += "<div class='u-d-flex u-p-h--8'>";
 	scheme.forEach(function (data) {
 		if (data.schemeName == "Basic") {
 			basicSchema = data;
 		}
-		card += "<div class='col-4'>";
-		card += "<div class='card card-pricing text-center px-3 mb-4 u-m-h--8' aria-haspopup='true' id=" + data.schemeId + ">";
-		card += "<div class='card-ribbon'>";
-        card += "<span>popular</span>";
-        card += "</div>";
+		card += "<div class='col-auto mb-3' style='display: flex;'>";
+		card += "<div class='card card-pricing text-center px-3 mb-4 u-m-h--8' style='width: 8rem;' aria-haspopup='true' id=" + data.schemeId + ">";
+		if(data.schemeBenefitsHighlights){
+			card += "<div class='card-ribbon'>";
+			card += "<span>"+data.schemeBenefitsHighlights+"</span>";
+			card += "</div>";
+		}
 		card += "<span class='mx-auto px-4 py-1 rounded-bottom bg-primary-card text-white shadow-sm text-zeta u-text--bold'>" + data.schemeName + "</span>";
 		card += "<div class='u-text--uppercase u-p-t--20 u-p-b--15 u-border-bottom--paleGrey u-text--bold text-mt u-pos--rel'>" + data.schemeBilingType + "</div>";
 		card += "<div class='plan-details u-d-flex u-d-flex--center u-border-bottom--paleGrey'>";
 		card += "<div class='u-p-b--20 u-p-t--8'>";
 		card += "<div class='text-gre u-text--striked text-epsilon u-m-r--4 il-f'>";
-		card += "<div class='text-currency-symbol'>"+getSymbol(data.schemeCurrency)+"</div>";
-		card += "<div class=''>"+ data.schemeActualPrice + "</div>";
+		card += "<div class='text-currency-symbol'>" + data.schemeCurrencySymbol + "</div>";
+		card += "<div class=''>" + data.schemeActualPrice + "</div>";
 		card += "</div>";
 		card += "<div class='card_container'>";
-		card += "<sup class='text-currency-symbol'>"+ getSymbol(data.schemeCurrency) +"</sup><span class='text-delta text-currency text-center u-text--bold u-align--vm cardBlock'>" + data.schemeActivePrice + "</span>";
+		card += "<sup class='text-currency-symbol'>" + data.schemeCurrencySymbol + "</sup><span class='text-delta text-currency text-center u-text--bold u-align--vm cardBlock'>" + data.schemeActivePrice + "</span>";
 		//card += "<span class='text-theta text-gre u-align--vtt cardBlock'>/ " + data.schemeDuration + "</span>";
 		card += "</div>";
 		card += "<div class='text-green u-m-t--4 text-zeta u-text--bold'>" + data.schemeOfferEnforced + "";
@@ -336,7 +339,14 @@ function membershipCard(scheme, data) {
 		card += "</div>";
 		card += "</div>";
 		card += "<div class='card-footer-member'>";
-		card += "<div class='u-p-v--12 text-gre text-zeta-lf'><img class='text-info' src='../assets/brand/mark.svg'> "+data.schemeContent+"</div>";
+			getContent(data.schemeContent).forEach(function (content) {
+			content = content.trimStart();
+			if(!content.startsWith("#")){
+				card += "<div class='u-p-v--12 text-gre text-zeta-lf'><img class='text-info' src='../assets/brand/mark.svg'> "+content+"</div>";
+			}else{
+				card += "<div class='u-p-v--12 text-gre text-zeta-lf ct-st'><img class='text-info' src='../assets/brand/x-mark.svg'> "+content.replace("#","")+"</div>";
+			}	
+			});
 		card += "<a href='#' class='btn read'><i id='card-icon' class='fa fa-angle-right'></i></a>";
 		card += "</div>";
 		card += "</div>";
@@ -470,22 +480,22 @@ function getSymbol(name){
 }
 
 function getContent(data){
-	if(data && Array.isArray(data)){
-		return data;
-	}
+	var array = data.split(',');
+	console.log(array);
+	return array;
 }
 
 function membershipFees(data){
 	console.log(data);
 	var fees = "";
 	if(data.schemeBilingType == "MONTHLY"){
-		fees = "1 Month - " + getSymbol(data.schemeCurrency) + " "+ data.schemeActivePrice;
+		fees = "1 Month - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}else if(data.schemeBilingType == "QUARTERLY"){
-		fees = "3 Months - " + getSymbol(data.schemeCurrency) + " "+ data.schemeActivePrice;
+		fees = "3 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}else if(data.schemeBilingType == "HALFYEARLY"){
-		fees = "6 Months - " + getSymbol(data.schemeCurrency) + " "+ data.schemeActivePrice;
+		fees = "6 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}else if(data.schemeBilingType == "YEARLY"){
-		fees = "1 year - " + getSymbol(data.schemeCurrency) + " "+ data.schemeActivePrice;
+		fees = "1 year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}
 	return fees;
 }
