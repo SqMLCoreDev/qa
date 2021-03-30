@@ -5,7 +5,6 @@ $(window).on('load', function () {
 $(document).ready(function () {
 	window.addEventListener("flutterInAppWebViewPlatformReady", function (event) {
 		window.platformReady = true;
-		alert('window.platformReady in main');
 	});
 });
 
@@ -232,7 +231,7 @@ var payee = async function payButton(data, RegistrationFees) {
 	};
 	console.log(json, data.isMember);
 	console.log('flutterPlatformReady', window.platformReady);
-	alert('window flutterPlatformReady', platformReady);
+	//alert('window flutterPlatformReady', platformReady);
 	let transaction = null;
 	if (platformReady) {
 		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await
