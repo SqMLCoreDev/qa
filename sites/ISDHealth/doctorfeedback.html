@@ -315,9 +315,7 @@ font-size: 13.5px;
   
 	   function populateDoctorTable(userData){
 		  document.getElementById("referringPhysician").innerHTML =  userData.referringPhysician;
-		  document.getElementById("doctorAddress").innerHTML =  userData.address;
-		  document.getElementById("doctorCity").innerHTML =  userData.cityTown1;
-		  document.getElementById("doctorCountry").innerHTML =  userData.country.name;
+		  document.getElementById("emailId").innerHTML =  userData.emailId;
 		  document.getElementById("doctorTelephone").innerHTML =  userData.telephone1;
 		  var studyRqst = [];
          for (var p in userData.studyRequested) {
@@ -337,7 +335,7 @@ font-size: 13.5px;
         }  
 		  document.getElementById("therapyRequested").innerHTML =  therapyRqst;
 		  document.getElementById("referringPhysicianSignature").innerHTML =  userData.referringPhysicianSignature;
-		  document.getElementById("doctorDate").innerHTML =  userData.date;
+		  document.getElementById("date").innerHTML =  userData.date;
 		 
    
       }
@@ -553,21 +551,14 @@ font-size: 13.5px;
 							<tr>
 							  <td colspan="5" id = "referringPhysician"> </td>
 							</tr>
-							<tr>
-							  <th>Address</th>
-							   <th>City</th>
-							</tr>
-							<tr>
-							  <td id = "doctorAddress"> </td>
-							   <td id = "doctorCity"> </td>
-							</tr>
+							
 							
 							<tr>
-							  <th >Country</th>
+							  <th >Email</th>
 							  <th >Telephone</th>
 							</tr>
 							<tr>
-							  <td id = "doctorCountry"> </td>
+							  <td id = "emailId"> </td>
 							   <td id = "doctorTelephone"> </td>
 							</tr>
 							
@@ -589,7 +580,7 @@ font-size: 13.5px;
 							</tr>
 							<tr>
 							  <td  id = "referringPhysicianSignature"> </td>
-							   <td  id = "doctorDate"> </td>
+							   <td  id = "date"> </td>
 							</tr>
 							
 						  </table>
