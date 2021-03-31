@@ -302,6 +302,7 @@ var payee = async function payButton(data, RegistrationFees) {
 
 function membershipCard(scheme, data, selected) {
 	var selectedScheme = null;
+	var basicScheme = null;
 	let card = "<div id='scheme-card' class='container-fluid'>";
 	card += "<div class='u-pos--rel c-banner-container' id='banner'>";
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
@@ -322,7 +323,7 @@ function membershipCard(scheme, data, selected) {
 	card += "<div class='u-d-flex u-p-h--8'>";
 	scheme.forEach(function (data) {
 		if (data.schemeName == "Basic") {
-			$('#'+data.schemeId).addClass('price-filter-active');
+			basicScheme = data;
 		}
 		if(data.schemeId == selected){
 			selectedScheme = data;
@@ -378,7 +379,11 @@ function membershipCard(scheme, data, selected) {
 		if(selected){
 			$('#'+selected).addClass('price-filter-active');
 			return selectedScheme;
+		}else if (basicScheme) {
+			$('#'+basicScheme.schemeId).addClass('price-filter-active');
+			return basicScheme;
 		}
+		
 	}
 	return null;
 }
