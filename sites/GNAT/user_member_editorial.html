@@ -47,9 +47,11 @@
 					$('.card-pricing').click(function () {
 						var schema = getScheme(this.id, info.schemeDefinition);
 						userObj["scheme"] = schema;
-						var fees = schema.schemeActivePrice;
+						var fees = 0;
 						if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
 							fees = schema.schemeActivePrice + schema.schemeBaseAmount;
+						}else{
+							fees = schema.schemeActivePrice;
 						}
 						userObj["schemeId"] = schema.schemeId;
 						userObj["fees"] = fees;
