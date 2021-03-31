@@ -223,18 +223,17 @@ function getCountries(alphaCode) {
 	return callingCode;
 }
 
-var payee = async function payButton(data, RegistrationFees) {
+var payee = async function payButton(data) {
 	console.log('payButton', data);
 	var description;
 	var platformReady = true;
-	var RegistrationFees = 0;
 	if (data.renewalEligible) {
 		description = "Membership Renewal Fee for " + data.userFullName;
 	} else {
 		description = "Membership Fee for " + data.userFullName;
 	}
 	var json = {
-		"totalAmount": data.fees + RegistrationFees,
+		"totalAmount": data.fees,
 		"payeePhoneNumber": data.countryCodeValueHome + data.homeNumber,
 		"payeeName": data.userFullName,
 		"payeeEmail": data.emailId,
