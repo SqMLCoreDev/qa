@@ -227,8 +227,8 @@ var payee = async function payButton(data, RegistrationFees) {
 	console.log('payButton', data);
 	var description;
 	var platformReady = true;
+	var RegistrationFees = 0;
 	if (data.renewalEligible) {
-		RegistrationFees = 0;
 		description = "Membership Renewal Fee for " + data.userFullName;
 	} else {
 		description = "Membership Fee for " + data.userFullName;
