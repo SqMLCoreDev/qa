@@ -152,9 +152,12 @@ var fetchAPI = async function (url, formdata, handlerName) {
 
 function getFormInfo(URL, data) {
 	var param = {};
-	param["departmentName"] = data.departmentName;
-	param["role"] = data.loggedInRole.toLowerCase();
-	
+	if(data.departmentName && data.departmentName != "null"){
+		param["departmentName"] = data.departmentName;
+	}
+	if(data.loggedInRole && data.loggedInRole != "null"){
+		param["role"] = data.loggedInRole.toLowerCase();
+	}
 	if (data.userName && data.userName != "null") {
 		param["userName"] = data.userName;
 	}
@@ -168,14 +171,20 @@ function getFormInfo(URL, data) {
 		data: param,
 		async: false,
 		success: function (result) {
-			console.log(result);
 			result["formDefinition"] = JSON.parse(result.formDefinition);
 			if (data.page.toLowerCase() == "adduser" || data.page.toLowerCase() == "signup" ){
 				result["formData"] = {"hasUser":false, "hasMember":false};
 			}else {
 				result["formData"] = JSON.parse(result.formData);
 			}
-			membershipCard(result.schemeDefinition, data);
+			var schemeId = null;
+			if(result.formData.hasOwnProperty('schemeId')){
+				schemeId = result.formData.schemeId;
+			}
+			var schemeInfo = membershipCard(result.schemeDefinition, data, schemeId);
+			if(schemeInfo){
+				result.formData["scheme"] = schemeInfo;
+			}
 			formObj = result;
 		},
 		beforeSend: function (request) {
@@ -289,11 +298,10 @@ var payee = async function payButton(data, RegistrationFees) {
 	}
 }
 
-function membershipCard(scheme, data) {
-	var basicSchema = {};
+function membershipCard(scheme, data, selected) {
+	var selectedScheme = null;
 	let card = "<div id='scheme-card' class='container-fluid'>";
 	card += "<div class='u-pos--rel c-banner-container' id='banner'>";
-	
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
 	card += "<img alt='Plus Logo' class='u-columns u-two u-m-b--10 ' effect='blur' src='../assets/brand/plus-logo.png''>";
 	card += "<div class='u-text--bold text-large bg-black'>Unlimited benefits with "+ data.departmentName +" Member+";
@@ -312,7 +320,10 @@ function membershipCard(scheme, data) {
 	card += "<div class='u-d-flex u-p-h--8'>";
 	scheme.forEach(function (data) {
 		if (data.schemeName == "Basic") {
-			basicSchema = data;
+			$('#'+data.schemeId).addClass('price-filter-active');
+		}
+		if(data.schemeId == selected){
+			selectedScheme = data;
 		}
 		card += "<div class='col-auto mb-3' style='display: flex;'>";
 		card += "<div class='card card-pricing text-center px-3 mb-4 u-m-h--8' style='width: 8rem;' aria-haspopup='true' id=" + data.schemeId + ">";
@@ -362,8 +373,12 @@ function membershipCard(scheme, data) {
 	if(data.page != "signup"){
 		$("#membership-card").append(card);
 		cardActivation();
-		$('#'+basicSchema.schemeId).addClass('price-filter-active');
+		if(selected){
+			$('#'+selected).addClass('price-filter-active');
+			return selectedScheme;
+		}
 	}
+	return null;
 }
 
 function cardActivation() {
@@ -480,7 +495,6 @@ function getSymbol(name){
 
 function getContent(data){
 	var array = data.split(',');
-	console.log(array);
 	return array;
 }
 
