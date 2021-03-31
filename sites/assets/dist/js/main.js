@@ -56,7 +56,9 @@ function URLBuilder(baseURL, docvars, hasUser, hasMember) {
 	params.append("departmentName", docvars.departmentName);
 	params.append("hasUser", hasUser);
 	params.append("hasMember", hasMember);
-	params.append("role", docvars.loggedInRole.toLowerCase());
+	if(docvars.loggedInRole && docvars.loggedInRole != "null"){
+		params.append("role", docvars.loggedInRole.toLowerCase());
+	}
 	if (docvars.membershipId != "null") {
 		params.append("membershipId", docvars.membershipId);
 	}
