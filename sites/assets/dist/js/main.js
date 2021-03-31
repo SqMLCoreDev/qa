@@ -240,6 +240,7 @@ var payee = async function payButton(data, RegistrationFees) {
 		"payeeEmail": data.emailId,
 		"paymentDescription": description
 	};
+	alert(json.totalAmount);
 	console.log(json, data.isMember);
 	console.log('flutterPlatformReady', window.platformReady);
 	//alert('window flutterPlatformReady', platformReady);
