@@ -1,13 +1,11 @@
 <html>
     <head>
-	   <meta charset="utf-8">
+		<meta charset="utf-8">
        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
        <meta name="description" content="">
        <meta name="generator" content="Jekyll v4.1.1">
        <title>User Membership</title>
-	   
-       <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
-       <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
+
        <link href="../assets/dist/css/custom-formio/theme.less.css" rel="stylesheet">
        <link href="../assets/dist/css/font-awesome.min.css" rel="stylesheet">
 	   <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -19,9 +17,7 @@
 	   <script src='../assets/dist/js/lodash/lodash.min.js'></script>
 	   <script src='../assets/dist/js/jquery-3.5.1.min.js'></script>
 	   <script src='../assets/dist/js/attrchange.js'></script>
-	   <script src='../assets/dist/js/investigate/selectize.js'></script>
        <script src='../assets/dist/js/bootstrap.bundle.min.js'></script>
-	   <script src='../assets/dist/js/pooper/popper.min.js'></script>
 	   <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
 	   <script src='../assets/dist/js/main.js'></script>
 	   
@@ -38,7 +34,7 @@
 			
 			var info = getFormInfo(URL, docvars);
 			console.log('info',info);
-			//alert("user membership editorial" + JSON.stringify(docvars));
+			alert("user membership editorial" + JSON.stringify(docvars));
 			Formio.createForm(document.getElementById('builder'), info.formDefinition)
 				.then(function (form) {
 					var userObj = {};
@@ -51,10 +47,13 @@
 					$('.card-pricing').click(function () {
 						var schema = getScheme(this.id, info.schemeDefinition);
 						userObj["scheme"] = schema;
-						var fees = schema.schemeActivePrice;
+						var fees = 0;
 						if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
 							fees = schema.schemeActivePrice + schema.schemeBaseAmount;
+						}else{
+							fees = schema.schemeActivePrice;
 						}
+						userObj["schemeId"] = schema.schemeId;
 						userObj["fees"] = fees;
 						userObj["newMemberFees"] = membershipFees(schema);
 						form.submission = { data: userObj };
@@ -67,7 +66,6 @@
 						$('#formSubmit').attr('disabled','disabled');
 						
 						var userObject = submission.data;
-						console.log("B4 : userObject : " + JSON.stringify(userObject)); 
 
 						delete userObject["submit"];
 						delete userObject["confirmPassword"];
@@ -85,13 +83,13 @@
 						delete userObject["maritalStatus1"];
 						delete userObject["others"];
 						
-						console.log("AF : userObject : " + JSON.stringify(userObject))
+						console.log("Request : " + JSON.stringify(userObject))
 
 						var handlerName =  'userMembershipHandlerWithArgs';
 						
 						var formURL = URLBuilder(URL, docvars, info.formData.hasUser, info.formData.hasMember);
 						
-						var responce = fetchRequest(form, formURL, userObject, handlerName);
+						var responce = fetchRequest(form, formURL, userObject, handlerName, docvars.clientId);
 					});
 
 					form.on('redraw', () => {
@@ -102,7 +100,6 @@
 		});
 		
 		function editObject(json){
-			console.log(json);
 			return json;
 		}
 		
