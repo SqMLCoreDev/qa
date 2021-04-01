@@ -157,6 +157,9 @@ function getFormInfo(URL, data) {
 	if(data.departmentName && data.departmentName != "null"){
 		param["departmentName"] = data.departmentName;
 	}
+	if(data.rootdepartmentName && data.rootdepartmentName != "null"){
+		param["rootdepartmentName"] = data.rootdepartmentName;
+	}
 	if(data.loggedInRole && data.loggedInRole != "null"){
 		param["role"] = data.loggedInRole.toLowerCase();
 	}
@@ -335,7 +338,7 @@ function membershipCard(scheme, data, selected) {
 			card += "</div>";
 		}
 		card += "<span class='mx-auto px-4 py-1 rounded-bottom bg-primary-card text-white shadow-sm text-zeta u-text--bold'>" + data.schemeName + "</span>";
-		card += "<div class='u-text--uppercase u-p-t--20 u-p-b--15 u-border-bottom--paleGrey u-text--bold text-mt u-pos--rel'>" + data.schemeBilingType + "</div>";
+		card += "<div class='u-text--uppercase u-p-t--20 u-p-b--15 u-border-bottom--paleGrey u-text--bold text-mt u-pos--rel'>" + getTitle(data) + "</div>";
 		card += "<div class='plan-details u-d-flex u-d-flex--center u-border-bottom--paleGrey'>";
 		card += "<div class='u-p-b--20 u-p-t--8'>";
 		card += "<div class='text-gre u-text--striked text-epsilon u-m-r--4 il-f'>";
@@ -502,6 +505,25 @@ function getSymbol(name){
 function getContent(data){
 	var array = data.split(',');
 	return array;
+}
+
+function getTitle(data){
+	var duration = data.schemeDuration;
+	if(data.schemeBilingType == "MONTHLY"){
+		if(duration){
+			return duration +" "+"MONTHS";
+		}else{
+			return "MONTH";
+		}
+			
+	}else if(data.schemeBilingType == "YEARLY"){
+		if(duration){
+			return duration +" "+"YEAR";
+		}else{
+			return "YEAR";
+		}
+	}
+	return data.schemeBilingType;
 }
 
 function membershipFees(data){
