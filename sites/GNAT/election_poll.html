@@ -124,6 +124,18 @@
       			var userObj;
 				//userObj["role"] = docvars.role;
 				
+				if(docvars.hasOwnProperty('firstName'){
+					userObj['firstName'] = docvars.firstName;
+				}
+				if(docvars.hasOwnProperty('lastName'){
+					userObj['lastName'] = docvars.lastName;
+				}
+				if(docvars.hasOwnProperty('membershipId'){
+					userObj['gnatMembershipId'] = docvars.membershipId;
+				}
+				if(docvars.hasOwnProperty('rnNumber'){
+					userObj['rnRmNumber'] = docvars.rnNumber;
+				}
       			
 				userObj["role"] = "nonEdit";
       
