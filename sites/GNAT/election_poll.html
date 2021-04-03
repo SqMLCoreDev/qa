@@ -92,14 +92,6 @@
 		var globalForm = null;
 		var flutterPlatformReady = false;
 		 var clientId;
-		
-		function getUrlVars() {
-			var vars = {};
-			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
-				vars[key] = decodeURI(value);
-			});
-			return vars;
-		}
 
 		$(document).ready(function () {
 			
@@ -124,16 +116,16 @@
       			var userObj;
 				//userObj["role"] = docvars.role;
 				
-				if(docvars.hasOwnProperty('firstName')){
+				if(docvars.hasOwnProperty('firstName') && docvars.firstName){
 					userObj['firstName'] = docvars.firstName;
 				}
-				if(docvars.hasOwnProperty('lastName')){
+				if(docvars.hasOwnProperty('lastName') && docvars.lastName){
 					userObj['lastName'] = docvars.lastName;
 				}
-				if(docvars.hasOwnProperty('membershipId')){
+				if(docvars.hasOwnProperty('membershipId') && docvars.membershipId){
 					userObj['gnatMembershipId'] = docvars.membershipId;
 				}
-				if(docvars.hasOwnProperty('rnNumber')){
+				if(docvars.hasOwnProperty('rnNumber') && docvars.rnNumber){
 					userObj['rnRmNumber'] = docvars.rnNumber;
 				}
       			
