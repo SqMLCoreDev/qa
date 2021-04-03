@@ -124,6 +124,9 @@
 				}
 				if(docvars.hasOwnProperty('membershipId') && docvars.membershipId){
 					userObj['gnatMembershipId'] = docvars.membershipId;
+					
+				}else {
+					alert("This User is not a Registerd Member");
 				}
 				if(docvars.hasOwnProperty('rnNumber') && docvars.rnNumber){
 					userObj['rnRmNumber'] = docvars.rnNumber;
