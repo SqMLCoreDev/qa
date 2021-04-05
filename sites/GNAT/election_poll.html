@@ -96,7 +96,12 @@
 
 		$(document).ready(function () {
 		alert('test');
-			
+			swal({
+  title: "test!",
+  text: "test alert!",
+  icon: "success",
+  button: "ok!",
+});
 			
 			var docvars = getUrlVars();
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
