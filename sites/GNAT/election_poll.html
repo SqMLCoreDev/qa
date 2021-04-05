@@ -95,13 +95,7 @@
 		 var clientId;
 
 		$(document).ready(function () {
-		alert('test');
-			swal({
-  title: "test!",
-  text: "test alert!",
-  icon: "success",
-  button: "ok!",
-});
+		
 			
 			var docvars = getUrlVars();
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
@@ -131,6 +125,9 @@
 				}
 				if(docvars.hasOwnProperty('membershipId') && docvars.membershipId){
 					userObj['gnatMembershipId'] = docvars.membershipId;	
+				}else{
+					alert('no id');
+					swal({title: "test!",text: "no id alert!",icon: "success",button: "ok!"});
 				}
 				if(docvars.hasOwnProperty('rnNumber') && docvars.rnNumber){
 					userObj['rnRmNumber'] = docvars.rnNumber;
