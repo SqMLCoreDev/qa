@@ -21,6 +21,7 @@
     <script src='../assets/dist/js/pooper/popper.min.js'></script>
     <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
     <script src='../assets/dist/js/main.js'></script>
+	<script src="../assets/dist/js/sweetalert.min.js"></script>
        <style>
 		.bd-placeholder-img {
 		  font-size: 1.125rem;
@@ -94,7 +95,12 @@
 		 var clientId;
 
 		$(document).ready(function () {
-			
+			swal({
+  title: "Good job!",
+  text: "You clicked the button!",
+  icon: "success",
+  button: "Aww yiss!",
+});
 			
 			var docvars = getUrlVars();
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
