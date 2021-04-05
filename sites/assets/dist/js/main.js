@@ -541,3 +541,12 @@ function membershipFees(data){
 	return fees;
 }
 
+
+function SuccessAlert(title, msg){
+	swal({title: title, text: msg, icon: 'success'});
+}
+
+function WarningAlert(title, msg){
+	swal({title: title, text: msg, icon: 'error'});
+}
+
