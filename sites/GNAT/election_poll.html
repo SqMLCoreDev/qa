@@ -168,6 +168,7 @@
 								
       						}
 							form.submission = { data: userObject };
+							form.triggerChange();
       					}).catch(function(error) {
       						console.log("error fetch",error);
       					});
