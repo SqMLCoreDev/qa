@@ -123,10 +123,7 @@
 					userObj['lastName'] = docvars.lastName;
 				}
 				if(docvars.hasOwnProperty('membershipId') && docvars.membershipId){
-					userObj['gnatMembershipId'] = docvars.membershipId;
-					
-				}else {
-					alert("This User is not a Registered Member");
+					userObj['gnatMembershipId'] = docvars.membershipId;	
 				}
 				if(docvars.hasOwnProperty('rnNumber') && docvars.rnNumber){
 					userObj['rnRmNumber'] = docvars.rnNumber;
