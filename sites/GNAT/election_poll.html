@@ -96,7 +96,6 @@
 
 		$(document).ready(function () {
 		
-			
 			var docvars = getUrlVars();
 			window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
 				flutterPlatformReady = true;
@@ -125,9 +124,6 @@
 				}
 				if(docvars.hasOwnProperty('membershipId') && docvars.membershipId){
 					userObj['gnatMembershipId'] = docvars.membershipId;	
-				}else{
-					alert('no id');
-					swal({title: "test!",text: "no id alert!",icon: "success",button: "ok!"});
 				}
 				if(docvars.hasOwnProperty('rnNumber') && docvars.rnNumber){
 					userObj['rnRmNumber'] = docvars.rnNumber;
@@ -167,7 +163,7 @@
 									userObject['response'] = true;
       						}else{
       							form.emit('submitError', response.message);
-								alert(response.message);
+								WarningAlert('Warning', response.message);
 								userObject['response'] = false;
 								
       						}
