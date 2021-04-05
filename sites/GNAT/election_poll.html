@@ -162,7 +162,8 @@
       								$('#formSubmit').attr('disabled','disabled');
       								
       						}else{
-      							form.emit('submitError', response.message)
+      							form.emit('submitError', response.message);
+								alert(response.message);
       						}
       					}).catch(function(error) {
       						console.log("error fetch",error);
