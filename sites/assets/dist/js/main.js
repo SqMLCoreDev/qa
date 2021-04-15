@@ -228,7 +228,7 @@ function getCountries(alphaCode) {
 var payee = async function payButton(data) {
 	console.log('payButton', data);
 	var description;
-	var platformReady = false;
+	var platformReady = true;
 	if (data.renewalEligible) {
 		description = "Membership Renewal Fee for " + data.userFullName;
 	} else {
