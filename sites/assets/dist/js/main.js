@@ -52,14 +52,16 @@ function URLBuilder(baseURL, docvars, hasUser, hasMember) {
 	let url = new URL(baseURL);
 	let params = '';
 	params = url.searchParams;
-	params.append("userName", docvars.userName);
 	params.append("departmentName", docvars.departmentName);
 	params.append("hasUser", hasUser);
 	params.append("hasMember", hasMember);
+	if(docvars.userName && docvars.userName != "null"){
+		params.append("userName", docvars.userName);
+	}
 	if(docvars.loggedInRole && docvars.loggedInRole != "null"){
 		params.append("role", docvars.loggedInRole.toLowerCase());
 	}
-	if (docvars.membershipId != "null") {
+	if (docvars.membershipId && docvars.membershipId != "null") {
 		params.append("membershipId", docvars.membershipId);
 	}
 	console.log(url.toString());
@@ -178,7 +180,8 @@ function getFormInfo(URL, data) {
 		success: function (result) {
 			result["formDefinition"] = JSON.parse(result.formDefinition);
 			if (data.page.toLowerCase() == "adduser" || data.page.toLowerCase() == "signup" ){
-				result["formData"] = {"hasUser":false, "hasMember":false};
+				var formData = JSON.parse(result.formData);
+				result["formData"] = {"hasUser":false, "hasMember":false, "membershipSchemeType" : formData.membershipSchemeType};
 			}else {
 				result["formData"] = JSON.parse(result.formData);
 			}
@@ -186,7 +189,7 @@ function getFormInfo(URL, data) {
 			if(result.formData.hasOwnProperty('schemeId')){
 				schemeId = result.formData.schemeId;
 			}
-			var schemeInfo = membershipCard(result.schemeDefinition, data, schemeId);
+			var schemeInfo = membershipCard(result.formData, result.schemeDefinition, data, schemeId);
 			if(schemeInfo){
 				result.formData["scheme"] = schemeInfo;
 			}
@@ -287,7 +290,7 @@ var payee = async function payButton(data) {
 		return data;
 	} else {
 		transaction = {
-			"receiptNo": "12345",
+			"receiptNo": "order_GTsfTSLwhgS4kT",
 			"paymentMode": "CASH",
 			"paymentStatus": "success"
 		};
@@ -302,7 +305,7 @@ var payee = async function payButton(data) {
 	}
 }
 
-function membershipCard(scheme, data, selected) {
+function membershipCard(formData, scheme, data, selected) {
 	var selectedScheme = null;
 	var basicScheme = null;
 	let card = "<div id='scheme-card' class='container-fluid'>";
@@ -371,23 +374,30 @@ function membershipCard(scheme, data, selected) {
 	card += "</div>";
 	card += "</div>";
 	card += "</div>";
-
 	card += "</div>";
 
 	// Append the new article card to the article section div
 	if(data.page != "signup"){
-		$("#membership-card").append(card);
-		cardActivation();
-		if(selected){
-			$('#'+selected).addClass('price-filter-active');
-			return selectedScheme;
-		}else if (basicScheme) {
-			$('#'+basicScheme.schemeId).addClass('price-filter-active');
-			return basicScheme;
+		if(formData.membershipSchemeType == "ONBOARD" || formData.membershipSchemeType == "RENEWAL" && formData.expiryDays && formData.expiryDays < 5){
+		console.log('if scheme');
+			return createMembershipCard(card, selected, basicScheme, selectedScheme);
+		}else{
+			console.log('else scheme', formData);
 		}
-		
 	}
 	return null;
+}
+
+function createMembershipCard(card, selected, basicScheme, selectedScheme){
+	$("#membership-card").append(card);
+	cardActivation();
+	if(selected){
+		$('#'+selected).addClass('price-filter-active');
+		return selectedScheme;
+	}else if (basicScheme) {
+		$('#'+basicScheme.schemeId).addClass('price-filter-active');
+		return basicScheme;
+	}
 }
 
 function cardActivation() {
