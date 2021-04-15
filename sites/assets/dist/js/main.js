@@ -185,11 +185,7 @@ function getFormInfo(URL, data) {
 			}else {
 				result["formData"] = JSON.parse(result.formData);
 			}
-			var schemeId = null;
-			if(result.formData.hasOwnProperty('schemeId')){
-				schemeId = result.formData.schemeId;
-			}
-			var schemeInfo = membershipCard(result.formData, result.schemeDefinition, data, schemeId);
+			var schemeInfo = membershipCard(result.formData, result.schemeDefinition, data);
 			if(schemeInfo){
 				result.formData["scheme"] = schemeInfo;
 			}
@@ -232,7 +228,7 @@ function getCountries(alphaCode) {
 var payee = async function payButton(data) {
 	console.log('payButton', data);
 	var description;
-	var platformReady = true;
+	var platformReady = false;
 	if (data.renewalEligible) {
 		description = "Membership Renewal Fee for " + data.userFullName;
 	} else {
@@ -290,7 +286,7 @@ var payee = async function payButton(data) {
 		return data;
 	} else {
 		transaction = {
-			"receiptNo": "order_GTsfTSLwhgS4kT",
+			"receiptNo": "order_" +randomUUID(15),
 			"paymentMode": "CASH",
 			"paymentStatus": "success"
 		};
@@ -305,7 +301,7 @@ var payee = async function payButton(data) {
 	}
 }
 
-function membershipCard(formData, scheme, data, selected) {
+function membershipCard(formData, scheme, data) {
 	var selectedScheme = null;
 	var basicScheme = null;
 	let card = "<div id='scheme-card' class='container-fluid'>";
@@ -316,12 +312,6 @@ function membershipCard(formData, scheme, data, selected) {
 	card += "</div>";
 	card += "</div>";
 	card += "</div>";
-	/*card += "<div class='row' style='margin-left: 25px;'>";
-	card += "<div class='col-xs-12 text-md-right lead'>";
-	card += "<a id='left-button' class='btn btn-outline-secondary prev' title='go back'><i class='fa fa-angle-left'></i></a>";
-	card += "<a id='right-button' class='btn btn-outline-secondary next' title='more'><i class='fa fa-angle-right'></i></a>";
-	card += "</div>";
-	card += "</div>"; */
 	card += "<div id='scheme' class='d-flex flex-row flex-nowrap overflow-auto'>";
 	card += "<div class='pricing row flex-column flex-md-row'>";
 	card += "<div class='u-p-v--10 text-center c-card-slider' id='plans' style='overflow: visible;'>";
@@ -330,7 +320,9 @@ function membershipCard(formData, scheme, data, selected) {
 		if (data.schemeName == "Basic") {
 			basicScheme = data;
 		}
-		if(data.schemeId == selected){
+		if(data.schemeId == formData.schemeId){
+			selectedScheme = data;
+		}else if(formData.fees && data.schemeActivePrice + data.schemeBaseAmount == parseInt(formData.fees)){
 			selectedScheme = data;
 		}
 		card += "<div class='col-auto mb-3' style='display: flex;'>";
@@ -375,12 +367,28 @@ function membershipCard(formData, scheme, data, selected) {
 	card += "</div>";
 	card += "</div>";
 	card += "</div>";
-
+	
+	if(formData.membershipSchemeType == "RENEWAL"){
+		card += "<div style='margin: 5px 5px 5px;'>";
+		card += "<p class='text-pm float-left'>Membership : <p>"+  formData.membershipSchemeType +"</p></p>";
+		card += "<p class='text-pm float-left'>Expiry Date : <p>"+  formData.expiryDate +"</p></p>";
+		card += "<p class='text-pm float-left'>Expiry Days :  <p>"+ formData.expiryDays+" Days left</p></p>";
+		card += "</div>";
+	}
+	
 	// Append the new article card to the article section div
 	if(data.page != "signup"){
-		if(formData.membershipSchemeType == "ONBOARD" || formData.membershipSchemeType == "RENEWAL" && formData.expiryDays && formData.expiryDays < 5){
+		if(formData.membershipSchemeType == "ONBOARD"){
 		console.log('if scheme');
-			return createMembershipCard(card, selected, basicScheme, selectedScheme);
+			return createMembershipCard(card, basicScheme, selectedScheme);
+		}else if(formData.membershipSchemeType == "RENEWAL"){
+			console.log('else if scheme', formData);
+			if(formData.expiryDays && formData.expiryDays <= 5){
+				return createMembershipCard(card, basicScheme, selectedScheme);
+			}else{
+				console.log('selectedScheme', selectedScheme);
+				return selectedScheme;
+			}
 		}else{
 			console.log('else scheme', formData);
 		}
@@ -388,11 +396,11 @@ function membershipCard(formData, scheme, data, selected) {
 	return null;
 }
 
-function createMembershipCard(card, selected, basicScheme, selectedScheme){
+function createMembershipCard(card, basicScheme, selectedScheme){
 	$("#membership-card").append(card);
 	cardActivation();
-	if(selected){
-		$('#'+selected).addClass('price-filter-active');
+	if(selectedScheme && selectedScheme.schemeId){
+		$('#'+selectedScheme.schemeId).addClass('price-filter-active');
 		return selectedScheme;
 	}else if (basicScheme) {
 		$('#'+basicScheme.schemeId).addClass('price-filter-active');
@@ -409,15 +417,6 @@ function cardActivation() {
 		
 		var id = $(this).attr('id');
 		console.log(id);
-		/*  $('.price-filter-active').not(this).removeClass('price-filter-active');
-			$(this).toggleClass('price-filter-active');
-			$this = $(this);
-			if (!$this.hasClass('active')) {
-			$('.card-pricing').removeClass('active');
-			$(this).attr('id').addClass('active');
-			var id = $(this).attr('id');
-			console.log(id);
-			} */
 	})
 	var view = $("#scheme");
 	var sliderLimit = 120;
@@ -551,6 +550,16 @@ function membershipFees(data){
 	return fees;
 }
 
+function randomUUID(length) {
+    var result           = [];
+    var characters       = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    var charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+      result.push(characters.charAt(Math.floor(Math.random() * 
+ charactersLength)));
+   }
+   return result.join('');
+}
 
 function SuccessAlert(title, msg){
 	swal({title: title, text: msg, icon: 'success'});
