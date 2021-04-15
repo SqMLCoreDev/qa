@@ -233,4 +233,8 @@ input[type="radio"][disabled]+label {
 	display: none !important;
 }
 
+.text-pm{
+	color : #007bff;
+}
+
 /* loader */
