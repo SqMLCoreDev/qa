@@ -42,24 +42,11 @@
 						userObj = editObject(info.formData);
 					}
 					userObj["page"] = docvars.page;
-					var obj = userObj;
 					form.submission = { data: userObj };
 					
 					$('.card-pricing').click(function () {
-						var schema = getScheme(this.id, info.schemeDefinition);
-						userObj = form._data;
-						userObj["scheme"] = schema;
-						var fees = 0;
-						if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
-							fees = schema.schemeActivePrice + schema.schemeBaseAmount;
-						}else{
-							fees = schema.schemeActivePrice;
-						}
-						userObj["schemeId"] = schema.schemeId;
-						userObj["fees"] = fees;
-						userObj["newMemberFees"] = membershipFees(schema);
-						console.log(userObj);
-						form.submission = { data: userObj };
+						var submission = schemeCard(this.id, info.schemeDefinition, form);
+						form.submission = submission;
 						console.log(form._data);
 					});
 					
