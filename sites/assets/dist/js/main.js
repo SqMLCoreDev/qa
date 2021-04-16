@@ -228,7 +228,7 @@ function getCountries(alphaCode) {
 var payee = async function payButton(data) {
 	console.log('payButton', data);
 	var description;
-	var platformReady = true;
+	var platformReady = getDevice();
 	if (data.renewalEligible) {
 		description = "Membership Renewal Fee for " + data.userFullName;
 	} else {
@@ -322,7 +322,7 @@ function membershipCard(formData, scheme, data) {
 		}
 		if(data.schemeId == formData.schemeId){
 			selectedScheme = data;
-		}else if(formData.fees && data.schemeActivePrice + data.schemeBaseAmount == parseInt(formData.fees)){
+		}else if(formData.hasMember && formData.fees && data.schemeActivePrice + data.schemeBaseAmount == parseInt(formData.fees)){
 			selectedScheme = data;
 		}
 		card += "<div class='col-auto mb-3' style='display: flex;'>";
@@ -379,11 +379,15 @@ function membershipCard(formData, scheme, data) {
 	// Append the new article card to the article section div
 	if(data.page != "signup"){
 		if(formData.membershipSchemeType == "ONBOARD"){
-		console.log('if scheme');
-			return createMembershipCard(card, basicScheme, selectedScheme);
+			console.log('if scheme');
+			if(formData.receiptNo){
+				return selectedScheme;
+			}else{
+				return createMembershipCard(card, basicScheme, selectedScheme);
+			}
 		}else if(formData.membershipSchemeType == "RENEWAL"){
 			console.log('else if scheme', formData);
-			if(formData.expiryDays && formData.expiryDays <= 5){
+			if(formData.expiryDays && formData.expiryPeriod && formData.expiryDays <= formData.expiryPeriod){
 				return createMembershipCard(card, basicScheme, selectedScheme);
 			}else{
 				console.log('selectedScheme', selectedScheme);
@@ -569,3 +573,10 @@ function WarningAlert(title, msg){
 	swal({title: title, text: msg, icon: 'error'});
 }
 
+function getDevice(){
+	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
+	  return true;
+	}else{
+	  return false;
+	}
+}
