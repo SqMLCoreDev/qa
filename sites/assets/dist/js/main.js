@@ -228,9 +228,11 @@ function getCountries(alphaCode) {
 var payee = async function payButton(data) {
 	console.log('payButton', data);
 	var description;
+	var Renewal = false;
 	var platformReady = getDevice();
 	if (data.renewalEligible) {
 		description = "Membership Renewal Fee for " + data.userFullName;
+		Renewal = true;
 	} else {
 		description = "Membership Fee for " + data.userFullName;
 	}
@@ -279,10 +281,14 @@ var payee = async function payButton(data) {
 		data["receiptNo"] = transaction.receiptNo;
 		data["paymentMode"] = transaction.paymentMode;
 		data["paymentStatus"] = transaction.paymentStatus;
+		if(Renewal){
+			data["isRenewedMembership"] = true;
+		}
 		if (data.paymentStatus === 'success') {
 			data["membershipStatus"] = 'Pending Approval';
 			data["memberStatus"] = 'Pending Approval';
 		}
+		console.log(data);
 		return data;
 	} else {
 		transaction = {
@@ -293,10 +299,14 @@ var payee = async function payButton(data) {
 		data["receiptNo"] = transaction.receiptNo;
 		data["paymentMode"] = transaction.paymentMode;
 		data["paymentStatus"] = transaction.paymentStatus;
+		if(Renewal){
+			data["isRenewedMembership"] = true;
+		}
 		if (data.paymentStatus === 'success') {
 			data["membershipStatus"] = 'Pending Approval';
 			data["memberStatus"] = 'Pending Approval';
 		}
+		console.log(data);
 		return data;
 	}
 }
@@ -403,8 +413,11 @@ function membershipCard(formData, scheme, data) {
 function createMembershipCard(card, basicScheme, selectedScheme){
 	$("#membership-card").append(card);
 	cardActivation();
+	
 	if(selectedScheme && selectedScheme.schemeId){
-		$('#'+selectedScheme.schemeId).addClass('price-filter-active');
+		var id = $('#'+selectedScheme.schemeId);
+		id.addClass('price-filter-active');
+		id[0].scrollIntoView({ block: "start", behavior: 'smooth'});
 		return selectedScheme;
 	}else if (basicScheme) {
 		$('#'+basicScheme.schemeId).addClass('price-filter-active');
@@ -571,6 +584,23 @@ function SuccessAlert(title, msg){
 
 function WarningAlert(title, msg){
 	swal({title: title, text: msg, icon: 'error'});
+}
+function schemeCard(id, scheme, formData){
+	var schema = getScheme(id, scheme);
+	var userObj = formData._data;
+	userObj["scheme"] = schema;
+	var fees = 0;
+	if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
+		fees = schema.schemeActivePrice + schema.schemeBaseAmount;
+	}else if (schema.schemeBaseAmount && schema.schemeType == "RENEWAL"){ // TODO
+		fees = schema.schemeActivePrice + schema.schemeBaseAmount;
+	}
+	userObj["schemeId"] = schema.schemeId;
+	userObj["fees"] = fees;
+	userObj["newMemberFees"] = membershipFees(schema);
+	console.log(userObj);
+	var submission = { data: userObj };
+	return submission;
 }
 
 function getDevice(){
