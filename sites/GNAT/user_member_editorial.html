@@ -42,10 +42,12 @@
 						userObj = editObject(info.formData);
 					}
 					userObj["page"] = docvars.page;
+					var obj = userObj;
 					form.submission = { data: userObj };
 					
 					$('.card-pricing').click(function () {
 						var schema = getScheme(this.id, info.schemeDefinition);
+						userObj = form._data;
 						userObj["scheme"] = schema;
 						var fees = 0;
 						if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
@@ -56,6 +58,7 @@
 						userObj["schemeId"] = schema.schemeId;
 						userObj["fees"] = fees;
 						userObj["newMemberFees"] = membershipFees(schema);
+						console.log(userObj);
 						form.submission = { data: userObj };
 						console.log(form._data);
 					});
