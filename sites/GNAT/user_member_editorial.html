@@ -19,6 +19,7 @@
 	   <script src='../assets/dist/js/attrchange.js'></script>
        <script src='../assets/dist/js/bootstrap.bundle.min.js'></script>
 	   <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
+	   <script src="../assets/dist/js/sweetalert.min.js"></script>
 	   <script src='../assets/dist/js/main.js'></script>
 	   
        <script>
@@ -47,7 +48,7 @@
 					$('.card-pricing').click(function () {
 						var submission = schemeCard(this.id, info.schemeDefinition, form);
 						form.submission = submission;
-						console.log(form._data);
+						console.log('card-pricing',form._data);
 					});
 					
 					console.log(userObj);
