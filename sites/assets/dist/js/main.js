@@ -23,6 +23,16 @@ function getUrlVars() {
 	return vars;
 }
 
+function isValidJSON(str) {
+	try {
+		JSON.parse(str);
+	} catch (e) {
+		console.log("JSON Parsing error [" + str + "]\n" + e);
+		return false;
+	}
+	return true;
+}
+
 var convertType = function (value) {
 	var values = {
 			undefined: undefined,
@@ -34,18 +44,42 @@ var convertType = function (value) {
 	return isNumber && +(value) || !(value in values) && value || values[value];
 };
 
-function isValidJSON(str) {
-	try {
-		JSON.parse(str);
-	} catch (e) {
-		console.log("JSON Parsing error [" + str + "]\n" + e);
-		return false;
-	}
-	return true;
-}
-
 function now() {
 	return new Date(new Date().toString().split('GMT')[0] + ' UTC').toISOString().split('.')[0];
+}
+
+function enable(id) {
+	document.addEventListener("DOMContentLoaded", function (event) {
+		document.getElementById(id).disabled = false;
+		$('#' + id).removeClass('disable');
+	});
+}
+
+function disable(id) {
+	var comp = document.querySelectorAll("[id^=" + id + "]");
+	for (var i = 0; i < comp.length; i++) {
+		comp[i].disabled = true;
+	}
+	document.getElementById(id).disabled = true;
+	$('#' + id).addClass('disable');
+}
+
+function showComponent(value, status) {
+	if (status) {
+		$('input[type="radio"][value="' + value + '"]').prop('disabled', false);
+	} else {
+		$('input[type="radio"][value="' + value + '"]').prop('disabled', true);
+	}
+}
+
+function showLoader(loader) {
+	if (loader == 'show') {
+		$(".loader").show();
+		$("#builder").addClass('hide');
+	} else {
+		$(".loader").hide();
+		$("#builder").removeClass('hide');
+	}
 }
 
 function URLBuilder(baseURL, docvars, hasUser, hasMember) {
@@ -66,40 +100,6 @@ function URLBuilder(baseURL, docvars, hasUser, hasMember) {
 	}
 	console.log(url.toString());
 	return url.toString();
-}
-
-function disable(id) {
-	var comp = document.querySelectorAll("[id^=" + id + "]");
-	for (var i = 0; i < comp.length; i++) {
-		comp[i].disabled = true;
-	}
-	document.getElementById(id).disabled = true;
-	$('#' + id).addClass('disable');
-}
-
-function showComponent(value, status) {
-	if (status) {
-		$('input[type="radio"][value="' + value + '"]').prop('disabled', false);
-	} else {
-		$('input[type="radio"][value="' + value + '"]').prop('disabled', true);
-	}
-}
-
-function enable(id) {
-	document.addEventListener("DOMContentLoaded", function (event) {
-		document.getElementById(id).disabled = false;
-		$('#' + id).removeClass('disable');
-	});
-}
-
-function showLoader(loader) {
-	if (loader == 'show') {
-		$(".loader").show();
-		$("#builder").addClass('hide');
-	} else {
-		$(".loader").hide();
-		$("#builder").removeClass('hide');
-	}
 }
 
 function fetchRequest(form, URL, userObject, handlerName, clientId) {
@@ -200,7 +200,7 @@ function getFormInfo(URL, data) {
 		},
 		error: function (textStatus) {
 			console.log(textStatus);
-			alert(textStatus.responseJSON.message);
+			WarningAlert(textStatus.responseJSON.errorCode, textStatus.responseJSON.message);
 			formObj = textStatus.responseJSON;
 		}
 	});
@@ -225,92 +225,6 @@ function getCountries(alphaCode) {
 	return callingCode;
 }
 
-var payee = async function payButton(data) {
-	console.log('payButton', data);
-	var description;
-	var Renewal = false;
-	var platformReady = getDevice();
-	if (data.renewalEligible) {
-		description = "Membership Renewal Fee for " + data.userFullName;
-		Renewal = true;
-	} else {
-		description = "Membership Fee for " + data.userFullName;
-	}
-	var json = {
-		"totalAmount": data.fees,
-		"payeePhoneNumber": data.countryCodeValueHome + data.homeNumber,
-		"payeeName": data.userFullName,
-		"payeeEmail": data.emailId,
-		"paymentDescription": description
-	};
-	console.log(json, data.isMember);
-	console.log('flutterPlatformReady', window.platformReady);
-	//alert('window flutterPlatformReady', platformReady);
-	let transaction = null;
-	if (platformReady) {
-		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await
-			function (data) {
-				console.log("handlerPayResponseWithArgs" + JSON.stringify(data));
-				if (Array.isArray(data.response)) {
-					data["response"] = data.response[0];
-				}
-				var receiptNo = null;
-				var paymentMode = null;
-				var transactionStatus = null;
-				if (data.response) {
-					receiptNo = data.response.transactionId;
-					paymentMode = data.response.paymentMode;
-					transactionStatus = data.response.transactionStatus;
-				}
-				if (!data.response && !data.isCancelled && getUrlVars().loggedInRole == 'user') {
-					paymentMode = 'CASH';
-					transactionStatus = 'success';
-				}
-
-				if (data.receiptNumber) {
-					receiptNo = data.receiptNumber;
-				}
-
-				transaction = {
-					"receiptNo": receiptNo,
-					"paymentMode": paymentMode,
-					"paymentStatus": transactionStatus
-				};
-
-			});
-		data["receiptNo"] = transaction.receiptNo;
-		data["paymentMode"] = transaction.paymentMode;
-		data["paymentStatus"] = transaction.paymentStatus;
-		if(Renewal){
-			data["isRenewedMembership"] = true;
-		}
-		if (data.paymentStatus === 'success') {
-			data["membershipStatus"] = 'Pending Approval';
-			data["memberStatus"] = 'Pending Approval';
-		}
-		console.log(data);
-		return data;
-	} else {
-		transaction = {
-			"receiptNo": "order_" +randomUUID(15),
-			"paymentMode": "CASH",
-			"paymentStatus": "success"
-		};
-		data["receiptNo"] = transaction.receiptNo;
-		data["paymentMode"] = transaction.paymentMode;
-		data["paymentStatus"] = transaction.paymentStatus;
-		if(Renewal){
-			data["isRenewedMembership"] = true;
-		}
-		if (data.paymentStatus === 'success') {
-			data["membershipStatus"] = 'Pending Approval';
-			data["memberStatus"] = 'Pending Approval';
-		}
-		console.log(data);
-		return data;
-	}
-}
-
 function membershipCard(formData, scheme, data) {
 	var selectedScheme = null;
 	var basicScheme = null;
@@ -332,7 +246,7 @@ function membershipCard(formData, scheme, data) {
 		}
 		if(data.schemeId == formData.schemeId){
 			selectedScheme = data;
-		}else if(formData.hasMember && formData.fees && data.schemeActivePrice + data.schemeBaseAmount == parseInt(formData.fees)){
+		}else if(formData.hasMember && formData.fees && data.schemeActivePrice == parseInt(formData.fees)){
 			selectedScheme = data;
 		}
 		card += "<div class='col-auto mb-3' style='display: flex;'>";
@@ -425,6 +339,78 @@ function createMembershipCard(card, basicScheme, selectedScheme){
 	}
 }
 
+function schemeCard(id, scheme, formData){
+	//var planChange = InfoAlert('Do you Want to Upgrade the Plan', '');
+	var schema = getScheme(id, scheme);
+	var userObj = formData._data;
+	console.log('schemeCard bf', userObj);
+	userObj["scheme"] = schema;
+	var fees = parseInt(userObj.fees);
+	userObj["fees"] = fees;
+	if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
+		userObj["newMemberFees"] = membershipFees(schema);
+	}else if (schema.schemeBaseAmount && schema.schemeType == "RENEWAL"){ // TODO
+		userObj["renewalFees"] = membershipFees(schema);
+		userObj["renewalPayableFees"] = schema.schemeActivePrice;
+	}
+	userObj["schemeId"] = schema.schemeId;
+	
+	console.log('schemeCard',userObj);
+	var submission = { data: userObj };
+	return submission;
+}
+
+function getScheme(id, scheme) {
+	return scheme.filter(function(data){return (data['schemeId'] == id);})[0];
+}
+
+function getSymbol(name){
+    let symbol = {
+      'USD': '$', // US Dollar
+      'EUR': '€', // Euro
+      'CRC': '₡', // Costa Rican Colón
+      'GBP': '£', // British Pound Sterling
+      'ILS': '₪', // Israeli New Sheqel
+      'INR': '₹', // Indian Rupee
+      'JPY': '¥', // Japanese Yen
+      'KRW': '₩', // South Korean Won
+      'NGN': '₦', // Nigerian Naira
+      'PHP': '₱', // Philippine Peso
+      'PLN': 'zł', // Polish Zloty
+      'PYG': '₲', // Paraguayan Guarani
+      'THB': '฿', // Thai Baht
+      'UAH': '₴', // Ukrainian Hryvnia
+      'VND': '₫', // Vietnamese Dong
+    }
+    if(symbol[name] !== undefined) {
+        return symbol[name];
+    }
+}
+
+function getContent(data){
+	var array = data.split(',');
+	return array;
+}
+
+function getTitle(data){
+	var duration = data.schemeDuration;
+	if(data.schemeBilingType == "MONTHLY"){
+		if(duration){
+			return duration +" "+"MONTHS";
+		}else{
+			return "MONTH";
+		}
+			
+	}else if(data.schemeBilingType == "YEARLY"){
+		if(duration){
+			return duration +" "+"YEAR";
+		}else{
+			return "YEAR";
+		}
+	}
+	return data.schemeBilingType;
+}
+
 function cardActivation() {
 	$('.card-pricing').click(function () {
 	
@@ -495,61 +481,91 @@ function cardActivation() {
 
 }());
 
-function getParentForm(info) {
-	var def = info.formDefinition;
-	return def;
-}
-
-function getScheme(id, scheme) {
-	return scheme.filter(function(data){return (data['schemeId'] == id);})[0];
-}
-
-function getSymbol(name){
-    let symbol = {
-      'USD': '$', // US Dollar
-      'EUR': '€', // Euro
-      'CRC': '₡', // Costa Rican Colón
-      'GBP': '£', // British Pound Sterling
-      'ILS': '₪', // Israeli New Sheqel
-      'INR': '₹', // Indian Rupee
-      'JPY': '¥', // Japanese Yen
-      'KRW': '₩', // South Korean Won
-      'NGN': '₦', // Nigerian Naira
-      'PHP': '₱', // Philippine Peso
-      'PLN': 'zł', // Polish Zloty
-      'PYG': '₲', // Paraguayan Guarani
-      'THB': '฿', // Thai Baht
-      'UAH': '₴', // Ukrainian Hryvnia
-      'VND': '₫', // Vietnamese Dong
-    }
-
-    if(symbol[name] !== undefined) {
-        return symbol[name];
-    }
-}
-
-function getContent(data){
-	var array = data.split(',');
-	return array;
-}
-
-function getTitle(data){
-	var duration = data.schemeDuration;
-	if(data.schemeBilingType == "MONTHLY"){
-		if(duration){
-			return duration +" "+"MONTHS";
+var payee = async function payButton(data) {
+	console.log('payButton', data);
+	var description;
+	var Renewal = false;
+	var platformReady = getDevice();
+	var totalFees = 0;
+	if (data.renewalEligible) {
+		description = "Membership Renewal Fee for " + data.userFullName;
+		Renewal = true;
+		if(data.renewalPreviousMonths){
+			totalFees = calculatePayableMonths(data);
 		}else{
-			return "MONTH";
+			totalFees = data.renewalPayableFees;
 		}
-			
-	}else if(data.schemeBilingType == "YEARLY"){
-		if(duration){
-			return duration +" "+"YEAR";
-		}else{
-			return "YEAR";
-		}
+	} else {
+		description = "Membership Fee for " + data.userFullName;
+		totalFees = data.fees + data.scheme.schemeBaseAmount;
 	}
-	return data.schemeBilingType;
+	var json = {
+		"totalAmount": totalFees,
+		"payeePhoneNumber": data.countryCodeValueHome + data.homeNumber,
+		"payeeName": data.userFullName,
+		"payeeEmail": data.emailId,
+		"paymentDescription": description
+	};
+	console.log(json, data.isMember);
+	console.log('flutterPlatformReady', window.platformReady);
+	//alert('window flutterPlatformReady', platformReady);
+	let transaction = null;
+	if (platformReady) {
+		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await
+			function (data) {
+				console.log("handlerPayResponseWithArgs" + JSON.stringify(data));
+				if (Array.isArray(data.response)) {
+					data["response"] = data.response[0];
+				}
+				var receiptNo = null;
+				var paymentMode = null;
+				var transactionStatus = null;
+				if (data.response) {
+					receiptNo = data.response.transactionId;
+					paymentMode = data.response.paymentMode;
+					transactionStatus = data.response.transactionStatus;
+				}
+				if (!data.response && !data.isCancelled && getUrlVars().loggedInRole == 'user') {
+					paymentMode = 'CASH';
+					transactionStatus = 'success';
+				}
+
+				if (data.receiptNumber) {
+					receiptNo = data.receiptNumber;
+				}
+				transaction = {"receiptNo": receiptNo, "paymentMode": paymentMode, "paymentStatus": transactionStatus};
+			});
+		data["receiptNo"] = transaction.receiptNo;
+		data["paymentMode"] = transaction.paymentMode;
+		data["paymentStatus"] = transaction.paymentStatus;
+		if(data.paymentStatus === 'success'){
+			if(Renewal){
+				data["isRenewedMembership"] = true;
+				data["fees"] = data.renewalPayableFees;
+			}else {
+				data["membershipStatus"] = 'Pending Approval';
+				data["memberStatus"] = 'Pending Approval';
+			}
+		}
+		console.log(data);
+		return data;
+	} else {
+		transaction = {"receiptNo": "order_" +randomUUID(15), "paymentMode": "CASH", "paymentStatus": "success"};
+		data["receiptNo"] = transaction.receiptNo;
+		data["paymentMode"] = transaction.paymentMode;
+		data["paymentStatus"] = transaction.paymentStatus;
+		if(data.paymentStatus === 'success'){
+			if(Renewal){
+				data["isRenewedMembership"] = true;
+				data["fees"] = data.renewalPayableFees;
+			}else {
+				data["membershipStatus"] = 'Pending Approval';
+				data["memberStatus"] = 'Pending Approval';
+			}
+		}
+		console.log(data);
+		return data;
+	}
 }
 
 function membershipFees(data){
@@ -565,6 +581,17 @@ function membershipFees(data){
 		fees = "1 year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}
 	return fees;
+}
+
+function calculatePayableMonths(formData) {
+	var payableFees = parseInt(formData.fees) * formData.expiredMonths + formData.renewalPayableFees;
+	console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', formData.expiredMonths,' : ', formData.renewalPayableFees);
+	return payableFees;
+}
+
+function getParentForm(info) {
+	var def = info.formDefinition;
+	return def;
 }
 
 function randomUUID(length) {
@@ -585,23 +612,18 @@ function SuccessAlert(title, msg){
 function WarningAlert(title, msg){
 	swal({title: title, text: msg, icon: 'error'});
 }
-function schemeCard(id, scheme, formData){
-	var schema = getScheme(id, scheme);
-	var userObj = formData._data;
-	userObj["scheme"] = schema;
-	var fees = 0;
-	if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
-		fees = schema.schemeActivePrice + schema.schemeBaseAmount;
-	}else if (schema.schemeBaseAmount && schema.schemeType == "RENEWAL"){ // TODO
-		fees = schema.schemeActivePrice + schema.schemeBaseAmount;
-	}
-	userObj["schemeId"] = schema.schemeId;
-	userObj["fees"] = fees;
-	userObj["newMemberFees"] = membershipFees(schema);
-	console.log(userObj);
-	var submission = { data: userObj };
-	return submission;
+
+function InfoAlert(title, confirmMsg){
+	swal({title: title, buttons: {  confirm: 'Yes', cancel: 'No'}, confirmButtonText: `yes`, icon: 'info'}).then((result) => {
+	  if (result.isConfirmed) {
+		//swal(confirmMsg, '', 'success');
+		return true;
+	  } else if (result.isDenied) {
+		return false;
+	  }
+	})
 }
+
 
 function getDevice(){
 	if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)){
