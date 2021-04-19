@@ -339,6 +339,7 @@ function createMembershipCard(card, basicScheme, selectedScheme){
 
 function schemeCard(id, scheme, formData){
 	//var planChange = InfoAlert('Do you Want to Upgrade the Plan', '');
+	//$('.price-filter-active').addClass('no-hover');
 	var schema = getScheme(id, scheme);
 	var userObj = formData._data;
 	console.log('schemeCard bf', userObj);
@@ -542,9 +543,11 @@ var payee = async function payButton(data) {
 			if(Renewal){
 				data["isRenewedMembership"] = true;
 				data["fees"] = data.renewalPayableFees;
+				data["currentPaidPlan"] = data.renewalFees;
 			}else {
 				data["membershipStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
+				data["currentPaidPlan"] = data.newMemberFees;
 			}
 			var userObject = update(data);
 		}
@@ -567,7 +570,7 @@ var payee = async function payButton(data) {
 			var userObject = update(data);
 		}
 		data["page"] = session.page;
-		$('#scheme').addClass('noselect');
+		//$('#membership-card').addClass('hide');
 		console.log(data);
 		return data;
 	}
