@@ -23,26 +23,18 @@
 	   <script src='../assets/dist/js/main.js'></script>
 	   
        <script>
-		var clientId;
-		var env = "qa";
-		
+	   
 		$(document).ready(function () {
 			
-			var docvars = getUrlVars();
-			
-			var URL = "https://" + env + ".servicedx.com/filing/dynamicForm/userMembership";
-			//var URL = "http://localhost:9104/filing/dynamicForm/userMembership";
-			
-			var info = getFormInfo(URL, docvars);
+			var info = getFormInfo();
 			console.log('info',info);
-			//alert("user membership editorial" + JSON.stringify(docvars));
 			Formio.createForm(document.getElementById('builder'), info.formDefinition)
 				.then(function (form) {
 					var userObj = {};
 					if(info.formData != null){
 						userObj = editObject(info.formData);
 					}
-					userObj["page"] = docvars.page;
+					userObj["page"] = getSessionStorage().page;
 					form.submission = { data: userObj };
 					
 					$('.card-pricing').click(function () {
@@ -54,33 +46,9 @@
 					console.log(userObj);
 					form.nosubmit = true;
 					form.on('submit', function (submission) {
-						$('#formSubmit').attr('disabled','disabled');
-						
 						var userObject = submission.data;
-
-						delete userObject["submit"];
-						delete userObject["confirmPassword"];
-						delete userObject["hobbies"];
-						delete userObject["sameAsPresentAddress"];
-						delete userObject["phoneNo"];
-						delete userObject["secondPhoneNo"];
-						delete userObject["countrys"];
-						delete userObject["secondaryCountrys"];
-						delete userObject["page"];
-						delete userObject["anniversaryDate1"];
-						delete userObject["birthDate1"];
-						delete userObject["addressProofPic1"];
 						delete userObject["specialSkills"];
-						delete userObject["maritalStatus1"];
-						delete userObject["others"];
-						
-						console.log("Request : " + JSON.stringify(userObject))
-
-						var handlerName =  'userMembershipHandlerWithArgs';
-						
-						var formURL = URLBuilder(URL, docvars, info.formData.hasUser, info.formData.hasMember);
-						
-						var responce = fetchRequest(form, formURL, userObject, handlerName, docvars.clientId);
+						submit(form, userObject);
 					});
 
 					form.on('redraw', () => {
