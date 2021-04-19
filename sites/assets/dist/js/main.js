@@ -8,6 +8,13 @@ $(document).ready(function () {
 	});
 });
 
+function getSessionStorage() {
+	var session = getUrlVars();
+    session['URL'] =  "https://" + session.env_code + ".servicedx.com/filing/dynamicForm/userMembership";
+	//session['URL'] =  "http://localhost:9104/filing/dynamicForm/userMembership";
+	return session;
+}
+
 function getUrlVars() {
 	var vars = {};
 	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
@@ -82,8 +89,9 @@ function showLoader(loader) {
 	}
 }
 
-function URLBuilder(baseURL, docvars, hasUser, hasMember) {
-	let url = new URL(baseURL);
+function URLBuilder(hasUser, hasMember) {
+	var docvars = getSessionStorage();
+	let url = new URL(docvars.URL);
 	let params = '';
 	params = url.searchParams;
 	params.append("departmentName", docvars.departmentName);
@@ -102,21 +110,26 @@ function URLBuilder(baseURL, docvars, hasUser, hasMember) {
 	return url.toString();
 }
 
-function fetchRequest(form, URL, userObject, handlerName, clientId) {
+function fetchRequest(form, URL, userObject, handlerName) {
 	showLoader('show');
-	fetchAPI(URL, JSON.stringify(userObject), handlerName, clientId).then(response => {
+	fetchAPI(URL, JSON.stringify(userObject), handlerName).then(response => {
 		showLoader('hide');
 		if (!response.hasOwnProperty('errorCode')) {
-			form.emit('submitDone', 'Success')
+			if(form){
+				form.emit('submitDone', 'Success');
+			}
 		} else {
-			form.emit('submitError', response.message);
+			if(form){
+				form.emit('submitError', response.message);
+			}
 		}
 	}).catch(function (error) {
 		console.log("error fetch", error);
 	});
 }
 
-var fetchAPI = async function (url, formdata, handlerName, clientId) {
+var fetchAPI = async function (url, formdata, handlerName) {
+	var docvars = getSessionStorage();
 	var platformReady = true;
 	var options = {
 		method: 'POST',
@@ -124,7 +137,7 @@ var fetchAPI = async function (url, formdata, handlerName, clientId) {
 		redirect: 'follow',
 		headers: new Headers({
 			'content-type': 'application/json',
-			'clientid': clientId
+			'clientid': docvars.clientId
 		})
 	};
 	let response = await fetch(url, options)
@@ -133,7 +146,7 @@ var fetchAPI = async function (url, formdata, handlerName, clientId) {
 		let json = await response.json();
 		console.log('response body', json, "flutterPlatformReady ", platformReady);
 		try {
-			if (platformReady) {
+			if (platformReady && handlerName) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -143,8 +156,9 @@ var fetchAPI = async function (url, formdata, handlerName, clientId) {
 	} else {
 		let json = await response.json();
 		console.log('error', json.message, json.errorCode);
+		WarningAlert(json.errorCode, json.message);
 		try {
-			if (platformReady) {
+			if (platformReady  && handlerName) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -154,45 +168,46 @@ var fetchAPI = async function (url, formdata, handlerName, clientId) {
 	}
 }
 
-function getFormInfo(URL, data) {
+function getFormInfo() {
+	var session = getSessionStorage();
 	var param = {};
-	if(data.departmentName && data.departmentName != "null"){
-		param["departmentName"] = data.departmentName;
+	if(session.departmentName && session.departmentName != "null"){
+		param["departmentName"] = session.departmentName;
 	}
-	if(data.rootdepartmentName && data.rootdepartmentName != "null"){
-		param["rootdepartmentName"] = data.rootdepartmentName;
+	if(session.rootdepartmentName && session.rootdepartmentName != "null"){
+		param["rootdepartmentName"] = session.rootdepartmentName;
 	}
-	if(data.loggedInRole && data.loggedInRole != "null"){
-		param["role"] = data.loggedInRole.toLowerCase();
+	if(session.loggedInRole && session.loggedInRole != "null"){
+		param["role"] = session.loggedInRole.toLowerCase();
 	}
-	if (data.userName && data.userName != "null") {
-		param["userName"] = data.userName;
+	if (session.userName && session.userName != "null") {
+		param["userName"] = session.userName;
 	}
-	if (data.membershipId && data.membershipId != "null"){
-		param["membershipId"] = data.membershipId;
+	if (session.membershipId && session.membershipId != "null"){
+		param["membershipId"] = session.membershipId;
 	}
 	var formObj = {};
 	$.ajax({
-		url: URL,
+		url: session.URL,
 		type: "GET",
 		data: param,
 		async: false,
 		success: function (result) {
 			result["formDefinition"] = JSON.parse(result.formDefinition);
-			if (data.page.toLowerCase() == "adduser" || data.page.toLowerCase() == "signup" ){
+			if (session.page.toLowerCase() == "adduser" || session.page.toLowerCase() == "signup" ){
 				var formData = JSON.parse(result.formData);
 				result["formData"] = {"hasUser":false, "hasMember":false, "membershipSchemeType" : formData.membershipSchemeType};
 			}else {
 				result["formData"] = JSON.parse(result.formData);
 			}
-			var schemeInfo = membershipCard(result.formData, result.schemeDefinition, data);
+			var schemeInfo = membershipCard(result.formData, result.schemeDefinition);
 			if(schemeInfo){
 				result.formData["scheme"] = schemeInfo;
 			}
 			formObj = result;
 		},
 		beforeSend: function (request) {
-			request.setRequestHeader("clientid", data.clientId);
+			request.setRequestHeader("clientid", session.clientId);
 			showLoader('show');
 		},
 		complete: function () {
@@ -207,32 +222,15 @@ function getFormInfo(URL, data) {
 	return formObj;
 }
 
-function getCountries(alphaCode) {
-	var callingCode = '';
-	var url = "https://qa-memberly.github.io/qa/sites/assets/dist/countries.json";
-	var options = {
-		method: 'GET'
-	};
-	var xmlHttp = new XMLHttpRequest();
-	xmlHttp.open("GET", url, false);
-	xmlHttp.send(null);
-	var code = JSON.parse(xmlHttp.responseText);
-	for (var i in code) {
-		if (code[i].alphaCode == alphaCode) {
-			callingCode = code[i].callingCode;
-		}
-	}
-	return callingCode;
-}
-
-function membershipCard(formData, scheme, data) {
+function membershipCard(formData, scheme) {
+	var session = getSessionStorage();
 	var selectedScheme = null;
 	var basicScheme = null;
 	let card = "<div id='scheme-card' class='container-fluid'>";
 	card += "<div class='u-pos--rel c-banner-container' id='banner'>";
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
 	card += "<img alt='Plus Logo' class='u-columns u-two u-m-b--10 ' effect='blur' src='../assets/brand/plus-logo.png''>";
-	card += "<div class='u-text--bold text-large bg-black'>Unlimited benefits with "+ data.departmentName +" Member+";
+	card += "<div class='u-text--bold text-large bg-black'>Unlimited benefits with "+ session.departmentName +" Member+";
 	card += "</div>";
 	card += "</div>";
 	card += "</div>";
@@ -296,12 +294,12 @@ function membershipCard(formData, scheme, data) {
 		card += "<div style='margin: 5px 5px 5px;'>";
 		card += "<p class='text-pm float-left'>Membership : <p>"+  formData.membershipSchemeType +"</p></p>";
 		card += "<p class='text-pm float-left'>Expiry Date : <p>"+  formData.expiryDate +"</p></p>";
-		card += "<p class='text-pm float-left'>Expiry Days :  <p>"+ formData.expiryDays+" Days left</p></p>";
+		card += "<p class='text-pm float-left'>Expiry Days :  <p>"+ formData.expiryDays+" Days left ("+formData.expiryStatus+")</p></p>";
 		card += "</div>";
 	}
 	
 	// Append the new article card to the article section div
-	if(data.page != "signup"){
+	if(session.page != "signup"){
 		if(formData.membershipSchemeType == "ONBOARD"){
 			console.log('if scheme');
 			if(formData.receiptNo){
@@ -347,9 +345,10 @@ function schemeCard(id, scheme, formData){
 	userObj["scheme"] = schema;
 	var fees = parseInt(userObj.fees);
 	userObj["fees"] = fees;
-	if(schema.schemeBaseAmount && schema.schemeType == "ONBOARD"){
+	if(schema.schemeType == "ONBOARD"){
 		userObj["newMemberFees"] = membershipFees(schema);
-	}else if (schema.schemeBaseAmount && schema.schemeType == "RENEWAL"){ // TODO
+		userObj["fees"] = schema.schemeActivePrice;
+	}else if (schema.schemeType == "RENEWAL"){ // TODO
 		userObj["renewalFees"] = membershipFees(schema);
 		userObj["renewalPayableFees"] = schema.schemeActivePrice;
 	}
@@ -483,6 +482,7 @@ function cardActivation() {
 
 var payee = async function payButton(data) {
 	console.log('payButton', data);
+	var session = getSessionStorage();
 	var description;
 	var Renewal = false;
 	var platformReady = getDevice();
@@ -546,7 +546,9 @@ var payee = async function payButton(data) {
 				data["membershipStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 			}
+			var userObject = update(data);
 		}
+		data["page"] = session.page;
 		console.log(data);
 		return data;
 	} else {
@@ -562,7 +564,10 @@ var payee = async function payButton(data) {
 				data["membershipStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 			}
+			var userObject = update(data);
 		}
+		data["page"] = session.page;
+		$('#scheme').addClass('noselect');
 		console.log(data);
 		return data;
 	}
@@ -584,9 +589,47 @@ function membershipFees(data){
 }
 
 function calculatePayableMonths(formData) {
-	var payableFees = parseInt(formData.fees) * formData.expiredMonths + formData.renewalPayableFees;
-	console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', formData.expiredMonths,' : ', formData.renewalPayableFees);
+	var payableFees = parseInt(formData.fees) * Math.abs(formData.expiredMonths) + formData.renewalPayableFees;
+	console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', Math.abs(formData.expiredMonths),' : ', formData.renewalPayableFees);
 	return payableFees;
+}
+
+
+function update(submission){
+	var data = toObject(submission);
+	//delete data["specialSkills"];
+	console.log(data);
+	var formURL = URLBuilder(data.hasUser, data.hasMember);
+	var responce = fetchRequest(null, formURL, data, null);
+}
+
+function submit(form, submission){
+	$('#formSubmit').attr('disabled','disabled');
+	var data = toObject(submission);				
+	var handlerName =  'userMembershipHandlerWithArgs';				
+	var formURL = URLBuilder(data.hasUser, data.hasMember);				
+	var responce = fetchRequest(form, formURL, data, handlerName);
+}
+
+function toObject(userObject){
+
+		delete userObject["submit"];
+		delete userObject["confirmPassword"];
+		delete userObject["hobbies"];
+		delete userObject["sameAsPresentAddress"];
+		delete userObject["phoneNo"];
+		delete userObject["secondPhoneNo"];
+		delete userObject["countrys"];
+		delete userObject["secondaryCountrys"];
+		delete userObject["page"];
+		delete userObject["anniversaryDate1"];
+		delete userObject["birthDate1"];
+		delete userObject["addressProofPic1"];
+		delete userObject["maritalStatus1"];
+		delete userObject["others"];
+		
+		console.log("Request : " + JSON.stringify(userObject))
+		return userObject;
 }
 
 function getParentForm(info) {
