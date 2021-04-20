@@ -484,6 +484,7 @@ function cardActivation() {
 var payee = async function payButton(data) {
 	console.log('payButton', data);
 	var session = getSessionStorage();
+	var formData = data;
 	var description;
 	var Renewal = false;
 	var platformReady = getDevice();
@@ -513,26 +514,26 @@ var payee = async function payButton(data) {
 	let transaction = null;
 	if (platformReady) {
 		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await
-			function (data) {
-				console.log("handlerPayResponseWithArgs" + JSON.stringify(data));
-				if (Array.isArray(data.response)) {
-					data["response"] = data.response[0];
+			function (handlerResponse) {
+				console.log("handlerPayResponseWithArgs" + JSON.stringify(handlerResponse));
+				if (Array.isArray(handlerResponse.response)) {
+					handlerResponse["response"] = handlerResponse.response[0];
 				}
 				var receiptNo = null;
 				var paymentMode = null;
 				var transactionStatus = null;
-				if (data.response) {
-					receiptNo = data.response.transactionId;
-					paymentMode = data.response.paymentMode;
-					transactionStatus = data.response.transactionStatus;
+				if (handlerResponse.response) {
+					receiptNo = handlerResponse.response.transactionId;
+					paymentMode = handlerResponse.response.paymentMode;
+					transactionStatus = handlerResponse.response.transactionStatus;
 				}
-				if (!data.response && !data.isCancelled && getUrlVars().loggedInRole == 'user') {
+				if (!handlerResponse.response && !handlerResponse.isCancelled && getUrlVars().loggedInRole == 'user') {
 					paymentMode = 'CASH';
 					transactionStatus = 'success';
 				}
 
-				if (data.receiptNumber) {
-					receiptNo = data.receiptNumber;
+				if (handlerResponse.receiptNumber) {
+					receiptNo = handlerResponse.receiptNumber;
 				}
 				transaction = {"receiptNo": receiptNo, "paymentMode": paymentMode, "paymentStatus": transactionStatus};
 			});
@@ -549,7 +550,7 @@ var payee = async function payButton(data) {
 				data["memberStatus"] = 'Pending Approval';
 				data["currentPaidPlan"] = data.newMemberFees;
 			}
-			var userObject = update(data);
+			update(data);
 		}
 		data["page"] = session.page;
 		console.log(data);
@@ -567,7 +568,7 @@ var payee = async function payButton(data) {
 				data["membershipStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 			}
-			var userObject = update(data);
+			update(data);
 		}
 		data["page"] = session.page;
 		//$('#membership-card').addClass('hide');
@@ -600,7 +601,6 @@ function calculatePayableMonths(formData) {
 
 function update(submission){
 	var data = toObject(submission);
-	//delete data["specialSkills"];
 	console.log(data);
 	var formURL = URLBuilder(data.hasUser, data.hasMember);
 	var responce = fetchRequest(null, formURL, data, null);
@@ -616,20 +616,20 @@ function submit(form, submission){
 
 function toObject(userObject){
 
-		delete userObject["submit"];
-		delete userObject["confirmPassword"];
-		delete userObject["hobbies"];
-		delete userObject["sameAsPresentAddress"];
-		delete userObject["phoneNo"];
-		delete userObject["secondPhoneNo"];
-		delete userObject["countrys"];
-		delete userObject["secondaryCountrys"];
-		delete userObject["page"];
-		delete userObject["anniversaryDate1"];
-		delete userObject["birthDate1"];
-		delete userObject["addressProofPic1"];
-		delete userObject["maritalStatus1"];
-		delete userObject["others"];
+		//delete userObject["submit"];
+		//delete userObject["confirmPassword"];
+		//delete userObject["hobbies"];
+		//delete userObject["sameAsPresentAddress"];
+		//delete userObject["phoneNo"];
+		//delete userObject["secondPhoneNo"];
+		//delete userObject["countrys"];
+		//delete userObject["secondaryCountrys"];
+		//delete userObject["page"];
+		//delete userObject["anniversaryDate1"];
+		//delete userObject["birthDate1"];
+		//delete userObject["specialSkills"];
+		//delete userObject["maritalStatus1"];
+		//delete userObject["others"];
 		
 		console.log("Request : " + JSON.stringify(userObject))
 		return userObject;
