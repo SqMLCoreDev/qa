@@ -242,7 +242,7 @@ span.duration {
 	box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.3);
 	transition: all 0.2s;	
 }
-
+/*
 .card-pricing:not(.no-hover):active,
 .price-filter-active:not(.no-hover),
 .price-filter-active:not(.no-hover):hover {
@@ -253,7 +253,7 @@ span.duration {
 	box-shadow: 0 0.5rem 1rem 0 rgba(0, 0, 0, 0.3);
 	transition: all 0.2s;
 	cursor: not-allowed;
-}
+}*/
 
 .card-pricing:hover .btn {
 	opacity: 1;
