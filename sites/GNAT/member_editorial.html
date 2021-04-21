@@ -49,7 +49,7 @@
 			if(docvars.hasOwnProperty('clientId')){
 				clientId = docvars.clientId;
 			}
-			
+			alert('URL: '+JSON.stringify(docvars));
 			var filing_URL = "https://" + env + ".servicedx.com/filing/membership/formio";
 			//var filing_URL = "http://localhost:9104/filing/membership/formio";
 			var formDefinitionUrl = "https://" + env + ".servicedx.com/admin/departments/" + formDefinitionDept;
