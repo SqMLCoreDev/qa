@@ -552,7 +552,6 @@ var payee = async function payButton(data) {
 			}
 			update(data);
 		}
-		data["page"] = session.page;
 		console.log(data);
 		return data;
 	} else {
@@ -570,8 +569,7 @@ var payee = async function payButton(data) {
 			}
 			update(data);
 		}
-		data["page"] = session.page;
-		//$('#membership-card').addClass('hide');
+		$('#membership-card').addClass('hide');
 		console.log(data);
 		return data;
 	}
@@ -599,11 +597,13 @@ function calculatePayableMonths(formData) {
 }
 
 
-function update(submission){
+var update = async function (submission){
 	var data = toObject(submission);
 	console.log(data);
 	var formURL = URLBuilder(data.hasUser, data.hasMember);
-	var responce = fetchRequest(null, formURL, data, null);
+	var handlerName =  'userMembershipHandlerWithArgs';
+	var responce = await fetchRequest(null, formURL, data, handlerName);
+	return responce;
 }
 
 function submit(form, submission){
@@ -613,7 +613,14 @@ function submit(form, submission){
 	var formURL = URLBuilder(data.hasUser, data.hasMember);				
 	var responce = fetchRequest(form, formURL, data, handlerName);
 }
-
+function setObject(info){
+	var userObj = {};
+	if(info.formData != null){
+		userObj = editObject(info.formData);
+	}
+	userObj["page"] = getSessionStorage().page;
+	return userObj;
+}
 function toObject(userObject){
 
 		//delete userObject["submit"];

@@ -30,11 +30,8 @@
 			console.log('info',info);
 			Formio.createForm(document.getElementById('builder'), info.formDefinition)
 				.then(function (form) {
-					var userObj = {};
-					if(info.formData != null){
-						userObj = editObject(info.formData);
-					}
-					userObj["page"] = getSessionStorage().page;
+					var userObj = setObject(info);
+					
 					form.submission = { data: userObj };
 					
 					$('.card-pricing').click(function () {
@@ -45,6 +42,7 @@
 					
 					console.log(userObj);
 					form.nosubmit = true;
+					
 					form.on('submit', function (submission) {
 						var userObject = submission.data;
 						delete userObject["specialSkills"];
