@@ -156,7 +156,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 	} else {
 		let json = await response.json();
 		console.log('error', json.message, json.errorCode);
-		WarningAlert(json.errorCode, json.message);
+		//WarningAlert(json.errorCode, json.message);
 		try {
 			if (platformReady  && handlerName) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
@@ -569,7 +569,6 @@ var payee = async function payButton(data) {
 			}
 			update(data);
 		}
-		$('#membership-card').addClass('hide');
 		console.log(data);
 		return data;
 	}
