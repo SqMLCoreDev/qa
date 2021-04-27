@@ -592,8 +592,8 @@ function membershipFees(data){
 }
 
 function calculatePayableMonths(formData) {
-	var payableFees = parseInt(formData.fees) * Math.abs(formData.expiredMonths) + formData.renewalPayableFees;
-	console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', Math.abs(formData.expiredMonths),' : ', formData.renewalPayableFees);
+	var payableFees = parseInt(formData.fees) * Math.abs(formData.expiredMonths) + parseInt(formData.renewalPayableFees);
+	console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', Math.abs(formData.expiredMonths),' : ', parseInt(formData.renewalPayableFees));
 	return payableFees;
 }
 
