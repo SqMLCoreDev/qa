@@ -130,7 +130,7 @@ function fetchRequest(form, URL, userObject, handlerName) {
 
 var fetchAPI = async function (url, formdata, handlerName) {
 	var docvars = getSessionStorage();
-	var platformReady = true;
+	var platformReady = getDevice();
 	var options = {
 		method: 'POST',
 		body: formdata,
@@ -156,7 +156,9 @@ var fetchAPI = async function (url, formdata, handlerName) {
 	} else {
 		let json = await response.json();
 		console.log('error', json.message, json.errorCode);
-		//WarningAlert(json.errorCode, json.message);
+		if(!platformReady){
+			WarningAlert(json.errorCode, json.message);
+		}
 		try {
 			if (platformReady  && handlerName) {
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
