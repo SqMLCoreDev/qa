@@ -511,6 +511,7 @@ var payee = async function payButton(data) {
 		"paymentDescription": description
 	};
 	console.log(json, data.isMember);
+	alert(JSON.stringify(json));
 	console.log('flutterPlatformReady', window.platformReady);
 	//alert('window flutterPlatformReady', platformReady);
 	let transaction = null;
