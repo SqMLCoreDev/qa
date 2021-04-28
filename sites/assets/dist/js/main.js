@@ -311,7 +311,7 @@ function membershipCard(formData, scheme) {
 			}
 		}else if(formData.membershipSchemeType == "RENEWAL"){
 			console.log('else if scheme', formData);
-			if(formData.expiryDays && formData.expiryPeriod && formData.expiryDays <= formData.expiryPeriod){
+			if(formData.expiryDate && formData.expiryPeriod && formData.expiryDays <= formData.expiryPeriod){
 				return createMembershipCard(card, basicScheme, selectedScheme);
 			}else{
 				console.log('selectedScheme', selectedScheme);
