@@ -205,6 +205,7 @@ function getFormInfo() {
 			var schemeInfo = membershipCard(result.formData, result.schemeDefinition);
 			if(schemeInfo){
 				result.formData["scheme"] = schemeInfo;
+				result["formData"] = schemeCard(schemeInfo.schemeId, result.schemeDefinition, result.formData);
 			}
 			formObj = result;
 		},
@@ -343,7 +344,7 @@ function schemeCard(id, scheme, formData){
 	//var planChange = InfoAlert('Do you Want to Upgrade the Plan', '');
 	//$('.price-filter-active').addClass('no-hover');
 	var schema = getScheme(id, scheme);
-	var userObj = formData._data;
+	var userObj = formData;
 	console.log('schemeCard bf', userObj);
 	userObj["scheme"] = schema;
 	var fees = parseInt(userObj.fees);
@@ -358,8 +359,7 @@ function schemeCard(id, scheme, formData){
 	userObj["schemeId"] = schema.schemeId;
 	
 	console.log('schemeCard',userObj);
-	var submission = { data: userObj };
-	return submission;
+	return userObj;
 }
 
 function getScheme(id, scheme) {
@@ -570,7 +570,7 @@ var payee = async function payButton(data) {
 				data["membershipStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 			}
-			update(data);
+			//update(data);
 		}
 		console.log(data);
 		return data;
