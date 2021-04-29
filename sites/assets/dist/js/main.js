@@ -10,8 +10,12 @@ $(document).ready(function () {
 
 function getSessionStorage() {
 	var session = getUrlVars();
-    session['URL'] =  "https://" + session.env_code + ".servicedx.com/filing/dynamicForm/userMembership";
-	//session['URL'] =  "http://localhost:9104/filing/dynamicForm/userMembership";
+	if(session.hasOwnProperty('device')){
+		session['URL'] =  "http://localhost:9104/filing/dynamicForm/userMembership";
+	}else{
+		session['URL'] =  "https://" + session.env_code + ".servicedx.com/filing/dynamicForm/userMembership";
+	}
+	alert("URL"+JSON.stringify(session));
 	return session;
 }
 
@@ -569,7 +573,7 @@ var payee = async function payButton(data) {
 				data["membershipStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 			}
-			//update(data);
+			update(data);
 		}
 		console.log(data);
 		return data;
