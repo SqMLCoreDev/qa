@@ -12,6 +12,7 @@
        <link href="../assets/dist/css/custom-formio/formio.full.min.css" rel="stylesheet">
 	   <link href="../assets/dist/css/sanitize.css" rel="stylesheet">
 	   <link href="../assets/dist/css/main.css" rel="stylesheet">
+	   <link href="../assets/dist/css/lets.css" rel="stylesheet">
 	   
        <script src='../assets/dist/js/lodash/lodash.core.min.js'></script>
 	   <script src='../assets/dist/js/lodash/lodash.min.js'></script>
@@ -27,12 +28,15 @@
 			margin : 10px; margin-bottom: 25px;
 		}
 		.outerheader > div.mb-2 {
-			border: 0.5px solid #58a6d0 !important;
+			border: 0px solid #58a6d0 !important;
+			box-shadow: rgb(45 62 80 / 61%) 1px -5px 10px 0px;
+			border-bottom: 2px solid #cdd0d2 !important;
 		} 
 		.outerheader > div.mb-2 > div.card-header {
 			text-align : center;
 			background-image: linear-gradient(to bottom, #54b3d4, #685db7);
-			margin-top: -1px; color:white;
+			margin-top: 0px; color:white;
+			
 		}
 		.formio-component, .form-control, .select2-selection__rendered {
 			font-size: 13px!important;
@@ -133,9 +137,25 @@
                             </div>
                             <div class="question-answer-row" id="section" style="padding-left:10px;padding-right:10px;">
                                <div class="question-answer-cell">
-							      <div class='card-bg' id='membership-card'></div>
-                                  <div class='' id='builder'></div>
-                               </div>
+								   <div class='card-bg' id='membership-card'></div>
+								   <div class='' id='builder' style="box-shadow: inset 0px 12px 20px 6px rgb(69 90 100 / 15%);"></div>
+								   <div style="padding:20px;">
+									  <div class="cardCover" style="z-index:998">
+										 <div class="iINgyj is--responsive" style="padding:15px;padding-top:5px;height:55px;padding-left:10px;height: 55px;">
+											<div class="" style="background:none;">
+											   <span>
+												  <h6>Details</h6>
+											   </span>
+											</div>
+										 </div>
+									  </div>
+									  <div class="UICardSection__Section-sc-1xfd1nn-0 kiqmOq private-card__section has--vertical-spacing p-top-0">
+										 <div style="padding:10px;margin-top:-38px;border:1px solid yellow;">
+											&nbsp;Visual display
+										 </div>
+									  </div>
+								   </div>
+								</div>
                             </div>
                          </div>
                       </div>
