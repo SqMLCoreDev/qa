@@ -151,8 +151,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 		console.log('response body', json, "flutterPlatformReady ", platformReady);
 		try {
 			if (platformReady && handlerName) {
-				//window.flutter_inappwebview.callHandler(handlerName, response.status, json, false);
-				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
+				window.flutter_inappwebview.callHandler(handlerName, response.status, json, false);
 			}
 		} catch (e) {
 			console.log("flutter_inappwebview error");
@@ -166,8 +165,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 		}
 		try {
 			if (platformReady  && handlerName) {
-				//window.flutter_inappwebview.callHandler(handlerName, response.status, json, false);
-				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
+				window.flutter_inappwebview.callHandler(handlerName, response.status, json, false);
 			}
 		} catch (e) {
 			console.log("flutter_inappwebview error");
@@ -521,7 +519,7 @@ var payee = async function payButton(data) {
 	//alert('window flutterPlatformReady', platformReady);
 	let transaction = null;
 	if (platformReady) {
-		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', json).then(await
+		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', null, json, true).then(await
 			function (handlerResponse) {
 				console.log("handlerPayResponseWithArgs" + JSON.stringify(handlerResponse));
 				if (Array.isArray(handlerResponse.response)) {
