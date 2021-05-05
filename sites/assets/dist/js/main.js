@@ -509,7 +509,7 @@ var payee = async function payButton(data) {
 	}
 	var json = {
 		"totalAmount": totalFees,
-		"payeePhoneNumber": data.countryCode + data.mobileNo,
+		"payeePhoneNumber": data.mobileNo,
 		"payeeName": data.firstName + data.lastName,
 		"payeeEmail": data.emailId,
 		"paymentDescription": description
