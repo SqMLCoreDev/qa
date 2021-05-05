@@ -22,6 +22,56 @@
 	   <script src="../assets/dist/js/sweetalert.min.js"></script>
 	   <script src='../assets/dist/js/main.js'></script>
 	   
+	   <style>
+		.outerheader {
+			margin : 10px; margin-bottom: 25px;
+		}
+		.outerheader > div.mb-2 {
+			border: 0.5px solid #58a6d0 !important;
+		} 
+		.outerheader > div.mb-2 > div.card-header {
+			text-align : center;
+			background-image: linear-gradient(to bottom, #54b3d4, #685db7);
+			margin-top: -1px; color:white;
+		}
+		.formio-component, .form-control, .select2-selection__rendered {
+			font-size: 13px!important;
+		}
+		#membership-card {
+			background-image: linear-gradient(-45deg, #4a5cc1 0%, #4a5cc1 33%, #2d3251 100%);
+			background-attachment:inherit;
+		}
+		.question-answer-row {
+			padding:0px !important;
+			margin-top:-15px !important; 
+		}
+		.u-text--bold {
+			color: white !important;
+		}
+		.pricing {
+			margin-left:10px;
+		}
+		.form-group {
+			margin-bottom: 0.5rem;
+		}
+		.info-alert {
+			position: relative;
+			padding: 0.75rem 1.25rem;
+			margin-bottom: 1rem;
+			border: 1px solid transparent;
+			border-radius: 0.25rem;
+			color: #516a35;
+			background-color: #ebf5e0;
+			border-color: #b4c89f;
+		}
+		.formio-component-submit {
+			margin-left:10px;
+		}
+		.u-p-v--12 {
+			font-size: 13px!important;
+		}
+	   </style>
+	   
        <script>
 	   
 		$(document).ready(function () {
@@ -62,12 +112,12 @@
        </script>
 	   <link href="../assets/dist/css/poopins/poopins.css" rel="stylesheet">
     </head>
-    <body style="padding:10px;background-color: #dde0e0;">
+    <body style="padding:10px;background-color:#111225;">
        <div id="wrapper">
           <div id="initScreen" style="display: block;">
              <div class="section" id="a67a329f1c344dfd887b3efc8a413ed3">
 				<span class="loader"></span>
-                <div class="screen" id="survey-screen-1" style="background-color: rgb(245, 249, 250);">
+                <div class="screen" id="survey-screen-1" style="background-color:#FFF;">
                    <div class="main-container">
                       <div id="survey-section" class="">
                          <div class="survey-sub-screen multiplechoice-question-component" id="survey-sub-screen-half-n-half">
@@ -84,7 +134,8 @@
                       <div class="footer-row">
                          <div class="footer hide-submit">
                             <div id="logo-container">
-                               <img style="width:50px;height:40px;" id="logo" src="https://static.wixstatic.com/media/eaa914_9cf3646c1306425db2dc5191490521f2~mv2.png/v1/crop/x_0,y_21,w_340,h_274/fill/w_121,h_96,al_c,q_85,usm_0.66_1.00_0.01/logo_edited.webp" alt="Logo" class="">
+                               <img style="width:50px;height:40px;" id="logo" 
+							   src="https://static.wixstatic.com/media/eaa914_9cf3646c1306425db2dc5191490521f2~mv2.png/v1/crop/x_0,y_21,w_340,h_274/fill/w_121,h_96,al_c,q_85,usm_0.66_1.00_0.01/logo_edited.webp" alt="Logo" class="">
                             </div>
                          </div>
                       </div>
