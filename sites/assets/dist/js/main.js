@@ -496,7 +496,7 @@ var payee = async function payButton(data) {
 	var platformReady = getDevice();
 	var totalFees = 0;
 	if (data.renewalEligible) {
-		description = "Membership Renewal Fee for " + data.firstName + data.lastName;
+		description = "Membership Renewal Fee for " + data.firstName +' '+ data.lastName;
 		Renewal = true;
 		if(data.renewalPreviousMonths){
 			totalFees = calculatePayableMonths(data);
@@ -504,13 +504,13 @@ var payee = async function payButton(data) {
 			totalFees = data.renewalPayableFees;
 		}
 	} else {
-		description = "Membership Fee for " + data.firstName + data.lastName;
+		description = "Membership Fee for " + data.firstName +' '+ data.lastName;
 		totalFees =  parseInt(data.fees) + parseInt(data.scheme.schemeBaseAmount);
 	}
 	var json = {
 		"totalAmount": totalFees,
 		"payeePhoneNumber": data.mobileNo,
-		"payeeName": data.firstName + data.lastName,
+		"payeeName": data.firstName +' '+ data.lastName,
 		"payeeEmail": data.emailId,
 		"paymentDescription": description
 	};
