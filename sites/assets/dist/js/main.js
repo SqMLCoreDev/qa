@@ -15,6 +15,7 @@ function getSessionStorage() {
 	}else{
 		session['URL'] =  "https://" + session.env_code + ".servicedx.com/filing/dynamicForm/userMembership";
 	}
+	alert(JSON.stringify(session));
 	return session;
 }
 
@@ -150,6 +151,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 		console.log('response body', json, "flutterPlatformReady ", platformReady);
 		try {
 			if (platformReady && handlerName) {
+				//window.flutter_inappwebview.callHandler(handlerName, response.status, json, false);
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -164,6 +166,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 		}
 		try {
 			if (platformReady  && handlerName) {
+				//window.flutter_inappwebview.callHandler(handlerName, response.status, json, false);
 				window.flutter_inappwebview.callHandler(handlerName, response.status, json);
 			}
 		} catch (e) {
@@ -572,7 +575,7 @@ var payee = async function payButton(data) {
 				data["membershipStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 			}
-			update(data);
+			//update(data);
 		}
 		console.log(data);
 		return data;
