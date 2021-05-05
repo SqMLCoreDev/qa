@@ -519,7 +519,7 @@ var payee = async function payButton(data) {
 	//alert('window flutterPlatformReady', platformReady);
 	let transaction = null;
 	if (platformReady) {
-		await window.flutter_inappwebview.callHandler('handlerPayWithArgs', null, json, true).then(await
+		await window.flutter_inappwebview.callHandler('userMembershipHandlerWithArgs', null, json, true).then(await
 			function (handlerResponse) {
 				console.log("handlerPayResponseWithArgs" + JSON.stringify(handlerResponse));
 				if (Array.isArray(handlerResponse.response)) {
