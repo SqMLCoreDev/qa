@@ -42,8 +42,13 @@
 			font-size: 13px!important;
 		}
 		#membership-card {
-			background-image: linear-gradient(-45deg, #4a5cc1 0%, #4a5cc1 33%, #2d3251 100%);
-			background-attachment:inherit;
+			/* background-image: linear-gradient(-45deg, #4a5cc1 0%, #4a5cc1 33%, #2d3251 100%);
+			background-attachment:inherit; */
+			background-image: url(https://static.hsappstatic.net/ecosystem-marketplace-core/static-1.1427/img/storefront-header-blobs.svg), 
+			linear-gradient(-45deg, #4a5cc1 0%, #4a5cc1 33%, #102ac7 100%);
+			background-attachment: initial;
+			background-position-x: unset;
+			background-position-y: bottom;
 		}
 		.question-answer-row {
 			padding:0px !important;
@@ -76,10 +81,10 @@
 		}
 		.card-pricing:active, .price-filter-active, .price-filter-active:hover {
 			z-index: 1;
-			border: 3px solid #ed8d0973;
+			border: 3px solid #ed09cb;
 			margin-top: -.25rem;
 			margin-bottom: .25rem;
-			box-shadow: 1rem 2rem 4rem 6px #f30b0b4d;
+			box-shadow: 1rem 2rem 4rem 6px #0beff3a8;
 			transition: all 0.2s;
 		}
 	   </style>
