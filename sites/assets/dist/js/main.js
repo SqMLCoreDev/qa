@@ -329,6 +329,18 @@ function membershipCard(formData, scheme) {
 	return null;
 }
 
+function schemeDescription(scheme){
+	let card = '';
+	if(scheme && scheme.schemeDescription){
+		card = "<div style='margin: 5px 5px 5px;'>";
+		card += "<p class=''><p>"+  scheme.schemeDescription +"</p></p>";
+		card += "</div>";
+		$("#description").show().empty().append(card);
+	}else{
+		$("#description").hide();
+	}
+}
+
 function createMembershipCard(card, basicScheme, selectedScheme){
 	$("#membership-card").append(card);
 	cardActivation();
@@ -351,6 +363,7 @@ function schemeCard(id, scheme, formData){
 	var userObj = formData;
 	console.log('schemeCard bf', userObj);
 	userObj["scheme"] = schema;
+	schemeDescription(userObj.scheme);
 	var fees = parseInt(userObj.fees);
 	userObj["fees"] = fees;
 	if(schema.schemeType == "ONBOARD"){
