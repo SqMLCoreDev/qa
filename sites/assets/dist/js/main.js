@@ -297,19 +297,39 @@ function membershipCard(formData, scheme) {
 	card += "</div>";
 	card += "</div>";
 	
+	let renewalDetails = '';
 	if(formData.membershipSchemeType == "RENEWAL"){
-		card += "<div style='margin: 5px 5px 5px;'>";
-		card += "<p class='text-pm float-left'>Membership : <p>"+  formData.membershipSchemeType +"</p></p>";
-		card += "<p class='text-pm float-left'>Expiry Date : <p>"+  formData.expiryDate +"</p></p>";
-		card += "<p class='text-pm float-left'>Expiry Days :  <p>"+ formData.expiryDays+" Days left ("+formData.expiryStatus+")</p></p>";
-		card += "</div>";
+	   var exipry = formData.expiryDays;
+	    var expiryClass = '';
+	    var expiryPrefixText = '';
+		var expirySuffixText = '';
+		if (exipry > 0){
+		   expiryClass = 'alt-inf';
+	       expiryPrefixText = 'Expiry Days :';
+		   expirySuffixText = ' Days left (Expire Soon)';
+		} else if (exipry == 0){
+		   expiryClass = 'alt-wrn';
+	       expiryPrefixText = 'Expiry Days :';
+		   expirySuffixText = ' (Expire Today)';
+		} else{
+		   expiryClass = 'alt-dg';
+	       expiryPrefixText = 'Expired Before :';
+		   expirySuffixText = ' Days (Expired)';
+		}
+		renewalDetails += "<div class='ep-status "+expiryClass+" m-2'>";
+		renewalDetails += "<p class='float-left'>Membership : <p>"+  formData.membershipSchemeType +"</p></p>";
+		renewalDetails += "<p class='float-left'>Expiry Date : <p>"+  formData.expiryDate +"</p></p>";
+		renewalDetails += "<p class='float-left'>" + expiryPrefixText +"<p>"+ formData.expiryDays + expirySuffixText + "</p></p>";
+		renewalDetails += "</div>";
 	}
+	$("#renewal-details").show().empty().append(renewalDetails);
 	
 	// Append the new article card to the article section div
 	if(session.page != "signup"){
 		if(formData.membershipSchemeType == "ONBOARD"){
 			console.log('if scheme');
 			if(formData.receiptNo){
+				$("#description").hide();
 				return selectedScheme;
 			}else{
 				return createMembershipCard(card, basicScheme, selectedScheme);
@@ -320,6 +340,7 @@ function membershipCard(formData, scheme) {
 				return createMembershipCard(card, basicScheme, selectedScheme);
 			}else{
 				console.log('selectedScheme', selectedScheme);
+				$("#description").hide();
 				return selectedScheme;
 			}
 		}else{
