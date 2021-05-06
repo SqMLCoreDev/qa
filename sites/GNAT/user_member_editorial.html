@@ -60,7 +60,7 @@
 			background-color: #ebf5e0;
 			border-color: #b4c89f;
 		}
-		.formio-component-content div[ref="html"], alert-info{
+		.formio-component-content div[ref="html"]{
 			position: relative;
 			padding: 0.75rem 1.25rem;
 			margin-bottom: 1rem;
@@ -70,12 +70,35 @@
 			background-color: #d1ecf1 !important;
 			border-color: #dcdcdc;
 		}
+		.formio-component-content.mb div[ref="html"] p{
+			margin-bottom: 0rem;
+		}
+		.ep-status{
+			position: relative;
+			padding: 0.75rem 1.25rem;
+			margin-bottom: 1rem;
+			border: 1px solid #73737300;
+			border-radius: 0.25rem;
+		}
+		.alt-inf{
+			color: #0c5460;
+			background-color: #d1ecf1 !important;
+			border-color: #dcdcdc;
+		}
+		.alt-wrn{
+			color: #856404;
+			background-color: #fff3cd !important;
+			border-color: #b5b5b5;
+		}
+		.alt-dg{
+			color: #721c24;
+			background-color: #f8d7da;
+			border-color: #b5b5b5;
+		}
+		
 		strong {
 			color: #356a69;
 			background-color: #d1ecf1 !important;
-		}
-		.formio-component-submit {
-			margin-left:10px;
 		}
 		.u-p-v--12 {
 			font-size: 13px!important;
@@ -141,6 +164,7 @@
                             <div class="question-answer-row" id="section" style="padding-left:10px;padding-right:10px;">
                                <div class="question-answer-cell">
 							      <div class='card-bg' id='membership-card'></div>
+								  <div class='' id='renewal-details'></div>
 								  <div class='scheme-description info-alert m-2' id='description'></div>
                                   <div class='' id='builder'></div>
                                </div>
