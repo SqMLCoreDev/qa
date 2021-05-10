@@ -586,7 +586,7 @@ var payee = async function payButton(data) {
 				data["fees"] = data.renewalPayableFees;
 				data["currentPaidPlan"] = data.renewalFees;
 			}else {
-				data["membershipStatus"] = 'Pending Approval';
+				data["membershipApprovalStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 				data["currentPaidPlan"] = data.newMemberFees;
 			}
@@ -604,7 +604,7 @@ var payee = async function payButton(data) {
 				data["isRenewedMembership"] = true;
 				data["fees"] = data.renewalPayableFees;
 			}else {
-				data["membershipStatus"] = 'Pending Approval';
+				data["membershipApprovalStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 			}
 			//update(data);
