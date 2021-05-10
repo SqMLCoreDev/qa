@@ -15,7 +15,7 @@ function getSessionStorage() {
 	}else{
 		session['URL'] =  "https://" + session.env_code + ".servicedx.com/filing/dynamicForm/userMembership";
 	}
-	alert(JSON.stringify(session));
+	//alert(JSON.stringify(session));
 	return session;
 }
 
