@@ -585,7 +585,6 @@ var payee = async function payButton(data) {
 		data["receiptNo"] = transaction.receiptNo;
 		data["paymentMode"] = transaction.paymentMode;
 		data["paymentStatus"] = transaction.paymentStatus;
-		alert(JSON.stringify(transaction));
 		if(data.paymentStatus === 'success'){
 			if(Renewal){
 				data["isRenewedMembership"] = true;
@@ -613,7 +612,7 @@ var payee = async function payButton(data) {
 				data["membershipApprovalStatus"] = 'Pending Approval';
 				data["memberStatus"] = 'Pending Approval';
 			}
-			//update(data);
+			update(data);
 		}
 		console.log(data);
 		return data;
@@ -646,10 +645,8 @@ var update = async function (submission){
 	var data = toObject(submission);
 	console.log(data);
 	var formURL = URLBuilder(data.hasUser, data.hasMember);
-	var handlerName =  'userMembershipHandlerWithArgs1';
-	alert(JSON.stringify(data));
+	var handlerName =  'userMembershipHandlerWithArgs';
 	var responce = await fetchRequest(null, formURL, data, handlerName);
-	alert(JSON.stringify(responce));
 	return responce;
 }
 
