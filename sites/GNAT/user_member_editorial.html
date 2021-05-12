@@ -43,7 +43,7 @@
 					form.nosubmit = true;
 					
 					form.on('submit', function (submission) {
-						var userObject = submission.data;
+						var userObject = submissionObject(submission.data);
 						submit(form, userObject);
 					});
 
@@ -56,6 +56,17 @@
 		
 		function editObject(json){
 			return json;
+		}
+		
+		function submissionObject(json){
+			if(json.hasOwnProperty('tempUserSub')){
+				json["tempUserSubType"] = json.tempUserSub;
+			}
+			return json;
+		}
+		
+		function schemeByRole(scheme) {
+			return scheme;
 		}
 		
        </script>
