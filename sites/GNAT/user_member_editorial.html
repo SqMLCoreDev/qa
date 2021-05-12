@@ -59,7 +59,7 @@
 		}
 		
 		function submissionObject(json){
-			if(json.hasOwnProperty('tempUserSub')){
+			if(json.hasOwnProperty('tempUserSub') && json.tempUserSub){
 				json["tempUserSubType"] = json.tempUserSub;
 			}
 			return json;
