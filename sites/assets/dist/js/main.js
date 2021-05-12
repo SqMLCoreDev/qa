@@ -31,6 +31,9 @@ function getUrlVars() {
 	if(vars.hasOwnProperty('env_code')){
 		vars["env_code"] = vars.env_code.toLowerCase();
 	}
+	if(vars.hasOwnProperty('loggedInRole')){
+		vars["loggedInRole"] = vars.loggedInRole.toLowerCase();
+	}
 	return vars;
 }
 
@@ -233,6 +236,7 @@ function membershipCard(formData, scheme) {
 	var session = getSessionStorage();
 	var selectedScheme = null;
 	var basicScheme = null;
+	scheme = schemeByRole(scheme);
 	let card = "<div id='scheme-card' class='container-fluid'>";
 	card += "<div class='u-pos--rel c-banner-container' id='banner'>";
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
@@ -261,6 +265,7 @@ function membershipCard(formData, scheme) {
 			card += "<span>"+data.schemeBenefitsHighlights+"</span>";
 			card += "</div>";
 		}
+		
 		card += "<span class='mx-auto px-4 py-1 rounded-bottom bg-primary-card text-white shadow-sm text-zeta u-text--bold'>" + data.schemeName + "</span>";
 		card += "<div class='u-text--uppercase u-p-t--20 u-p-b--15 u-border-bottom--paleGrey u-text--bold text-mt u-pos--rel'>" + getTitle(data) + "</div>";
 		card += "<div class='plan-details u-d-flex u-d-flex--center u-border-bottom--paleGrey'>";
@@ -580,6 +585,7 @@ var payee = async function payButton(data) {
 		data["receiptNo"] = transaction.receiptNo;
 		data["paymentMode"] = transaction.paymentMode;
 		data["paymentStatus"] = transaction.paymentStatus;
+		alert(JSON.stringify(transaction));
 		if(data.paymentStatus === 'success'){
 			if(Renewal){
 				data["isRenewedMembership"] = true;
@@ -640,8 +646,10 @@ var update = async function (submission){
 	var data = toObject(submission);
 	console.log(data);
 	var formURL = URLBuilder(data.hasUser, data.hasMember);
-	var handlerName =  'userMembershipHandlerWithArgs';
+	var handlerName =  'userMembershipHandlerWithArgs1';
+	alert(JSON.stringify(data));
 	var responce = await fetchRequest(null, formURL, data, handlerName);
+	alert(JSON.stringify(responce));
 	return responce;
 }
 

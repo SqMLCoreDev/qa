@@ -58,6 +58,17 @@
 			return json;
 		}
 		
+		function submissionObject(json){
+			return json;
+		}
+		
+		function schemeByRole(scheme) {
+			if(getSessionStorage().loggedInRole == "user" && scheme.membershipId){
+				return scheme.slice(1);
+			}
+			return scheme;
+		}
+		
        </script>
 	   <link href="../assets/dist/css/poopins/poopins.css" rel="stylesheet">
     </head>

@@ -357,3 +357,25 @@ strong {
 	padding: 0.5rem 0.5rem;
 	display: none;
 }
+
+.scheme-badge-spinner {
+  width: 100px;
+  height: 100px;
+  background-image: url('../brand/badge.png');
+  background-color: #42a5f5;
+  -webkit-animation: rotate-div 1.2s infinite ease-in-out;
+  animation: rotate-div 1.2s infinite ease-in-out;
+}
+@keyframes rotate-div {
+  0% { 
+    transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(0deg) rotateY(0deg); 
+  } 50% { 
+    transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+    -webkit-transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); 
+  } 100% { 
+    transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+    -webkit-transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+	background-image: url('../brand/badge.png');
+  }
+}
