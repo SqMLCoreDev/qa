@@ -236,7 +236,7 @@ function membershipCard(formData, scheme) {
 	var session = getSessionStorage();
 	var selectedScheme = null;
 	var basicScheme = null;
-	scheme = schemeByRole(scheme);
+	scheme = schemeByRole(scheme, formData.hasMember);
 	let card = "<div id='scheme-card' class='container-fluid'>";
 	card += "<div class='u-pos--rel c-banner-container' id='banner'>";
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
@@ -267,7 +267,14 @@ function membershipCard(formData, scheme) {
 		}
 		
 		card += "<span class='mx-auto px-4 py-1 rounded-bottom bg-primary-card text-white shadow-sm text-zeta u-text--bold'>" + data.schemeName + "</span>";
-		card += "<div class='u-text--uppercase u-p-t--20 u-p-b--15 u-border-bottom--paleGrey u-text--bold text-mt u-pos--rel'>" + getTitle(data) + "</div>";
+		if(data.schemeName != "Basic"){
+			card += "<div class='scheme-badge-spinner'></div>";
+		}
+		card += "<div class='u-text--uppercase u-p-t--20 u-p-b--15 u-border-bottom--paleGrey u-text--bold text-mt u-pos--rel'>" + getTitle(data) + "<br>";
+		if(data.schemeName != "Basic"){
+			card += "<div class='u-text--uppercase text-mt u-pos--rel u-text--bold' style='font-size: 12px;'>Membership</div>";
+		}
+		card += "</div>";
 		card += "<div class='plan-details u-d-flex u-d-flex--center u-border-bottom--paleGrey'>";
 		card += "<div class='u-p-b--20 u-p-t--8'>";
 		card += "<div class='text-gre u-text--striked text-epsilon u-m-r--4 il-f'>";
@@ -443,14 +450,14 @@ function getTitle(data){
 		if(duration){
 			return duration +" "+"MONTHS";
 		}else{
-			return "MONTH";
+			return "MONTHLY";
 		}
 			
 	}else if(data.schemeBilingType == "YEARLY"){
 		if(duration){
 			return duration +" "+"YEAR";
 		}else{
-			return "YEAR";
+			return "YEARLY";
 		}
 	}
 	return data.schemeBilingType;

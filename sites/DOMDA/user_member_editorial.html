@@ -62,8 +62,8 @@
 			return json;
 		}
 		
-		function schemeByRole(scheme) {
-			if(getSessionStorage().loggedInRole == "user" && scheme.membershipId){
+		function schemeByRole(scheme, hasMember) {
+			if(getSessionStorage().loggedInRole == "user" && hasMember){
 				return scheme.slice(1);
 			}
 			return scheme;
