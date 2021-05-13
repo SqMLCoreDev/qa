@@ -159,7 +159,6 @@ body {
 }
 
 i.fa.fa-remove {
-  display: contents !important;
   font-size: 25px !important;
   color: #006af9 !important;
   font-weight: normal !important;
