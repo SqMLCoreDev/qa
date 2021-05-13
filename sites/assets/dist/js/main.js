@@ -31,9 +31,6 @@ function getUrlVars() {
 	if(vars.hasOwnProperty('env_code')){
 		vars["env_code"] = vars.env_code.toLowerCase();
 	}
-	if(vars.hasOwnProperty('loggedInRole')){
-		vars["loggedInRole"] = vars.loggedInRole.toLowerCase();
-	}
 	return vars;
 }
 
