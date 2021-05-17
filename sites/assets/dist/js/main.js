@@ -408,6 +408,11 @@ function schemeCard(id, scheme, formData){
 	}
 	userObj["schemeId"] = schema.schemeId;
 	
+	if(schema && schema.schemeActivePrice != 0){
+		userObj["isOnboardPlan"] = true;
+	}else{
+		userObj["isOnboardPlan"] = false;
+	}
 	console.log('schemeCard',userObj);
 	return userObj;
 }
