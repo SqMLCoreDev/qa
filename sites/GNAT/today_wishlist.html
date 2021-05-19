@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Wishes</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="" />
+    <meta name="keywords" content="">
+    <meta name="author" content="Ram Karuthapandian" />
+    <link rel="icon" href="../assets/brand/fav.ico" type="image/x-icon">
+
+    <!-- vendor css -->
+    <link rel="stylesheet" href="../assets/dist/css/plugins/dataTables.bootstrap4.min.css">  
+    <link rel="stylesheet" href="../assets/dist/css/style.css">
+	<style>
+	.custom-control-label:before{
+	  background-color:red;
+	}
+	.swal-title {
+		font-size:17px;
+	}
+	.table td, .table th {
+		border-top: 1px solid transparent; 
+	}
+	.wish-card-body {
+		padding: 10px !important; 
+		max-height: 130px;
+		overflow: hidden;
+	}
+	.card .card-header h5 {
+		margin-bottom: 5px;
+		color: #37474f;
+		font-size: 0.800rem;
+		font-weight: 600;
+		display: inline-block;
+		margin-right: 10px;
+		line-height: 1.1;
+		position: relative;
+		margin-left: -5px;
+		margin-right: 0px !important;
+	}
+	.namestyler {
+		background: -webkit-linear-gradient(#676dcb, #411ed1);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		text-shadow: 4px 5px 4px #021bb930;
+		font-size: 17px !important;
+	}
+	.nav-tabs .nav-link {
+		background-image: linear-gradient(to top, #20b4c3 2px, rgba(255, 255, 255, 0) 2px);
+	}
+	.wishcomp {
+		color:black;
+	} 
+	.wishtitlewrapper{
+		padding:3px 10px;
+		border-radius:3px;
+	}
+	.wishwrapper {
+		border:0px solid #F8F8F8;padding:5px;
+		border-radius: 5px;
+		min-height:60px !important;
+		display: table-cell; vertical-align: middle;
+	}
+	.darktheme.namestyler { 
+		background: -webkit-linear-gradient(#fff, #F8F8F8);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		text-shadow: 4px 5px 4px #021bb930;
+	}
+	.darktheme.wishtitlewrapper {
+		background-image: -webkit-linear-gradient( 135deg, transparent 0%, rgb(60 70 76 / 76%) 35%, rgb(1 5 23 / 66%) 100%);
+	}
+	.darktheme.wishcomp {
+		color:white;
+	}
+	.darktheme.wishwrapper {
+		background-image: -webkit-linear-gradient( 135deg, transparent 0%, rgb(60 70 76 / 45%) 35%, rgb(28 32 53 / 37%) 100%);
+	}
+	.darktheme.text-primary {
+		color: white !important;
+	}
+	 
+	</style>
+	
+    <script src="../assets/dist/js/vendor-all.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/clamp-js/0.7.0/clamp.js" integrity="sha512-TnePtmz3HL4p8nFS2lR46u0iHrwObVnUednDASZK/qS9btkd09xKs1PeCt1kpS4a0gWNQx1AF+WnDHDK+xWcAw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	
+	<script>
+		var navURL = window.location.origin;
+		if (window.location.pathname.split('/')[1]){
+			if (window.location.pathname.split('/')[1]=="SDxMembership"){
+				navURL = navURL+"/SDxMembership";
+			}
+		}
+		var currModule = "Redirectionals"; 
+		
+		$(document).ready(function() {
+		
+			$('p[name="wishcomp"]').each(function (){
+				$clamp(this, {clamp: 2});
+			});
+			//wishcomp
+			
+		});
+	</script>    
+	
+</head>
+<body class="" style="background: -webkit-linear-gradient(194deg, #2d1677 0%, rgb(28, 138, 218) 35%, rgb(76 7 63) 100%)!important;">
+	<!-- [ Pre-loader ] start -->
+	<div class="loader-bg" style="display:none">
+		<div class="loader-track">
+			<div class="loader-fill"></div>
+		</div>
+	</div>
+	<!-- [ Pre-loader ] End -->
+	 
+	<!-- [ Header ] start -->
+	
+	<!-- [ Header ] end -->
+	
+<!-- [ Main Content ] start -->
+<section class="pcoded-main-container" style="margin-left:0px;">
+    <div class="pcoded-content" style="padding:10px;margin-top:-10px;background:#FFF">
+        <!-- [ breadcrumb ] start -->
+        
+        <!-- [ breadcrumb ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="row">
+        <!-- liveline-section start -->
+            <div class="col-sm-12">
+                <div class="card" style="box-shadow:none;border:0px">
+                    <div class="card-header" 
+						style="display:inline-flex;background-image:linear-gradient(to bottom,#fff,#d5f1f1);border-radius:7px;
+							   border-bottom:0px solid #c9d1d8;padding:5px;padding-bottom:0px!important;">
+							   
+                        <span style="margin-top:7.5px;margin-left:5px;">&emsp;</span> 
+						<ul class="nav nav-tabs mb-3" id="myTab" role="tablist" style="margin-bottom:0px !important;">
+							<li class="nav-item">
+								<a class="nav-link active" id="thoughforday-tab" data-toggle="tab"  href="#thoughforday" role="tab" aria-controls="thoughforday" aria-selected="false">
+									<h5 style="margin-right:1px;font-weight:600;">Thought for Day</h5>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="wishes-tab" data-toggle="tab"  href="#wishes" role="tab" aria-controls="wishes" aria-selected="false">
+									<h5 style="margin-right:1px;font-weight:600;">Wishes</h5>
+								</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" id="announcements-tab" data-toggle="tab"  href="#announcements" role="tab" aria-controls="announcements" aria-selected="false">
+									<h5 style="margin-right:1px;font-weight:600;">Announcements</h5>
+								</a>
+							</li>
+						</ul>
+                    </div>
+                    <div class="card-body" style="padding:5px;padding-bottom:15px;padding-left:25px;">
+                        <div class="tab-content" id="summarytabsPane" style="">
+						
+							<div class="tab-pane fade show active" id="thoughforday" role="tabpanel" aria-labelledby="thoughforday-tab" 
+								style="margin-left:-20px">
+								<div id="thoughforday-slider" class="carousel slide" data-ride="carousel">
+									<ol class="carousel-indicators" style="border:0px solid red;border-radius:15px;margin-bottom: -20px!important;">
+										<li data-target="#thoughforday-slider" data-slide-to="0" class="active"></li>
+										<li data-target="#thoughforday-slider" data-slide-to="1"></li>
+										<li data-target="#thoughforday-slider" data-slide-to="2"></li>
+										<li data-target="#thoughforday-slider" data-slide-to="3"></li>
+										<li data-target="#thoughforday-slider" data-slide-to="4"></li>
+									</ol>
+
+									<div class="carousel-inner">
+										<div class="carousel-item active">
+											<div class="card" style="border:1px solid #e4e6f2">
+												<div class="card-body wish-card-body"> 
+													<div class="media align-items-center p-0">
+														<div class="text-center" style="margin-right:10px;">
+															<img id="loggedAvatar" class="img-radius" 
+															src="https://www.somatechnology.com/blog/wp-content/uploads/2020/06/Spot-Check-SpO2-Monitors-Pulse-Oximeter.jpg" alt="" style="width:50px;height:50px;">
+														</div>
+														<div>
+															<h4 class="m-0 text-bold namestyler">SpO2</h4>
+															<span>Know all about Oxygen in your body</span>
+														</div>
+													</div>
+													<div class="d-flex align-items-center justify-content-between mt-2">
+														<div style="border:1px solid #F8F8F8;padding:5px;">
+															<p class="m-0 height-restricted">Find the link to the full article of SpO2.</p>
+														</div>
+														<div class="text-right" style="margin-left:5px;">
+															<p class="m-0 font-weight-600"><span class="text-primary">Comment</span></p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							
+							<div class="tab-pane fade" id="wishes" role="tabpanel" aria-labelledby="wishes-tab"
+								style="margin-left:-20px">
+								<div id="slider" class="carousel slide" data-ride="carousel">
+									<ol class="carousel-indicators" style="border-radius:15px;margin-bottom: -20px!important;">
+										<li data-target="#slider" data-slide-to="0" class="active"></li>
+										<li data-target="#slider" data-slide-to="1"></li>
+										<li data-target="#slider" data-slide-to="2"></li>
+										<li data-target="#slider" data-slide-to="3"></li>
+										<li data-target="#slider" data-slide-to="4"></li>
+									</ol>
+
+									<div class="carousel-inner"> 
+										<div class="carousel-item active">
+											<div class="card" style="border:1px solid #e4e6f2;background-image: url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBxMSEhUQEhIWExUVFhcYFRYYFxgZFxUaFxUaGBcWExcYHCkgGBolGxkYITEhJikrLy4uFx8zODMsNygtLisBCgoKDg0OGxAQGy0mICUtLS0vMjItLS0tLS0tLy0vLS0tLS0tLS0tLS8rLS0tLS0tLS0tLS0tLS0tLS0tLS0tLf/AABEIAKgBLAMBIgACEQEDEQH/xAAcAAEAAQUBAQAAAAAAAAAAAAAABQIDBAYHAQj/xAA/EAACAQMCAwYDBAgFBAMAAAABAgADBBESIQUxQQYTIlFhcQeBkRQyQrEVI1JyocHR8DNDgpLhFlNigzXC0v/EABoBAQACAwEAAAAAAAAAAAAAAAACAwEEBQb/xAAzEQACAQIDAwwBBQEBAQAAAAAAAQIDEQQhMRJxkQUTIjJBUWGBobHB8NEUI5Lh8VKiFf/aAAwDAQACEQMRAD8A4bERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAEREAREQBERAESY4FwGted8KIB7ii9Z8nGVTGQu27HOw67yr/p6r9h/SXh7rv8AuMb6tWjXqxjGnpnzmLoELETb+wfZJeIm4D1hR7qlmnnHjqMcU1OehIOevKJSUVd6GUm8kahET0iZMHkRJHh3Ca1darUkLihTNWqdgEQEAk558+XPn5QCOiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAIiIAiIgCIiAJtvYLs3TvqldahqBaNBqv6vTklSBuW5DealOn/BS+Wm18DTFQtbZweWlSdQPnklfpIzbUXYuw0NurGLV81lpcg+xnBqlatcJSr9wlOm+pjqywzhB4dz4gD8iOuJK9kuw322jXJuqi0qVd6VJejFQG1FdxkhhsPXebX2c7S07o3dOlaUrc06R1d2qrqwxGWwMk7yqvccPQUqNK8W2oJ3b1KiDxVbhXYVMk7ZIRfkRL8FSjWqtSWi2tL6ZfK3X3lnKVLmKClB57TWTyWmXk+NsrnE721alUak4wyMVYeoM3X4U9lHvrtqTsaVNaQeq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);
+																			  background-size: cover">
+												<div class="card-body wish-card-body darktheme"> 
+													<div class="media align-items-center p-0"> 
+														<div class="text-center" style="margin-right:10px;">
+															<img id="loggedAvatar" class="img-radius" 
+															src="https://memberly-app.github.io/heroku/assets/images/avatars/Balaji.png" alt="" style="width:50px;">
+														</div>
+														<div class="darktheme wishtitlewrapper">
+															<h4 class="darktheme m-0 text-bold namestyler">Balaji Modhagala</h4> 
+															<span class="darktheme namestyler" style="font-size:small !important">May 19th, 2021</span>
+														</div>
+													</div>
+													<div class="d-flex align-items-center justify-content-between mt-2">
+														<div class="darktheme wishwrapper" style="display:table;">
+															<p class="darktheme wishcomp" name="wishcomp" style="display:table-cell;vertical-align: middle;">Happy Birthday Balaji</p>
+														</div>
+														<div class="text-right" style="margin-left:5px;">
+															<p class="m-0 font-weight-600"><span class="darktheme text-primary">Comment</span></p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="carousel-item">
+											<div class="card" style="border:1px solid #e4e6f2;background-image: url(https://images.indianexpress.com/2018/10/diwali-getty-images-1200.jpg);
+																			  background-size: cover">
+												<div class="card-body wish-card-body darktheme"> 
+													<div class="media align-items-center p-0"> 
+														<div class="darktheme wishtitlewrapper">
+															<h4 class="darktheme m-0 text-bold namestyler">Happy Diwali</h4> 
+															<span class="darktheme namestyler" style="font-size:small !important">May 19th, 2021</span>
+														</div>
+													</div>
+													<div class="d-flex align-items-center justify-content-between mt-2">
+														<div class="darktheme wishwrapper">
+															<p class="darktheme wishcomp" name="wishcomp">Wish you and your family a very happy, prosperous and safe Diwali. Please celebrate with all safety measures. Ensure to follow all required safety measures</p>
+														</div>
+														<div class="text-right" style="margin-left:5px;">
+															<p class="m-0 font-weight-600"><span class="darktheme text-primary">Comment</span></p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="carousel-item">
+											<div class="card" style="border:1px solid #e4e6f2;background-image: url(https://images.hindustantimes.com/rf/image_size_630x354/HT/p2/2019/04/20/Pictures/_19eefa2a-6339-11e9-b92f-deef78e36bd1.jpg);
+																			  background-size: cover; background-color:black;background-blend-mode: screen;">
+												<div class="card-body wish-card-body darktheme"> 
+													<div class="media align-items-center p-0"> 
+														<div class="darktheme wishtitlewrapper">
+															<h4 class="darktheme m-0 text-bold namestyler">Happy Easter</h4>
+															<span class="darktheme namestyler">2021</span>
+														</div>
+													</div>
+													<div class="d-flex align-items-center justify-content-between mt-2">
+														<div class="darktheme wishwrapper">
+															<p class="darktheme wishcomp" name="wishcomp">He is risen! Today, we remember Jesus' sacrifice and give thanks for what he brought to our world.. Wishing you a happy Easter full of blessings.</p>
+														</div>
+														<div class="text-right" style="margin-left:5px;">
+															<p class="m-0 font-weight-600"><span class="darktheme text-primary">Comment</span></p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div> 
+							
+							<div class="tab-pane fade" id="announcements" role="tabpanel" aria-labelledby="announcements-tab" 
+								style="margin-left:-20px">
+								<div id="slider" class="carousel slide" data-ride="carousel">
+									<ol class="carousel-indicators" style="border-radius:15px;margin-bottom: -20px!important;">
+										<li data-target="#slider" data-slide-to="0" class="active"></li>
+										<li data-target="#slider" data-slide-to="1"></li>
+										<li data-target="#slider" data-slide-to="2"></li>
+										<li data-target="#slider" data-slide-to="3"></li>
+										<li data-target="#slider" data-slide-to="4"></li>
+									</ol>
+
+									<div class="carousel-inner">
+										<div class="carousel-item active">
+											<div class="card" style="border:1px solid #e4e6f2">
+												<div class="card-body wish-card-body"> 
+													<div class="media align-items-center p-0">
+														<div class="text-center" style="margin-right:10px;">
+															<img id="loggedAvatar" class="img-radius" 
+															src="https://memberly-app.github.io/heroku/assets/images/avatars/Balaji.png" alt="" style="width:50px;">
+														</div>
+														<div>
+															<h4 class="m-0 text-bold namestyler">Balaji Modhagala</h4>
+															<span>Member since 8 Years</span>
+														</div>
+													</div>
+													<div class="d-flex align-items-center justify-content-between mt-2">
+														<div style="border:1px solid #F8F8F8;padding:5px;">
+															<p class="wishcomp" name="wishcomp">Wish you many more happy returns of the day, Balaji Modhagala</p>
+														</div>
+														<div class="text-right" style="margin-left:5px;">
+															<p class="m-0 font-weight-600"><span class="text-primary">Comment</span></p>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div> 
+                    </div> 
+                </div> 
+            </div>
+            
+            <!-- liveline-section end -->
+		</div>
+	</div>
+        <!-- [ Main Content ] end -->
+    </div>
+	
+<div class="modal fade bd-example-modal-lg show" id="modal-access-redirwidget" tabindex="-1" role="dialog" aria-labelledby="widget-accessor" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: 1px solid #cccccc;background-image:-webkit-gradient(linear,left top,right top,from(#e4ccea),color-stop(25%,#cbd2f3),color-stop(75%,#d4eff3),to(#cbf1ee))">
+                <span style="display:inline-flex"><h5 class="modal-title" id="">&nbsp;Access Widget</h5></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+			<div class="modal-body">
+				<iframe id="redirwidget_redirection" height="585" width="100%" class="embed-responsive-item" ></iframe>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade bd-example-modal-lg show" id="modal-stats-redirwidget" tabindex="-1" role="dialog" aria-labelledby="widget-statistics" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: 1px solid #cccccc;background-image:-webkit-gradient(linear,left top,right top,from(#e4ccea),color-stop(25%,#cbd2f3),color-stop(75%,#d4eff3),to(#cbf1ee))">
+                <span style="display:inline-flex"><h5 class="modal-title" id="">&nbsp;Redirectional Widget Statistics</h5></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+			<div class="modal-body">
+				Statistics
+			</div>
+		</div>
+	</div>
+</div>
+	
+	
+	
+<div class="modal fade bd-example-modal-lg show" id="modal-build-redirwidget" tabindex="-1" role="dialog" aria-labelledby="widget-builder" aria-hidden="true" >
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
+		
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: 1px solid #cccccc;background-image:-webkit-gradient(linear,left top,right top,from(#e4ccea),color-stop(25%,#cbd2f3),color-stop(75%,#d4eff3),to(#cbf1ee))">
+                <span style="display:inline-flex"><i class="fad fa-external-link-alt" style="color:#7d7db4;margin-top:0px;font-size:24px;"></i>&emsp;
+				<h5 class="modal-title" id="redirwidget_mode_title">&nbsp;Add Campaign</h5></span>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+			<form id="form-saveorupdate-redirwidget">
+            <div class="modal-body" style="">
+			
+				<ul class="nav nav-tabs mb-3" id="myTab" role="tablist" style="margin-bottom:-1.25px !important;">
+					<li class="nav-item">
+						<a class="nav-link active" 	id="basics-tab"  data-toggle="tab"  href="#basics"  role="tab" aria-controls="basics" aria-selected="true"><h5>Basics</h5></a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" 		id="evaluation-tab" data-toggle="tab"  href="#evaluation" role="tab" aria-controls="evaluation" aria-selected="false"><h5>Status</h5></a>
+					</li>
+				</ul>
+				
+				<div class="tab-content" id="campaignDetailsTabPane" style="height:400px!important;">
+					<div class="tab-pane fade show active" id="basics" role="tabpanel" aria-labelledby="basics-tab">
+						
+						<!-- Basics Tab Content -->
+							<input type="hidden" class="form-control" id="widget-current-id"/>
+							<div>&nbsp;</div>
+							<div class="form-group">
+								<label class="label" for="widget-subject-line"><small class="text-danger">* </small>Name</label>
+								<input type="text" class="form-control" id="widget-subject-line" placeholder="" required>
+							</div>
+							<div>&nbsp;</div>
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="form-group fill">
+										<label class="label" for="widget-target"><small class="text-danger">* </small>Target</label>
+										<input type="text" class="form-control" id="widget-target" placeholder="" required>
+									</div>
+								</div>
+								<div class="col-sm-6" style="display:none">
+									<div class="form-group fill">
+										<label class="label" for="widget-params">Parameters</label>
+										<input type="text" class="form-control" id="widget-params" placeholder="">
+									</div>
+								</div>
+							</div>
+							<div>&nbsp;</div>
+							
+						<!-- Basics Tab End -->
+					</div>
+					<div class="tab-pane fade" id="evaluation" role="tabpanel" aria-labelledby="evaluation-tab">
+						<!-- Evaluation Tab Content -->
+							<div>&nbsp;</div>
+							<div>&nbsp;</div>
+							<div class="row">
+								<div class="col-sm-6">
+									<label class="label"><small class="text-danger">* </small>Status</label>
+									<div class="form-group">
+										<select class="form-control" id="widget-status">
+											<option value="ACTIVE">Active</option>
+											<option value="CLOSED">Closed</option>
+											<option value="INACTIVE">In-Active</option>
+											<option value="SUSPENDED">Suspended</option>
+											<option value="FINALIZING">Finalizing</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							
+						<!-- Evaluation Tab End -->
+					</div>
+				</div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" id="submitter"> Save </button>
+                <button class="btn btn-danger"> Clear </button>
+            </div>
+			</form>
+        </div>
+    </div>
+</div>
+
+</section>
+
+    <!-- Required Js -->
+    <script src="../assets/dist/js/vendor-all.min.js"></script>
+    <script src="../assets/dist/js/bootstrap.min.js"></script>
+	
+
+	
+
+
+</body>
+</html>
