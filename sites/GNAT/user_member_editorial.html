@@ -55,13 +55,21 @@
 		});
 		
 		function editObject(json){
+			if(json.bloodGroup){
+				json["bloodGroupDisabled"] = json.bloodGroup;
+			}
+			if(json.tempUserSubType){
+				json["roleDisabled"] = json.tempUserSubType;
+			}
 			return json;
 		}
 		
 		function submissionObject(json){
+			console.log(json);
 			if(json.hasOwnProperty('tempUserSub') && json.tempUserSub){
 				json["tempUserSubType"] = json.tempUserSub;
 			}
+			console.log(json);
 			return json;
 		}
 		
