@@ -462,9 +462,21 @@
 <script src="../assets/dist/js/bootstrap.min.js"></script>
 
 <script>
+	var urlVars = null;
 	$(document).ready(function(){
-		alert("Started invoking ");
+		urlVars = getUrlVars();
+		alert("Started invoking "+urlVars);
 	});
+	
+	function getUrlVars() {
+		var vars = {};
+		var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, 
+			function (m, urlKey, urlVal) {
+			vars[urlKey] = decodeURI(urlVal);
+		});
+		return vars;
+	}
+		
 </script>
 
 	
