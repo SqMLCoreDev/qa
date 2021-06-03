@@ -241,10 +241,10 @@ function membershipCard(formData, scheme) {
 	var basicScheme = null;
 	scheme = schemeByRole(scheme, formData.hasMember);
 	let card = "<div id='scheme-card' class='container-fluid'>";
-	card += "<div class='u-pos--rel c-banner-container' id='banner'>";
+	card += "<div class='u-pos--rel' id='banner'>";
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
-	card += "<img alt='Plus Logo' class='u-columns u-two u-m-b--10 ' effect='blur' src='../assets/brand/plus-logo.png''>";
-	card += "<div class='u-text--bold text-large bg-black'>Unlimited benefits with "+ session.departmentName +" Member+";
+	//card += "<img alt='Plus Logo' class='u-columns u-two u-m-b--10 ' effect='blur' src='../assets/brand/plus-logo.png''>";
+	card += "<div class='u-text--bold text-large'>Unlimited benefits with "+ session.departmentName +" Member+";
 	card += "</div>";
 	card += "</div>";
 	card += "</div>";
@@ -276,6 +276,8 @@ function membershipCard(formData, scheme) {
 		card += "<div class='u-text--uppercase u-p-t--20 u-p-b--15 u-border-bottom--paleGrey u-text--bold text-mt u-pos--rel'>" + getTitle(data) + "<br>";
 		if(data.schemeName != "Basic"){
 			card += "<div class='u-text--uppercase text-mt u-pos--rel u-text--bold' style='font-size: 12px;'>Membership</div>";
+		}else{
+			card += "<div class='u-text--uppercase text-mt u-pos--rel u-text--bold' style='font-size: 12px;'><br></div>";
 		}
 		card += "</div>";
 		card += "<div class='plan-details u-d-flex u-d-flex--center u-border-bottom--paleGrey'>";
@@ -301,7 +303,7 @@ function membershipCard(formData, scheme) {
 				card += "<div class='u-p-v--12 text-gre text-zeta-lf ct-st'><img class='text-info' src='../assets/brand/x-mark.svg'> "+content.replace("#","")+"</div>";
 			}	
 			});
-		card += "<a href='#' class='btn read'><i id='card-icon' class='fa fa-angle-right'></i></a>";
+		card += "<a href='#' class='btn read' style='display: none;'><i id='card-icon' class='fa fa-angle-right'></i></a>";
 		card += "</div>";
 		card += "</div>";
 		card += "</div>";
@@ -582,6 +584,7 @@ var payee = async function payButton(data) {
 		await window.flutter_inappwebview.callHandler('userMembershipHandlerWithArgs', null, json, true).then(await
 			function (handlerResponse) {
 				console.log("handlerPayResponseWithArgs" + JSON.stringify(handlerResponse));
+				var isCancelled = handlerResponse["isCancelled"];
 				if (Array.isArray(handlerResponse.response)) {
 					handlerResponse["response"] = handlerResponse.response[0];
 				}
@@ -593,7 +596,7 @@ var payee = async function payButton(data) {
 					paymentMode = handlerResponse.response.paymentMode;
 					transactionStatus = handlerResponse.response.transactionStatus;
 				}
-				if (!handlerResponse.response && !handlerResponse.isCancelled && getUrlVars().loggedInRole == 'user') {
+				if (!handlerResponse.response && !isCancelled && getUrlVars().loggedInRole == 'user') {
 					paymentMode = 'CASH';
 					transactionStatus = 'success';
 				}
@@ -602,23 +605,25 @@ var payee = async function payButton(data) {
 					receiptNo = handlerResponse.receiptNumber;
 				}
 				transaction = {"receiptNo": receiptNo, "paymentMode": paymentMode, "paymentStatus": transactionStatus};
+				data["receiptNo"] = transaction.receiptNo;
+				data["paymentMode"] = transaction.paymentMode;
+				data["paymentStatus"] = transaction.paymentStatus;
+				if(data.paymentStatus === 'success'){
+					if(Renewal){
+						data["isRenewedMembership"] = true;
+						data["fees"] = data.renewalPayableFees;
+						data["currentPaidPlan"] = data.renewalFees;
+					}else {
+						data["membershipApprovalStatus"] = 'Pending Approval';
+						data["memberStatus"] = 'Pending Approval';
+						data["currentPaidPlan"] = data.newMemberFees;
+					}
+					if(!isCancelled){
+						update(data);
+					}
+				}
+				console.log(data);
 			});
-		data["receiptNo"] = transaction.receiptNo;
-		data["paymentMode"] = transaction.paymentMode;
-		data["paymentStatus"] = transaction.paymentStatus;
-		if(data.paymentStatus === 'success'){
-			if(Renewal){
-				data["isRenewedMembership"] = true;
-				data["fees"] = data.renewalPayableFees;
-				data["currentPaidPlan"] = data.renewalFees;
-			}else {
-				data["membershipApprovalStatus"] = 'Pending Approval';
-				data["memberStatus"] = 'Pending Approval';
-				data["currentPaidPlan"] = data.newMemberFees;
-			}
-			update(data);
-		}
-		console.log(data);
 		return data;
 	} else {
 		transaction = {"receiptNo": "order_" +randomUUID(15), "paymentMode": "CASH", "paymentStatus": "success"};
