@@ -30,6 +30,9 @@ function getUrlVars() {
 	}
 	if(vars.hasOwnProperty('env_code')){
 		vars["env_code"] = vars.env_code.toLowerCase();
+		if(vars.env_code.toLowerCase() == "pd"){
+			vars["env_code"] = 'prod';
+		}
 	}
 	if(vars.hasOwnProperty('loggedInRole') && vars.loggedInRole != null){
 		vars["loggedInRole"] = vars.loggedInRole.toLowerCase();
