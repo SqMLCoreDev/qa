@@ -397,7 +397,13 @@ function schemeCard(id, scheme, formData){
 	console.log('schemeCard bf', userObj);
 	userObj["scheme"] = schema;
 	schemeDescription(userObj.scheme);
-	var fees = parseInt(userObj.fees);
+	console.log(userObj.fees, schema);
+	var fees = 0;
+	if(!userObj.fees){
+		fees = schema.schemeActivePrice;
+	}else{
+		fees = parseInt(userObj.fees);
+	}
 	userObj["fees"] = fees;
 	if(schema.schemeType == "ONBOARD"){
 		userObj["newMemberFees"] = membershipFees(schema);
