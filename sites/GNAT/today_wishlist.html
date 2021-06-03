@@ -45,11 +45,14 @@
 		background: -webkit-linear-gradient(#676dcb, #411ed1);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
-		text-shadow: 4px 5px 4px #021bb930;
+		/* text-shadow: 4px 5px 4px #021bb930; */
 		font-size: 17px !important;
 	}
 	.nav-tabs .nav-link {
 		background-image: linear-gradient(to top, #20b4c3 2px, rgba(255, 255, 255, 0) 2px);
+	}
+	.card { 
+		border-radius: 0.325rem!important;
 	}
 	.wishcomp {
 		color:black;
@@ -68,7 +71,7 @@
 		background: -webkit-linear-gradient(#fff, #F8F8F8);
 		-webkit-background-clip: text;
 		-webkit-text-fill-color: transparent;
-		text-shadow: 4px 5px 4px #021bb930;
+		/* text-shadow: 4px 5px 4px #021bb930; */
 	}
 	.darktheme.wishtitlewrapper {
 		background-image: -webkit-linear-gradient( 135deg, transparent 0%, rgb(60 70 76 / 76%) 35%, rgb(1 5 23 / 66%) 100%);
@@ -105,9 +108,9 @@
 	} 
 	.carousel-indicators {
 		border-radius: 500px;
-		margin-bottom: -7px!important;
-		/*background-image: -webkit-linear-gradient(135deg, #ab9ae345 0%, rgb(156 198 229 / 23%) 35%, rgb(170 180 234 / 19%) 100%);*/
-		background-image: -webkit-linear-gradient(135deg, #ab9ae3ab 0%, rgb(156 198 229 / 23%) 35%, rgb(147 161 235 / 48%) 100%);
+		margin-bottom: -8px!important; 
+		/*background-image: -webkit-linear-gradient(135deg, #ab9ae3ab 0%, rgb(156 198 229 / 23%) 35%, rgb(147 161 235 / 48%) 100%);*/
+		background-image: -webkit-linear-gradient(135deg, #ab9ae321 0%, rgb(156 198 229 / 11%) 35%, rgb(147 161 235 / 9%) 100%); 
 		border-top-left-radius: 0px;
 		border-top-right-radius: 0px; 
 	}
@@ -130,6 +133,7 @@
 	<script src="https://kit.fontawesome.com/23b535c980.js" crossorigin="anonymous"></script>
 	
 	<script>
+		var activityURL = "https://qa.servicedx.com";
 		var navURL = window.location.origin;
 		if (window.location.pathname.split('/')[1]){
 			if (window.location.pathname.split('/')[1]=="SDxMembership"){
@@ -158,7 +162,7 @@
 	</script>    
 	
 </head>
-<body class="" style="overflow-x:hidden;background:-webkit-linear-gradient(194deg, #2d1677 0%, rgb(28, 138, 218) 35%, rgb(76 7 63) 100%)!important;">
+<body class="" style="overflow:hidden;background:-webkit-linear-gradient(194deg, #2d1677 0%, rgb(28, 138, 218) 35%, rgb(76 7 63) 100%)!important;">
 	<!-- [ Pre-loader ] start -->
 	<div class="loader-bg" style="display:none">
 		<div class="loader-track">
@@ -173,7 +177,7 @@
 	
 <!-- [ Main Content ] start -->
 <section class="pcoded-main-container" style="margin-left:0px;">
-    <div class="pcoded-content w-100" style="padding:10px;margin-top:-16px;background:#FFF">
+    <div class="pcoded-content w-100" style="padding:10px;margin-top:-10px;background:#FFF">
         <!-- [ breadcrumb ] start -->
         
         <!-- [ breadcrumb ] end -->
@@ -220,12 +224,11 @@
                     <div class="card-body" style="padding:5px;padding-bottom:15px;padding-left:25px;">
                         <div class="tab-content" id="summarytabsPane" style="">
 						
-							<div class="tab-pane fade show active" id="hubhome" role="tabpanel" aria-labelledby="hubhome-tab" 
+							<div class="tab-pane fade show active" tabpanel-activity="load_user" id="hubhome" role="tabpanel" aria-labelledby="hubhome-tab" 
 								style="margin-left:-20px">
 								<div id="home-slider" class="carousel slide" data-ride="carousel">
 									<ol class="carousel-indicators">
-										<li data-target="#home-slider" data-slide-to="0" class="active"></li>
-										<li data-target="#home-slider" data-slide-to="1"></li>
+										<li data-target="#home-slider" data-slide-to="0" class="active"></li> 
 									</ol>
 
 									<div class="carousel-inner">
@@ -236,18 +239,18 @@
 														
 														<div class="text-center" style="margin-right:10px;">
 															<img id="loggedAvatar" class="img-radius" 
-															src="https://memberly-app.github.io/heroku/assets/images/user/admin/RamK.jpg" alt="" style="width:50px;height:50px;">
+															src="https://memberly-app.github.io/heroku/assets/images/user/ageneric.png" alt="" style="width:50px;height:50px;">
 														</div>
 														<div>
-															<h4 class="m-0 text-bold namestyler" style="color:white;background:none;text-shadow:none;-webkit-text-fill-color:unset">
-																Ram Karuthapandian
+															<h4 id="loggedFullName" class="m-0 text-bold namestyler" style="color:white;background:none;text-shadow:none;-webkit-text-fill-color:unset">
+															&nbsp;
 															</h4>
 															<span style="color:orange">Welcome</span>
 														</div>
-													</div>
+													</div> 
 													<div class="d-flex align-items-center justify-content-between mt-2">
 														<div style="border:0px solid #F8F8F8;padding:5px;">
-															<p class="m-0 height-restricted" style="color:white">How do you feel Today ?</p>
+															<p id="dailylog" class="m-0 height-restricted" style="color:white">How do you feel Today ?</p>
 														</div>
 														<div class="text-right" style="margin-left:5px;">
 															<p class="m-0 font-weight-600"><span class="text-primary"></span></p>
@@ -263,7 +266,7 @@
 								</div>
 							</div>
 							
-							<div class="tab-pane fade" id="reminders" role="tabpanel" aria-labelledby="reminders-tab" 
+							<div class="tab-pane fade" tabpanel-activity="load_reminders" id="reminders" role="tabpanel" aria-labelledby="reminders-tab" 
 								style="margin-left:-20px">
 								Reminders
 							</div>
@@ -457,11 +460,54 @@
 
 
 </section>
+<!-- Required Js -->
+<script src="../assets/dist/js/vendor-all.min.js"></script>
+<script src="../assets/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.blockUI/2.70/jquery.blockUI.min.js" 
+	integrity="sha512-eYSzo+20ajZMRsjxB6L7eyqo5kuXuS2+wEbbOkpaur+sA2shQameiJiWEzCIDwJqaB0a4a6tCuEvCOBHUg3Skg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-    <!-- Required Js -->
-    <script src="../assets/dist/js/vendor-all.min.js"></script>
-    <script src="../assets/dist/js/bootstrap.min.js"></script>
+<script>
+	var urlVars = null;
+	$(document).ready(function(){
+		urlVars = getUrlVars();
+		//alert("Started invoking "+JSON.stringify(urlVars)+", has[user] "+urlVars["userid"]);
+		
+		//tabpanel-activity="load_user"
+		$("div[tabpanel-activity]").each(function(){
+			$this = $(this); 
+			
+			/*$this.block({
+				message: '<div class="feather icon-refresh-cw icon-spin font-medium-2"></div>', 
+				overlayCSS: { backgroundColor: '#fff', opacity: 0.8, cursor: 'wait' },
+				css: { border: 0, padding: 0, backgroundColor: 'transparent' }
+			});*/ 
+			if ($this.attr("tabpanel-activity") == "load_user"){
+				if (urlVars["userid"] && urlVars["deptid"]){
+					$.ajax({ 'url': activityURL+"/admin/departments/"+urlVars["deptid"]+"/users/"+urlVars["userid"]+"/lightWeight", 
+							 'method': "GET", 'contentType': 'application/json'
+					}).done( function(data) { 
+						console.log("Its done");
+						if (data.profileImage)
+							$("#loggedAvatar").attr("src","data:image/png;base64,"+data.profileImage);
+						if (data.firstName && data.lastName)
+							$("#loggedFullName").text(data.firstName+" "+data.lastName);
+						//id="loggedAvatar", loggedFullName, dailylog
+					});
+				}
+			}
+		}); 
+	});
 	
+	function getUrlVars() {
+		var vars = {};
+		var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, 
+			function (m, urlKey, urlVal) {
+			vars[urlKey] = decodeURI(urlVal);
+		});
+		return vars;
+	}
+		
+</script>
 
 	
 
