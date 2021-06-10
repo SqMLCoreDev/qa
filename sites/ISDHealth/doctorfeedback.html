@@ -93,9 +93,15 @@ font-size: 13.5px;
 	if((userData.adminFormJson) != null){
 	populateDoctorTable(JSON.parse(userData.adminFormJson));
 	}
+	
+	
+		if((userData.adminFormJson) == null){
+	document.getElementById('doctorHeader').setAttribute("style", "display:none");
+	}
 		 if((docvars.userCategory) == "PATIENT"){
  
          document.getElementById('builder').setAttribute("style", "display:none");
+		 
 		 
           }
 		  
