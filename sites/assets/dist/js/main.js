@@ -322,21 +322,21 @@ function membershipCard(formData, scheme) {
 		var expirySuffixText = '';
 		if (exipry > 0){
 		   expiryClass = 'alt-inf';
-	       expiryPrefixText = 'Expiry Days :';
-		   expirySuffixText = ' Days left (Expire Soon)';
+	       expiryPrefixText = 'Expiry Days : ';
+		   expirySuffixText = ' Days left';
 		} else if (exipry == 0){
 		   expiryClass = 'alt-wrn';
-	       expiryPrefixText = 'Expiry Days :';
-		   expirySuffixText = ' (Expire Today)';
+	       expiryPrefixText = 'Expiry Days : ';
+		   expirySuffixText = '';
 		} else{
 		   expiryClass = 'alt-dg';
-	       expiryPrefixText = 'Expired Before :';
-		   expirySuffixText = ' Days (Expired)';
+	       expiryPrefixText = 'Expired Before : ';
+		   expirySuffixText = ' Days';
 		}
 		renewalDetails += "<div class='ep-status "+expiryClass+" m-2'>";
-		renewalDetails += "<p class='float-left'>Membership : <p>"+  formData.membershipSchemeType +"</p></p>";
-		renewalDetails += "<p class='float-left'>Expiry Date : <p>"+  formData.expiryDate +"</p></p>";
-		renewalDetails += "<p class='float-left'>" + expiryPrefixText +"<p>"+ formData.expiryDays + expirySuffixText + "</p></p>";
+		renewalDetails += "<p class='float-left'>Membership : <p>&ensp;"+  formData.membershipSchemeType +"</p></p>";
+		renewalDetails += "<p class='float-left'>Expiry Date : <p>&ensp;"+ new Date(formData.expiryDate).toISOString().split("T")[0]; +"</p></p>";
+		renewalDetails += "<p class='float-left'>" + expiryPrefixText +"<p>&ensp;"+ Math.abs(formData.expiryDays) + expirySuffixText + "</p></p>";
 		renewalDetails += "</div>";
 	}
 	$("#renewal-details").show().empty().append(renewalDetails);
@@ -618,9 +618,7 @@ var payee = async function payButton(data) {
 						data["memberStatus"] = 'Pending Approval';
 						data["currentPaidPlan"] = data.newMemberFees;
 					}
-					if(!isCancelled){
-						update(data);
-					}
+					update(data);
 				}
 				console.log(data);
 			});
@@ -689,6 +687,9 @@ function setObject(info){
 		userObj = editObject(info.formData);
 	}
 	userObj["page"] = getSessionStorage().page;
+	if(getSessionStorage().mode){
+		userObj["mode"] = getSessionStorage().mode;
+	}
 	return userObj;
 }
 function toObject(userObject){

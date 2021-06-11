@@ -321,6 +321,10 @@ input[type="radio"][disabled]+label {
 	margin-bottom: 1rem;
 	border: 1px solid #73737300;
 	border-radius: 0.25rem;
+	margin-top: 0.6rem !important;
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important;
+    margin-bottom: 0rem !important;
 }
 
 .alt-inf {
@@ -355,6 +359,15 @@ strong {
 	white-space: pre-line;
 	padding: 0.5rem 0.5rem;
 	display: none;
+	margin-top: 0.6rem !important;
+    margin-left: 0.5rem !important;
+    margin-right: 0.5rem !important;
+    margin-bottom: 0rem !important;
+}
+
+.mb-d{
+	margin-top: 0.2rem !important;
+    margin-bottom: 0.5rem !important;
 }
 
 .scheme-badge-spinner {
