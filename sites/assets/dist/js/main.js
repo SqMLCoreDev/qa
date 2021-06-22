@@ -239,7 +239,7 @@ function membershipCard(formData, scheme) {
 	var session = getSessionStorage();
 	var selectedScheme = null;
 	var basicScheme = null;
-	scheme = schemeByRole(scheme, formData.hasMember);
+	scheme = schemeByRole(scheme, formData);
 	let card = "<div id='scheme-card' class='container-fluid'>";
 	card += "<div class='u-pos--rel' id='banner'>";
 	card += "<div class='u-p--16 text-white text-bold c-banner-container__content'>";
@@ -248,10 +248,11 @@ function membershipCard(formData, scheme) {
 	card += "</div>";
 	card += "</div>";
 	card += "</div>";
-	card += "<div id='scheme' class='d-flex flex-row flex-nowrap overflow-auto'>";
-	card += "<div class='pricing row flex-column flex-md-row'>";
-	card += "<div class='u-p-v--10 text-center c-card-slider' id='plans' style='overflow: visible;'>";
-	card += "<div class='u-d-flex u-p-h--8'>";
+	card += "<div id='scheme' class=''>";
+	card += "<div class=''>";
+	card += "<div class='u-p-v--10 container' style=''>";
+	card += "<div class='wrapper'>";
+	card += "<ul class='list' id='myTab'>";
 	scheme.forEach(function (data) {
 		if (data.schemeName == "Basic") {
 			basicScheme = data;
@@ -261,7 +262,9 @@ function membershipCard(formData, scheme) {
 		}else if(formData.hasMember && formData.fees && data.schemeActivePrice == parseInt(formData.fees)){
 			selectedScheme = data;
 		}
-		card += "<div class='col-auto mb-3' style='display: flex;'>";
+		
+        card += "<li class='item'>";
+		card += "<div class='col-auto mb-3'>";
 		card += "<div class='card card-pricing text-center px-3 mb-4 u-m-h--8' style='width: 8rem;' aria-haspopup='true' id=" + data.schemeId + ">";
 		if(data.schemeBenefitsHighlights){
 			card += "<div class='card-ribbon'>";
@@ -307,7 +310,11 @@ function membershipCard(formData, scheme) {
 		card += "</div>";
 		card += "</div>";
 		card += "</div>";
+		card += "</li>";
 	});
+	card += "</ul>";
+	card += "<a class='btn read scroller scroller-left vertical-center'><i class='fa fa-angle-left'></i></a>";
+    card += "<a class='btn read scroller scroller-right vertical-center'><i class='fa fa-angle-right'></i></a>";
 	card += "</div>";
 	card += "</div>";
 	card += "</div>";
@@ -382,6 +389,7 @@ function schemeDescription(scheme){
 function createMembershipCard(card, basicScheme, selectedScheme){
 	$("#membership-card").append(card);
 	cardActivation();
+	scrollx();
 	
 	if(selectedScheme && selectedScheme.schemeId){
 		var id = $('#'+selectedScheme.schemeId);
@@ -491,7 +499,7 @@ function cardActivation() {
 	})
 	var view = $("#scheme");
 	var sliderLimit = 120;
-
+	console.log(view);
 	$("#right-button").click(function () {
 		view.animate({
 			scrollLeft: "+=" + sliderLimit
@@ -507,6 +515,77 @@ function cardActivation() {
 			duration: 400
 		});
 	});
+	
+	
+
+}
+
+function scrollx(){
+	var hidWidth;
+	var scrollBarWidths = 40;
+
+	var widthOfList = function(){
+	  var itemsWidth = 0;
+	  $('.list li').each(function(){
+		var itemWidth = $(this).outerWidth();
+		itemsWidth+=itemWidth;
+	  });
+	  return itemsWidth;
+	};
+
+	console.log(widthOfList());
+
+	var widthOfHidden = function(){
+	  return (($('.wrapper').outerWidth())-widthOfList()-getLeftPosi())-scrollBarWidths;
+	};
+
+	var getLeftPosi = function(){
+	  return $('.list').position().left;
+	};
+
+	var reAdjust = function(){
+	  if (($('.wrapper').outerWidth()) < widthOfList()) {
+		$('.scroller-right').show();
+	  }
+	  else {
+		$('.scroller-right').hide();
+	  }
+	  
+	  if (getLeftPosi()<0) {
+		$('.scroller-left').show();
+	  }
+	  else {
+		$('.item').animate({left:"-="+getLeftPosi()+"px"},'slow');
+		$('.scroller-left').hide();
+	  }
+	}
+
+	reAdjust();
+
+	$(window).on('resize',function(e){  
+		reAdjust();
+	});
+
+	$('.scroller-right').click(function() {
+	  
+	  $('.scroller-left').fadeIn('slow');
+	  $('.scroller-right').fadeOut('slow');
+	  
+	  $('.list').animate({left:"+="+widthOfHidden()+"px"},'slow',function(){
+
+	  });
+	});
+
+	$('.scroller-left').click(function() {
+	  
+		$('.scroller-right').fadeIn('slow');
+		$('.scroller-left').fadeOut('slow');
+	  
+		$('.list').animate({left:"-="+getLeftPosi()+"px"},'slow',function(){
+		
+		});
+	});    
+	
 }
 
 (function () {
@@ -618,6 +697,7 @@ var payee = async function payButton(data) {
 						data["memberStatus"] = 'Pending Approval';
 						data["currentPaidPlan"] = data.newMemberFees;
 					}
+					data["approvedDate"] = now();
 					update(data);
 				}
 				console.log(data);

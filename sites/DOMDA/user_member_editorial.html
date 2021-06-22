@@ -62,8 +62,8 @@
 			return json;
 		}
 		
-		function schemeByRole(scheme, hasMember) {
-			if(getSessionStorage().loggedInRole == "user" && hasMember){
+		function schemeByRole(scheme, formData) {
+			if(getSessionStorage().loggedInRole == "user" && formData.hasMember && formData.membershipSchemeType == 'ONBOARD'){
 				return scheme.slice(1);
 			}
 			return scheme;
