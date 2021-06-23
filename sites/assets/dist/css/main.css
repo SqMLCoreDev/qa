@@ -409,10 +409,12 @@ strong {
 
 .scroller-right{
   float:right;
+  z-index: 1;
 }
 
 .scroller-left {
   float:left;
+  z-index: 1;
 }
 
 .wrapper {
@@ -420,7 +422,7 @@ strong {
 	padding:5px;
   	height:350px;
     position:relative;
-    overflow:hidden;
+    /*overflow:visibile;*/
 }
 
 .read{
