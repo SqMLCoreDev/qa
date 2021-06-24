@@ -140,7 +140,7 @@ function fetchRequest(form, URL, userObject, handlerName) {
 
 var fetchAPI = async function (url, formdata, handlerName) {
 	var docvars = getSessionStorage();
-	var platformReady = true;
+	var platformReady = getDevice();
 	var options = {
 		method: 'POST',
 		body: formdata,
@@ -152,7 +152,6 @@ var fetchAPI = async function (url, formdata, handlerName) {
 	};
 	let response = await fetch(url, options)
 	console.log('response', JSON.stringify(response));
-	alert(JSON.stringify(response));
 	if (response.ok) {
 		let json = await response.json();
 		console.log('response body', json, "flutterPlatformReady ", platformReady);
@@ -229,6 +228,7 @@ function getFormInfo() {
 		},
 		error: function (textStatus) {
 			console.log(textStatus);
+			alert(JSON.stringify(textStatus));
 			WarningAlert(textStatus.responseJSON.errorCode, textStatus.responseJSON.message);
 			formObj = textStatus.responseJSON;
 		}
