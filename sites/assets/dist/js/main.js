@@ -152,6 +152,7 @@ var fetchAPI = async function (url, formdata, handlerName) {
 	};
 	let response = await fetch(url, options)
 	console.log('response', JSON.stringify(response));
+	alert(JSON.stringify(response));
 	if (response.ok) {
 		let json = await response.json();
 		console.log('response body', json, "flutterPlatformReady ", platformReady);
