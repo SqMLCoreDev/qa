@@ -205,7 +205,7 @@ function getFormInfo() {
 		data: param,
 		async: false,
 		success: function (result) {
-		alert(JSON.stringify(result));
+		
 			result["formDefinition"] = JSON.parse(result.formDefinition);
 			if (session.page.toLowerCase() == "adduser" || session.page.toLowerCase() == "signup" ){
 				var formData = JSON.parse(result.formData);
@@ -217,7 +217,7 @@ function getFormInfo() {
 			if(schemeInfo){
 				result.formData["scheme"] = schemeInfo;
 				result["formData"] = schemeCard(schemeInfo.schemeId, result.schemeDefinition, result.formData);
-			}
+			}alert(JSON.stringify(formObj));
 			formObj = result;
 		},
 		beforeSend: function (request) {
