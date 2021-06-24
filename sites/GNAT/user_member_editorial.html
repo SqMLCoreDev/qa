@@ -30,7 +30,6 @@
 			Formio.createForm(document.getElementById('builder'), info.formDefinition)
 				.then(function (form) {
 					var userObj = setObject(info);
-					
 					form.submission = { data: userObj };
 					
 					$('.card-pricing').click(function () {
@@ -38,7 +37,7 @@
 						form.submission = { data: submission };
 						console.log('card-pricing',form._data);
 					});
-					
+					alert(JSON.stringify(form.submission));
 					console.log(userObj);
 					form.nosubmit = true;
 					
