@@ -429,3 +429,26 @@ strong {
 	margin-top: 140px;
 	background: rgba(255, 255, 255, 0.52);
 }
+
+.scroll{
+	overflow-x: scroll;
+}
+
+.scroll::-webkit-scrollbar {
+    -webkit-appearance: none;
+}
+.scroll::-webkit-scrollbar:vertical {
+    width: 12px;
+}
+.scroll::-webkit-scrollbar:horizontal {
+    height: 12px;
+}
+.scroll::-webkit-scrollbar-thumb {
+    background: linear-gradient(to bottom, #54b3d4, #685db7);
+    border-radius: 10px;
+    border: 2px solid #ffffff;
+}
+.scroll::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background-color: #ffffff;
+}

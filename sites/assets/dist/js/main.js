@@ -250,7 +250,7 @@ function membershipCard(formData, scheme) {
 	card += "</div>";
 	card += "<div id='scheme' class=''>";
 	card += "<div class=''>";
-	card += "<div class='u-p-v--10 container' style=''>";
+	card += "<div class='u-p-v--10 container scroll' style=''>";
 	card += "<div class='wrapper'>";
 	card += "<ul class='list' id='myTab'>";
 	scheme.forEach(function (data) {
@@ -389,7 +389,7 @@ function schemeDescription(scheme){
 function createMembershipCard(card, basicScheme, selectedScheme){
 	$("#membership-card").append(card);
 	cardActivation();
-	scrollx();
+	//scrollx();
 	
 	if(selectedScheme && selectedScheme.schemeId){
 		var id = $('#'+selectedScheme.schemeId);
@@ -522,7 +522,7 @@ function cardActivation() {
 
 function scrollx(){
 	var hidWidth;
-	var scrollBarWidths = 0;
+	var scrollBarWidths = 40;
 
 	var widthOfList = function(){
 	  var itemsWidth = 0;
@@ -532,73 +532,49 @@ function scrollx(){
 	  });
 	  return itemsWidth;
 	};
-
-	console.log(widthOfList());
-
+	
 	var widthOfHidden = function(){
 	  return (($('.wrapper').outerWidth())-widthOfList()-getLeftPosi())-scrollBarWidths;
-	};
-	
-	var listWidth = function(){
-	  return (($('.wrapper').outerWidth())-widthOfList())/3-10;
 	};
 
 	var getLeftPosi = function(){
 	  return $('.list').position().left;
 	};
 
-    console.log(widthOfHidden());
-    console.log(getLeftPosi());
 	var reAdjust = function(){
 	  if (($('.wrapper').outerWidth()) < widthOfList()) {
 		$('.scroller-right').show();
-	  }
-	  else {
 		$('.scroller-right').hide();
 	  }
 	  
-	  if (getLeftPosi()<120) {
+	  if (getLeftPosi()<0) {
 		$('.scroller-left').show();
 	  }
 	  else {
-		$('.item').animate({left:"-="+120+"px"},'slow');
-		$('.scroller-left').hide();
+		$('.item').animate({left:"-="+getLeftPosi()+"px"},'slow');
+	$('.scroller-left').hide();
 	  }
 	}
 
-	reAdjust();
-
-	$(window).on('resize',function(e){  
-		reAdjust();
-	});
-
 	$('.scroller-right').click(function() {
 	  
-	  console.log('right',widthOfHidden(), ' ',listWidth());
 	  $('.scroller-left').fadeIn('slow');
-	  if (listWidth() <= widthOfHidden()) {
-		$('.scroller-right').fadeOut('slow');
-	  }
+	  $('.scroller-right').fadeOut('slow');
 	  
-	  $('.list').animate({left:"+="+listWidth()+"px"},'slow',function(){});
-	  console.log(widthOfHidden());
+	  $('.list').animate({left:"+="+widthOfHidden()+"px"},'slow',function(){
+
+	  });
 	});
 
 	$('.scroller-left').click(function() {
 	  
-		console.log('left',getLeftPosi(), ' ',listWidth());
 		$('.scroller-right').fadeIn('slow');
-		if (listWidth() <= getLeftPosi()) {
-			$('.scroller-left').fadeOut('slow');
-		  }
+		$('.scroller-left').fadeOut('slow');
+	  
+		$('.list').animate({left:"-="+getLeftPosi()+"px"},'slow',function(){
 		
-		$('.list').animate({left:"-="+listWidth()+"px"},'slow',function(){});
-		console.log(getLeftPosi());
-	});    
-	
-	
-	
-	
+		});
+	});
 }
 
 (function () {
