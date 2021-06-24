@@ -205,6 +205,7 @@ function getFormInfo() {
 		data: param,
 		async: false,
 		success: function (result) {
+		alert(JSON.stringify(result));
 			result["formDefinition"] = JSON.parse(result.formDefinition);
 			if (session.page.toLowerCase() == "adduser" || session.page.toLowerCase() == "signup" ){
 				var formData = JSON.parse(result.formData);
