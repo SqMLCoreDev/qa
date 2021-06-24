@@ -140,7 +140,7 @@ function fetchRequest(form, URL, userObject, handlerName) {
 
 var fetchAPI = async function (url, formdata, handlerName) {
 	var docvars = getSessionStorage();
-	var platformReady = getDevice();
+	var platformReady = true;
 	var options = {
 		method: 'POST',
 		body: formdata,
