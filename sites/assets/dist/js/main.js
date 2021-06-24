@@ -217,7 +217,7 @@ function getFormInfo() {
 			if(schemeInfo){
 				result.formData["scheme"] = schemeInfo;
 				result["formData"] = schemeCard(schemeInfo.schemeId, result.schemeDefinition, result.formData);
-			}alert(JSON.stringify(formObj));
+			}alert(JSON.stringify(result));
 			formObj = result;
 		},
 		beforeSend: function (request) {
