@@ -1,7 +1,7 @@
 body {
   font-family: 'Poppins', sans-serif!important;
   overflow-x: hidden!important;
-}
+  }
 
 .card-header {
   padding: 5px !important;
@@ -432,6 +432,7 @@ strong {
 
 .scroll{
 	overflow-x: scroll;
+	overflow-y: hidden;
 }
 
 .scroll::-webkit-scrollbar {
