@@ -305,11 +305,15 @@ font-size: 13.5px;
 		  document.getElementById("havePacemaker").innerHTML =  userData.doYouHaveAPaceMaker;
 		  document.getElementById("troubleStayingAwake").innerHTML =  userData.doYouHaveTroubleStayingAwake;
 		  document.getElementById("troubleStayingAsleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
-		  document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
-	       	  document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
-      
-        var symptoms = [];
+		  document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
+	     
+			  if((userData.howLongDoYouSleepInADay) != undefined){
+			   document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
+			    
+			  }
+            var symptoms = [];
          for (var p in userData.doYouCurrentlySufferAnyOfTheFollowingConditions) {
+
           if(userData.doYouCurrentlySufferAnyOfTheFollowingConditions[p]== true){
                symptoms.push(p);
       	}
