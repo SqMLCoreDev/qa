@@ -229,7 +229,6 @@ function getFormInfo() {
 		},
 		error: function (textStatus) {
 			console.log(textStatus);
-			alert(JSON.stringify(textStatus));
 			WarningAlert(textStatus.responseJSON.errorCode, textStatus.responseJSON.message);
 			formObj = textStatus.responseJSON;
 		}
