@@ -1,1891 +1,1201 @@
-(function (global, factory) {
-  typeof exports === "object" && typeof module !== "undefined"
-    ? factory(exports, require("chart.js"))
-    : typeof define === "function" && define.amd
-    ? define(["exports", "chart.js"], factory)
-    : ((global = global || self),
-      factory((global.ChartBoxPlot = {}), global.Chart));
-})(this, function (exports, Chart) {
+!(function (t, e) {
+  "object" == typeof exports && "undefined" != typeof module
+    ? e(exports, require("chart.js"))
+    : "function" == typeof define && define.amd
+    ? define(["exports", "chart.js"], e)
+    : e(((t = t || self).ChartBoxPlot = {}), t.Chart);
+})(this, function (t, e) {
   "use strict";
-
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true,
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
+  function r(t, e, r) {
+    return (
+      e in t
+        ? Object.defineProperty(t, e, {
+            value: r,
+            enumerable: !0,
+            configurable: !0,
+            writable: !0,
+          })
+        : (t[e] = r),
+      t
+    );
   }
-
-  function ownKeys(object, enumerableOnly) {
-    var keys = Object.keys(object);
-
+  function i(t, e) {
+    var r = Object.keys(t);
     if (Object.getOwnPropertySymbols) {
-      var symbols = Object.getOwnPropertySymbols(object);
-      if (enumerableOnly)
-        symbols = symbols.filter(function (sym) {
-          return Object.getOwnPropertyDescriptor(object, sym).enumerable;
-        });
-      keys.push.apply(keys, symbols);
+      var i = Object.getOwnPropertySymbols(t);
+      e &&
+        (i = i.filter(function (e) {
+          return Object.getOwnPropertyDescriptor(t, e).enumerable;
+        })),
+        r.push.apply(r, i);
     }
-
-    return keys;
+    return r;
   }
-
-  function _objectSpread2(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-
-      if (i % 2) {
-        ownKeys(Object(source), true).forEach(function (key) {
-          _defineProperty(target, key, source[key]);
-        });
-      } else if (Object.getOwnPropertyDescriptors) {
-        Object.defineProperties(
-          target,
-          Object.getOwnPropertyDescriptors(source)
-        );
-      } else {
-        ownKeys(Object(source)).forEach(function (key) {
-          Object.defineProperty(
-            target,
-            key,
-            Object.getOwnPropertyDescriptor(source, key)
+  function o(t) {
+    for (var e = 1; e < arguments.length; e++) {
+      var o = null != arguments[e] ? arguments[e] : {};
+      e % 2
+        ? i(Object(o), !0).forEach(function (e) {
+            r(t, e, o[e]);
+          })
+        : Object.getOwnPropertyDescriptors
+        ? Object.defineProperties(t, Object.getOwnPropertyDescriptors(o))
+        : i(Object(o)).forEach(function (e) {
+            Object.defineProperty(t, e, Object.getOwnPropertyDescriptor(o, e));
+          });
+    }
+    return t;
+  }
+  function n(t, e) {
+    return (
+      (function (t) {
+        if (Array.isArray(t)) return t;
+      })(t) ||
+      (function (t, e) {
+        if ("undefined" == typeof Symbol || !(Symbol.iterator in Object(t)))
+          return;
+        var r = [],
+          i = !0,
+          o = !1,
+          n = void 0;
+        try {
+          for (
+            var a, l = t[Symbol.iterator]();
+            !(i = (a = l.next()).done) &&
+            (r.push(a.value), !e || r.length !== e);
+            i = !0
           );
-        });
-      }
-    }
-
-    return target;
-  }
-
-  function _slicedToArray(arr, i) {
-    return (
-      _arrayWithHoles(arr) ||
-      _iterableToArrayLimit(arr, i) ||
-      _unsupportedIterableToArray(arr, i) ||
-      _nonIterableRest()
-    );
-  }
-
-  function _arrayWithHoles(arr) {
-    if (Array.isArray(arr)) return arr;
-  }
-
-  function _iterableToArrayLimit(arr, i) {
-    if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr)))
-      return;
-    var _arr = [];
-    var _n = true;
-    var _d = false;
-    var _e = undefined;
-
-    try {
-      for (
-        var _i = arr[Symbol.iterator](), _s;
-        !(_n = (_s = _i.next()).done);
-        _n = true
-      ) {
-        _arr.push(_s.value);
-
-        if (i && _arr.length === i) break;
-      }
-    } catch (err) {
-      _d = true;
-      _e = err;
-    } finally {
-      try {
-        if (!_n && _i["return"] != null) _i["return"]();
-      } finally {
-        if (_d) throw _e;
-      }
-    }
-
-    return _arr;
-  }
-
-  function _unsupportedIterableToArray(o, minLen) {
-    if (!o) return;
-    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
-    var n = Object.prototype.toString.call(o).slice(8, -1);
-    if (n === "Object" && o.constructor) n = o.constructor.name;
-    if (n === "Map" || n === "Set") return Array.from(o);
-    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n))
-      return _arrayLikeToArray(o, minLen);
-  }
-
-  function _arrayLikeToArray(arr, len) {
-    if (len == null || len > arr.length) len = arr.length;
-
-    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-
-    return arr2;
-  }
-
-  function _nonIterableRest() {
-    throw new TypeError(
-      "Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."
-    );
-  }
-
-  // See <http://en.wikipedia.org/wiki/Kernel_(statistics)>.
-  function gaussian(u) {
-    return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * u * u);
-  }
-
-  // Welford's algorithm.
-  function mean(x) {
-    var n = x.length;
-    if (n === 0) return NaN;
-    var m = 0,
-      i = -1;
-
-    while (++i < n) {
-      m += (x[i] - m) / (i + 1);
-    }
-
-    return m;
-  }
-
-  // Also known as the sample variance, where the denominator is n - 1.
-
-  function variance(x) {
-    var n = x.length;
-    if (n < 1) return NaN;
-    if (n === 1) return 0;
-    var mean$1 = mean(x),
-      i = -1,
-      s = 0;
-
-    while (++i < n) {
-      var v = x[i] - mean$1;
-      s += v * v;
-    }
-
-    return s / (n - 1);
-  }
-
-  function ascending(a, b) {
-    return a - b;
-  }
-
-  function quantiles(d, quantiles) {
-    d = d.slice().sort(ascending);
-    var n_1 = d.length - 1;
-    return quantiles.map(function (q) {
-      if (q === 0) return d[0];
-      else if (q === 1) return d[n_1];
-      var index = 1 + q * n_1,
-        lo = Math.floor(index),
-        h = index - lo,
-        a = d[lo - 1];
-      return h === 0 ? a : a + h * (d[lo] - a);
-    });
-  }
-
-  function iqr(x) {
-    var quartiles = quantiles(x, [0.25, 0.75]);
-    return quartiles[1] - quartiles[0];
-  }
-
-  // Visualization. Wiley.
-
-  function nrd(x) {
-    var h = iqr(x) / 1.34;
-    return (
-      1.06 * Math.min(Math.sqrt(variance(x)), h) * Math.pow(x.length, -1 / 5)
-    );
-  }
-
-  function functor(v) {
-    return typeof v === "function"
-      ? v
-      : function () {
-          return v;
-        };
-  }
-
-  function kde() {
-    var kernel = gaussian,
-      sample = [],
-      bandwidth = nrd;
-
-    function kde(points, i) {
-      var bw = bandwidth.call(this, sample);
-      return points.map(function (x) {
-        var i = -1,
-          y = 0,
-          n = sample.length;
-
-        while (++i < n) {
-          y += kernel((x - sample[i]) / bw);
+        } catch (t) {
+          (o = !0), (n = t);
+        } finally {
+          try {
+            i || null == l.return || l.return();
+          } finally {
+            if (o) throw n;
+          }
         }
-
-        return [x, y / bw / n];
+        return r;
+      })(t, e) ||
+      (function (t, e) {
+        if (!t) return;
+        if ("string" == typeof t) return a(t, e);
+        var r = Object.prototype.toString.call(t).slice(8, -1);
+        "Object" === r && t.constructor && (r = t.constructor.name);
+        if ("Map" === r || "Set" === r) return Array.from(t);
+        if (
+          "Arguments" === r ||
+          /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(r)
+        )
+          return a(t, e);
+      })(t, e) ||
+      (function () {
+        throw new TypeError(
+          "Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."
+        );
+      })()
+    );
+  }
+  function a(t, e) {
+    (null == e || e > t.length) && (e = t.length);
+    for (var r = 0, i = new Array(e); r < e; r++) i[r] = t[r];
+    return i;
+  }
+  function l(t) {
+    return (1 / Math.sqrt(2 * Math.PI)) * Math.exp(-0.5 * t * t);
+  }
+  function s(t, e) {
+    return t - e;
+  }
+  function u(t) {
+    var e = (function (t, e) {
+      var r = (t = t.slice().sort(s)).length - 1;
+      return e.map(function (e) {
+        if (0 === e) return t[0];
+        if (1 === e) return t[r];
+        var i = 1 + e * r,
+          o = Math.floor(i),
+          n = i - o,
+          a = t[o - 1];
+        return 0 === n ? a : a + n * (t[o] - a);
       });
-    }
-
-    kde.kernel = function (x) {
-      if (!arguments.length) return kernel;
-      kernel = x;
-      return kde;
-    };
-
-    kde.sample = function (x) {
-      if (!arguments.length) return sample;
-      sample = x;
-      return kde;
-    };
-
-    kde.bandwidth = function (x) {
-      if (!arguments.length) return bandwidth;
-      bandwidth = functor(x);
-      return kde;
-    };
-
-    return kde;
+    })(t, [0.25, 0.75]);
+    return e[1] - e[0];
   }
+  function c(t) {
+    var e = u(t) / 1.34;
+    return (
+      1.06 *
+      Math.min(
+        Math.sqrt(
+          (function (t) {
+            var e = t.length;
+            if (e < 1) return NaN;
+            if (1 === e) return 0;
+            for (
+              var r = (function (t) {
+                  var e = t.length;
+                  if (0 === e) return NaN;
+                  for (var r = 0, i = -1; ++i < e; ) r += (t[i] - r) / (i + 1);
+                  return r;
+                })(t),
+                i = -1,
+                o = 0;
+              ++i < e;
 
-  // https://en.wikipedia.org/wiki/Quantile#Quantiles_of_a_population
-
-  function quantilesType7(arr) {
-    var n1 = arr.length - 1;
-
-    var compute = function compute(q) {
-      var index = 1 + q * n1;
-      var lo = Math.floor(index);
-      var h = index - lo;
-      var a = arr[lo - 1];
-      return h === 0 ? a : a + h * (arr[lo] - a);
-    };
-
-    return {
-      min: arr[0],
-      q1: compute(0.25),
-      median: compute(0.5),
-      q3: compute(0.75),
-      max: arr[n1],
-    };
+            ) {
+              var n = t[i] - r;
+              o += n * n;
+            }
+            return o / (e - 1);
+          })(t)
+        ),
+        e
+      ) *
+      Math.pow(t.length, -0.2)
+    );
   }
-  /**
-   * The hinges equal the quartiles for odd n (where n <- length(x))
-   * and differ for even n. Whereas the quartiles only equal observations
-   * for n %% 4 == 1 (n = 1 mod 4), the hinges do so additionally
-   * for n %% 4 == 2 (n = 2 mod 4), and are in the middle of
-   * two observations otherwise.
-   * @param {number[]} arr sorted array
-   */
-
-  function fivenum(arr) {
-    // based on R fivenum
-    var n = arr.length; // assuming R 1 index system, so arr[1] is the first element
-
-    var n4 = Math.floor((n + 3) / 2) / 2;
-
-    var compute = function compute(d) {
-      return 0.5 * (arr[Math.floor(d) - 1] + arr[Math.ceil(d) - 1]);
-    };
-
-    return {
-      min: arr[0],
-      q1: compute(n4),
-      median: compute((n + 1) / 2),
-      q3: compute(n + 1 - n4),
-      max: arr[n - 1],
-    };
-  }
-  /**
-   * compute the whiskers
-   * @param boxplot
-   * @param {number[]} arr sorted array
-   * @param {number} coef
-   */
-
-  function whiskers(boxplot, arr) {
-    var coef =
-      arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1.5;
-    var iqr = boxplot.q3 - boxplot.q1; // since top left is max
-
-    var coefValid = typeof coef === "number" && coef > 0;
-    var whiskerMin = coefValid
-      ? Math.max(boxplot.min, boxplot.q1 - coef * iqr)
-      : boxplot.min;
-    var whiskerMax = coefValid
-      ? Math.min(boxplot.max, boxplot.q3 + coef * iqr)
-      : boxplot.max;
-
-    if (Array.isArray(arr)) {
-      // compute the closest real element
-      for (var i = 0; i < arr.length; i++) {
-        var v = arr[i];
-
-        if (v >= whiskerMin) {
-          whiskerMin = v;
-          break;
-        }
-      }
-
-      for (var _i = arr.length - 1; _i >= 0; _i--) {
-        var _v = arr[_i];
-
-        if (_v <= whiskerMax) {
-          whiskerMax = _v;
-          break;
-        }
-      }
-    }
-
-    return {
-      whiskerMin: whiskerMin,
-      whiskerMax: whiskerMax,
-    };
-  }
-  var defaultStatsOptions = {
-    coef: 1.5,
-    quantiles: 7,
-  };
-
-  function determineStatsOptions(options) {
-    var coef =
-      options == null || typeof options.coef !== "number"
-        ? defaultStatsOptions.coef
-        : options.coef;
-    var q = options == null ? null : options.quantiles;
-    var quantiles =
-      typeof q === "function"
-        ? q
-        : q === "hinges" || q === "fivenum"
-        ? fivenum
-        : quantilesType7;
-    return {
-      coef: coef,
-      quantiles: quantiles,
-    };
-  }
-
-  function boxplotStats(arr, options) {
-    // console.assert(Array.isArray(arr));
-    if (arr.length === 0) {
-      return {
-        min: NaN,
-        max: NaN,
-        median: NaN,
-        q1: NaN,
-        q3: NaN,
-        whiskerMin: NaN,
-        whiskerMax: NaN,
-        outliers: [],
+  function h(t) {
+    var e = t.length - 1,
+      r = function (r) {
+        var i = 1 + r * e,
+          o = Math.floor(i),
+          n = i - o,
+          a = t[o - 1];
+        return 0 === n ? a : a + n * (t[o] - a);
       };
-    }
-
-    arr = arr.filter(function (v) {
-      return typeof v === "number" && !isNaN(v);
-    });
-    arr.sort(function (a, b) {
-      return a - b;
-    });
-
-    var _determineStatsOption = determineStatsOptions(options),
-      quantiles = _determineStatsOption.quantiles,
-      coef = _determineStatsOption.coef;
-
-    var stats = quantiles(arr);
-
-    var _whiskers = whiskers(stats, arr, coef),
-      whiskerMin = _whiskers.whiskerMin,
-      whiskerMax = _whiskers.whiskerMax;
-
-    stats.outliers = arr.filter(function (v) {
-      return v < whiskerMin || v > whiskerMax;
-    });
-    stats.whiskerMin = whiskerMin;
-    stats.whiskerMax = whiskerMax;
-    return stats;
+    return { min: t[0], q1: r(0.25), median: r(0.5), q3: r(0.75), max: t[e] };
   }
-  function violinStats(arr, options) {
-    // console.assert(Array.isArray(arr));
-    if (arr.length === 0) {
-      return {};
-    }
-
-    arr = arr.filter(function (v) {
-      return typeof v === "number" && !isNaN(v);
-    });
-    arr.sort(function (a, b) {
-      return a - b;
-    });
-
-    var _determineStatsOption2 = determineStatsOptions(options),
-      quantiles = _determineStatsOption2.quantiles;
-
-    var stats = quantiles(arr);
-    stats.kde = kde().sample(arr);
-    return stats;
+  function f(t) {
+    var e = t.length,
+      r = Math.floor((e + 3) / 2) / 2,
+      i = function (e) {
+        return 0.5 * (t[Math.floor(e) - 1] + t[Math.ceil(e) - 1]);
+      };
+    return {
+      min: t[0],
+      q1: i(r),
+      median: i((e + 1) / 2),
+      q3: i(e + 1 - r),
+      max: t[e - 1],
+    };
   }
-  function asBoxPlotStats(value, options) {
-    if (!value) {
-      return null;
+  function m(t, e) {
+    var r =
+        arguments.length > 2 && void 0 !== arguments[2] ? arguments[2] : 1.5,
+      i = t.q3 - t.q1,
+      o = "number" == typeof r && r > 0,
+      n = o ? Math.max(t.min, t.q1 - r * i) : t.min,
+      a = o ? Math.min(t.max, t.q3 + r * i) : t.max;
+    if (Array.isArray(e)) {
+      for (var l = 0; l < e.length; l++) {
+        var s = e[l];
+        if (s >= n) {
+          n = s;
+          break;
+        }
+      }
+      for (var u = e.length - 1; u >= 0; u--) {
+        var c = e[u];
+        if (c <= a) {
+          a = c;
+          break;
+        }
+      }
     }
-
+    return { whiskerMin: n, whiskerMax: a };
+  }
+  var d = { coef: 1.5, quantiles: 7 };
+  function v(t) {
+    var e = null == t || "number" != typeof t.coef ? d.coef : t.coef,
+      r = null == t ? null : t.quantiles;
+    return {
+      coef: e,
+      quantiles:
+        "function" == typeof r ? r : "hinges" === r || "fivenum" === r ? f : h,
+    };
+  }
+  function p(t, e) {
+    if (0 === t.length) return {};
+    (t = t.filter(function (t) {
+      return "number" == typeof t && !isNaN(t);
+    })).sort(function (t, e) {
+      return t - e;
+    });
+    var r = (0, v(e).quantiles)(t);
+    return (
+      (r.kde = (function () {
+        var t = l,
+          e = [],
+          r = c;
+        function i(i, o) {
+          var n = r.call(this, e);
+          return i.map(function (r) {
+            for (var i = -1, o = 0, a = e.length; ++i < a; )
+              o += t((r - e[i]) / n);
+            return [r, o / n / a];
+          });
+        }
+        return (
+          (i.kernel = function (e) {
+            return arguments.length ? ((t = e), i) : t;
+          }),
+          (i.sample = function (t) {
+            return arguments.length ? ((e = t), i) : e;
+          }),
+          (i.bandwidth = function (t) {
+            return arguments.length
+              ? ((r =
+                  "function" == typeof (e = t)
+                    ? e
+                    : function () {
+                        return e;
+                      }),
+                i)
+              : r;
+            var e;
+          }),
+          i
+        );
+      })().sample(t)),
+      r
+    );
+  }
+  function g(t, e) {
+    if (!t) return null;
     if (
-      typeof value.median === "number" &&
-      typeof value.q1 === "number" &&
-      typeof value.q3 === "number"
+      "number" == typeof t.median &&
+      "number" == typeof t.q1 &&
+      "number" == typeof t.q3
     ) {
-      // sounds good, check for helper
-      if (typeof value.whiskerMin === "undefined") {
-        var _determineStatsOption3 = determineStatsOptions(options),
-          coef = _determineStatsOption3.coef;
-
-        var _whiskers2 = whiskers(
-            value,
-            Array.isArray(value.items)
-              ? value.items.slice().sort(function (a, b) {
-                  return a - b;
+      if (void 0 === t.whiskerMin) {
+        var r = v(e).coef,
+          i = m(
+            t,
+            Array.isArray(t.items)
+              ? t.items.slice().sort(function (t, e) {
+                  return t - e;
                 })
               : null,
-            coef
+            r
           ),
-          whiskerMin = _whiskers2.whiskerMin,
-          whiskerMax = _whiskers2.whiskerMax;
-
-        value.whiskerMin = whiskerMin;
-        value.whiskerMax = whiskerMax;
+          o = i.whiskerMin,
+          n = i.whiskerMax;
+        (t.whiskerMin = o), (t.whiskerMax = n);
       }
-
-      return value;
+      return t;
     }
-
-    if (!Array.isArray(value)) {
-      return undefined;
-    }
-
-    if (value.__stats === undefined) {
-      value.__stats = boxplotStats(value, options);
-    }
-
-    return value.__stats;
+    return Array.isArray(t)
+      ? (void 0 === t.__stats &&
+          (t.__stats = (function (t, e) {
+            if (0 === t.length)
+              return {
+                min: NaN,
+                max: NaN,
+                median: NaN,
+                q1: NaN,
+                q3: NaN,
+                whiskerMin: NaN,
+                whiskerMax: NaN,
+                outliers: [],
+              };
+            (t = t.filter(function (t) {
+              return "number" == typeof t && !isNaN(t);
+            })).sort(function (t, e) {
+              return t - e;
+            });
+            var r = v(e),
+              i = r.quantiles,
+              o = r.coef,
+              n = i(t),
+              a = m(n, t, o),
+              l = a.whiskerMin,
+              s = a.whiskerMax;
+            return (
+              (n.outliers = t.filter(function (t) {
+                return t < l || t > s;
+              })),
+              (n.whiskerMin = l),
+              (n.whiskerMax = s),
+              n
+            );
+          })(t, e)),
+        t.__stats)
+      : void 0;
   }
-  function asViolinStats(value, options) {
-    if (!value) {
-      return null;
-    }
-
-    if (
-      typeof value.median === "number" &&
-      (typeof value.kde === "function" || Array.isArray(value.coords))
-    ) {
-      return value;
-    }
-
-    if (!Array.isArray(value)) {
-      return undefined;
-    }
-
-    if (value.__kde === undefined) {
-      value.__kde = violinStats(value, options);
-    }
-
-    return value.__kde;
+  function b(t, e) {
+    return t
+      ? "number" != typeof t.median ||
+        ("function" != typeof t.kde && !Array.isArray(t.coords))
+        ? Array.isArray(t)
+          ? (void 0 === t.__kde && (t.__kde = p(t, e)), t.__kde)
+          : void 0
+        : t
+      : null;
   }
-  function asValueStats(value, minStats, maxStats, options) {
-    if (
-      typeof value[minStats] === "number" &&
-      typeof value[maxStats] === "number"
-    ) {
-      return value;
-    }
-
-    if (!Array.isArray(value) || value.length === 0) {
-      return undefined;
-    }
-
-    return asBoxPlotStats(value, options);
+  function x(t, e) {
+    if (!t) return t;
+    if ("number" == typeof t || "string" == typeof t) return Number(t);
+    var r = g(t, e);
+    return r ? r.median : t;
   }
-  function getRightValue(rawValue, options) {
-    if (!rawValue) {
-      return rawValue;
-    }
-
-    if (typeof rawValue === "number" || typeof rawValue === "string") {
-      return Number(rawValue);
-    }
-
-    var b = asBoxPlotStats(rawValue, options);
-    return b ? b.median : rawValue;
+  var y = { ticks: o({ minStats: "min", maxStats: "max" }, d) };
+  function _(t) {
+    var e = this,
+      r = this.chart,
+      i = this.isHorizontal(),
+      o = this.options.ticks,
+      n = o.minStats,
+      a = o.maxStats;
+    (this.min = null),
+      (this.max = null),
+      r.data.datasets.forEach(function (o, l) {
+        var s = r.getDatasetMeta(l);
+        r.isDatasetVisible(l) &&
+          (function (t) {
+            return i ? t.xAxisID === e.id : t.yAxisID === e.id;
+          })(s) &&
+          o.data.forEach(function (r, i) {
+            if (null != r && !s.data[i].hidden) {
+              var o,
+                l,
+                u = (function (t, e, r, i) {
+                  return "number" == typeof t[e] && "number" == typeof t[r]
+                    ? t
+                    : Array.isArray(t) && 0 !== t.length
+                    ? g(t, i)
+                    : void 0;
+                })(r, n, a, e.options.ticks);
+              if (u) (o = u[n]), (l = u[a]);
+              else {
+                var c = +e.getRightValue(r);
+                if (isNaN(c)) return;
+                o = l = c;
+              }
+              (null === e.min || o < e.min) && (e.min = o),
+                (null === e.max || l > e.max) && (e.max = l),
+                t && t(u);
+            }
+          });
+      });
   }
-  var commonScaleOptions = {
-    ticks: _objectSpread2(
+  var w = o(
+      o({}, e.defaults.global.elements.rectangle),
+      {},
       {
-        minStats: "min",
-        maxStats: "max",
-      },
-      defaultStatsOptions
+        borderWidth: 1,
+        outlierRadius: 2,
+        outlierColor: e.defaults.global.elements.rectangle.backgroundColor,
+        lowerColor: e.defaults.global.elements.rectangle.lowerColor,
+        medianColor: null,
+        itemRadius: 0,
+        itemStyle: "circle",
+        itemBackgroundColor:
+          e.defaults.global.elements.rectangle.backgroundColor,
+        itemBorderColor: e.defaults.global.elements.rectangle.borderColor,
+        hitPadding: 2,
+        outlierHitRadius: 4,
+        tooltipDecimals: 2,
+      }
     ),
-  };
-  function commonDataLimits(extraCallback) {
-    var _this = this;
-
-    var chart = this.chart;
-    var isHorizontal = this.isHorizontal();
-    var _this$options$ticks = this.options.ticks,
-      minStats = _this$options$ticks.minStats,
-      maxStats = _this$options$ticks.maxStats;
-
-    var matchID = function matchID(meta) {
-      return isHorizontal
-        ? meta.xAxisID === _this.id
-        : meta.yAxisID === _this.id;
-    }; // First Calculate the range
-
-    this.min = null;
-    this.max = null; // Regular charts use x, y values
-    // For the boxplot chart we have rawValue.min and rawValue.max for each point
-
-    chart.data.datasets.forEach(function (d, i) {
-      var meta = chart.getDatasetMeta(i);
-
-      if (!chart.isDatasetVisible(i) || !matchID(meta)) {
-        return;
-      }
-
-      d.data.forEach(function (value, j) {
-        if (value == null || meta.data[j].hidden) {
-          return;
+    k = e.Element.extend({
+      isVertical: function () {
+        return void 0 !== this._view.width;
+      },
+      draw: function () {},
+      _drawItems: function (t, r, i, o) {
+        if (!(t.itemRadius <= 0 || !r.items || r.items.length <= 0)) {
+          i.save(),
+            (i.strokeStyle = t.itemBorderColor),
+            (i.fillStyle = t.itemBackgroundColor);
+          var n,
+            a =
+              (void 0 === (n = 1e3 * this._datasetIndex + this._index) &&
+                (n = Date.now()),
+              function () {
+                return (n = (9301 * n + 49297) % 233280) / 233280;
+              });
+          o
+            ? r.items.forEach(function (r) {
+                e.canvasHelpers.drawPoint(
+                  i,
+                  t.itemStyle,
+                  t.itemRadius,
+                  t.x - t.width / 2 + a() * t.width,
+                  r
+                );
+              })
+            : r.items.forEach(function (r) {
+                e.canvasHelpers.drawPoint(
+                  i,
+                  t.itemStyle,
+                  t.itemRadius,
+                  r,
+                  t.y - t.height / 2 + a() * t.height
+                );
+              }),
+            i.restore();
         }
-
-        var stats = asValueStats(
-          value,
-          minStats,
-          maxStats,
-          _this.options.ticks
+      },
+      _drawOutliers: function (t, e, r, i) {
+        t.outlierRadius <= 0 ||
+          !e.outliers ||
+          0 === e.outliers.length ||
+          ((r.fillStyle = t.outlierColor),
+          r.beginPath(),
+          i
+            ? e.outliers.forEach(function (e) {
+                r.arc(t.x, e, t.outlierRadius, 0, 2 * Math.PI);
+              })
+            : e.outliers.forEach(function (e) {
+                r.arc(e, t.y, t.outlierRadius, 0, 2 * Math.PI);
+              }),
+          r.fill(),
+          r.closePath());
+      },
+      _getBounds: function () {
+        return { left: 0, top: 0, right: 0, bottom: 0 };
+      },
+      _getHitBounds: function () {
+        var t = this._view.hitPadding,
+          e = this._getBounds();
+        return {
+          left: e.left - t,
+          top: e.top - t,
+          right: e.right + t,
+          bottom: e.bottom + t,
+        };
+      },
+      height: function () {
+        return 0;
+      },
+      inRange: function (t, e) {
+        return (
+          !!this._view &&
+          (this._boxInRange(t, e) || this._outlierIndexInRange(t, e) >= 0)
         );
-        var minValue;
-        var maxValue;
-
-        if (stats) {
-          minValue = stats[minStats];
-          maxValue = stats[maxStats];
-        } else {
-          // if stats are not available use the plain value
-          var parsed = +_this.getRightValue(value);
-
-          if (isNaN(parsed)) {
-            return;
-          }
-
-          minValue = maxValue = parsed;
-        }
-
-        if (_this.min === null || minValue < _this.min) {
-          _this.min = minValue;
-        }
-
-        if (_this.max === null || maxValue > _this.max) {
-          _this.max = maxValue;
-        }
-
-        if (extraCallback) {
-          extraCallback(stats);
-        }
-      });
-    });
-  }
-  function rnd(seed) {
-    // Adapted from http://indiegamr.com/generate-repeatable-random-numbers-in-js/
-    if (seed === undefined) {
-      seed = Date.now();
-    }
-
-    return function () {
-      seed = (seed * 9301 + 49297) % 233280;
-      return seed / 233280;
-    };
-  }
-
-  var defaults = _objectSpread2(
-    _objectSpread2({}, Chart.defaults.global.elements.rectangle),
-    {},
-    {
-      borderWidth: 1,
-      outlierRadius: 2,
-      outlierColor: Chart.defaults.global.elements.rectangle.backgroundColor,
-      lowerColor: Chart.defaults.global.elements.rectangle.lowerColor,
-      medianColor: null,
-      itemRadius: 0,
-      itemStyle: "circle",
-      itemBackgroundColor:
-        Chart.defaults.global.elements.rectangle.backgroundColor,
-      itemBorderColor: Chart.defaults.global.elements.rectangle.borderColor,
-      hitPadding: 2,
-      outlierHitRadius: 4,
-      tooltipDecimals: 2,
-    }
-  );
-  var ArrayElementBase = Chart.Element.extend({
-    isVertical: function isVertical() {
-      return this._view.width !== undefined;
-    },
-    draw: function draw() {
-      // abstract
-    },
-    _drawItems: function _drawItems(vm, container, ctx, vert) {
-      if (
-        vm.itemRadius <= 0 ||
-        !container.items ||
-        container.items.length <= 0
-      ) {
-        return;
-      }
-
-      ctx.save();
-      ctx.strokeStyle = vm.itemBorderColor;
-      ctx.fillStyle = vm.itemBackgroundColor; // jitter based on random data
-      // use the datesetindex and index to initialize the random number generator
-
-      var random = rnd(this._datasetIndex * 1000 + this._index);
-
-      if (vert) {
-        container.items.forEach(function (v) {
-          Chart.canvasHelpers.drawPoint(
-            ctx,
-            vm.itemStyle,
-            vm.itemRadius,
-            vm.x - vm.width / 2 + random() * vm.width,
-            v
-          );
-        });
-      } else {
-        container.items.forEach(function (v) {
-          Chart.canvasHelpers.drawPoint(
-            ctx,
-            vm.itemStyle,
-            vm.itemRadius,
-            v,
-            vm.y - vm.height / 2 + random() * vm.height
-          );
-        });
-      }
-
-      ctx.restore();
-    },
-    _drawOutliers: function _drawOutliers(vm, container, ctx, vert) {
-      if (
-        vm.outlierRadius <= 0 ||
-        !container.outliers ||
-        container.outliers.length === 0
-      ) {
-        return;
-      }
-
-      ctx.fillStyle = vm.outlierColor;
-      ctx.beginPath();
-
-      if (vert) {
-        container.outliers.forEach(function (v) {
-          ctx.arc(vm.x, v, vm.outlierRadius, 0, Math.PI * 2);
-        });
-      } else {
-        container.outliers.forEach(function (v) {
-          ctx.arc(v, vm.y, vm.outlierRadius, 0, Math.PI * 2);
-        });
-      }
-
-      ctx.fill();
-      ctx.closePath();
-    },
-    _getBounds: function _getBounds() {
-      // abstract
-      return {
-        left: 0,
-        top: 0,
-        right: 0,
-        bottom: 0,
-      };
-    },
-    _getHitBounds: function _getHitBounds() {
-      var padding = this._view.hitPadding;
-
-      var b = this._getBounds();
-
-      return {
-        left: b.left - padding,
-        top: b.top - padding,
-        right: b.right + padding,
-        bottom: b.bottom + padding,
-      };
-    },
-    height: function height() {
-      return 0; // abstract
-    },
-    inRange: function inRange(mouseX, mouseY) {
-      if (!this._view) {
-        return false;
-      }
-
-      return (
-        this._boxInRange(mouseX, mouseY) ||
-        this._outlierIndexInRange(mouseX, mouseY) >= 0
-      );
-    },
-    inLabelRange: function inLabelRange(mouseX, mouseY) {
-      if (!this._view) {
-        return false;
-      }
-
-      var bounds = this._getHitBounds();
-
-      if (this.isVertical()) {
-        return mouseX >= bounds.left && mouseX <= bounds.right;
-      }
-
-      return mouseY >= bounds.top && mouseY <= bounds.bottom;
-    },
-    inXRange: function inXRange(mouseX) {
-      var bounds = this._getHitBounds();
-
-      return mouseX >= bounds.left && mouseX <= bounds.right;
-    },
-    inYRange: function inYRange(mouseY) {
-      var bounds = this._getHitBounds();
-
-      return mouseY >= bounds.top && mouseY <= bounds.bottom;
-    },
-    _outlierIndexInRange: function _outlierIndexInRange(mouseX, mouseY) {
-      var vm = this._view;
-      var hitRadius = vm.outlierHitRadius;
-
-      var outliers = this._getOutliers();
-
-      var vertical = this.isVertical(); // check if along the outlier line
-
-      if (
-        (vertical && Math.abs(mouseX - vm.x) > hitRadius) ||
-        (!vertical && Math.abs(mouseY - vm.y) > hitRadius)
-      ) {
+      },
+      inLabelRange: function (t, e) {
+        if (!this._view) return !1;
+        var r = this._getHitBounds();
+        return this.isVertical()
+          ? t >= r.left && t <= r.right
+          : e >= r.top && e <= r.bottom;
+      },
+      inXRange: function (t) {
+        var e = this._getHitBounds();
+        return t >= e.left && t <= e.right;
+      },
+      inYRange: function (t) {
+        var e = this._getHitBounds();
+        return t >= e.top && t <= e.bottom;
+      },
+      _outlierIndexInRange: function (t, e) {
+        var r = this._view,
+          i = r.outlierHitRadius,
+          o = this._getOutliers(),
+          n = this.isVertical();
+        if ((n && Math.abs(t - r.x) > i) || (!n && Math.abs(e - r.y) > i))
+          return -1;
+        for (var a = n ? e : t, l = 0; l < o.length; l++)
+          if (Math.abs(o[l] - a) <= i) return l;
         return -1;
-      }
-
-      var toCompare = vertical ? mouseY : mouseX;
-
-      for (var i = 0; i < outliers.length; i++) {
-        if (Math.abs(outliers[i] - toCompare) <= hitRadius) {
-          return i;
-        }
-      }
-
-      return -1;
+      },
+      _boxInRange: function (t, e) {
+        var r = this._getHitBounds();
+        return t >= r.left && t <= r.right && e >= r.top && e <= r.bottom;
+      },
+      getCenterPoint: function () {
+        var t = this._view;
+        return { x: t.x, y: t.y };
+      },
+      getArea: function () {
+        return 0;
+      },
+      _getOutliers: function () {
+        return [];
+      },
+      tooltipPosition: function (t, e) {
+        if (!t) return this.getCenterPoint();
+        delete e._tooltipOutlier;
+        var r = this._view,
+          i = this._outlierIndexInRange(t.x, t.y);
+        return i < 0
+          ? this.getCenterPoint()
+          : ((e._tooltipOutlier = i),
+            this.isVertical()
+              ? { x: r.x, y: this._getOutliers()[i] }
+              : { x: this._getOutliers()[i], y: r.y });
+      },
+    });
+  e.defaults.global.elements.boxandwhiskers = o({}, w);
+  var q = (e.elements.BoxAndWhiskers = k.extend({
+    transition: function (t) {
+      var r = e.Element.prototype.transition.call(this, t),
+        i = this._model,
+        o = this._start,
+        n = this._view;
+      return i && 1 !== t
+        ? null == o.boxplot
+          ? r
+          : (i.boxplot === n.boxplot &&
+              (n.boxplot = e.helpers.clone(n.boxplot)),
+            (function (t, e, r, i) {
+              for (var o = 0, n = Object.keys(r); o < n.length; o++) {
+                var a = n[o],
+                  l = r[a],
+                  s = t[a];
+                if (s !== l)
+                  if ("number" != typeof l) {
+                    if (Array.isArray(l))
+                      for (
+                        var u = e[a], c = Math.min(l.length, s.length), h = 0;
+                        h < c;
+                        ++h
+                      )
+                        u[h] = s[h] + (l[h] - s[h]) * i;
+                  } else e[a] = s + (l - s) * i;
+              }
+            })(o.boxplot, n.boxplot, i.boxplot, t),
+            r)
+        : r;
     },
-    _boxInRange: function _boxInRange(mouseX, mouseY) {
-      var bounds = this._getHitBounds();
-
-      return (
-        mouseX >= bounds.left &&
-        mouseX <= bounds.right &&
-        mouseY >= bounds.top &&
-        mouseY <= bounds.bottom
-      );
+    draw: function () {
+      var t = this._chart.ctx,
+        e = this._view,
+        r = e.boxplot,
+        i = this.isVertical();
+      t.save(),
+        (t.fillStyle = e.backgroundColor),
+        (t.strokeStyle = e.borderColor),
+        (t.lineWidth = e.borderWidth),
+        this._drawBoxPlot(e, r, t, i),
+        this._drawOutliers(e, r, t, i),
+        t.restore(),
+        this._drawItems(e, r, t, i);
     },
-    getCenterPoint: function getCenterPoint() {
-      var _this$_view = this._view,
-        x = _this$_view.x,
-        y = _this$_view.y;
-      return {
-        x: x,
-        y: y,
-      };
+    _drawBoxPlot: function (t, e, r, i) {
+      i ? this._drawBoxPlotVert(t, e, r) : this._drawBoxPlotHoriz(t, e, r);
     },
-    getArea: function getArea() {
-      return 0; // abstract
+    _drawBoxPlotVert: function (t, e, r) {
+      var i = t.x,
+        o = t.width,
+        n = i - o / 2;
+      e.q3 > e.q1
+        ? r.fillRect(n, e.q1, o, e.q3 - e.q1)
+        : r.fillRect(n, e.q3, o, e.q1 - e.q3),
+        r.save(),
+        t.medianColor && (r.strokeStyle = t.medianColor),
+        r.beginPath(),
+        r.moveTo(n, e.median),
+        r.lineTo(n + o, e.median),
+        r.closePath(),
+        r.stroke(),
+        null != e.segment &&
+          (t.segmentColor && (r.strokeStyle = t.segmentColor),
+          r.beginPath(),
+          r.moveTo(n, e.segment),
+          r.lineTo(n + o, e.segment),
+          r.closePath()),
+        t.lowerColor &&
+          ((r.fillStyle = t.lowerColor),
+          e.q3 > e.q1
+            ? r.fillRect(n, e.median, o, e.q3 - e.median)
+            : r.fillRect(n, e.median, o, e.q1 - e.median)),
+        r.closePath(),
+        r.stroke(),
+        r.restore(),
+        e.q3 > e.q1
+          ? r.strokeRect(n, e.q1, o, e.q3 - e.q1)
+          : r.strokeRect(n, e.q3, o, e.q1 - e.q3),
+        r.beginPath(),
+        r.moveTo(n, e.whiskerMin),
+        r.lineTo(n + o, e.whiskerMin),
+        r.moveTo(i, e.whiskerMin),
+        r.lineTo(i, e.q1),
+        r.moveTo(n, e.whiskerMax),
+        r.lineTo(n + o, e.whiskerMax),
+        r.moveTo(i, e.whiskerMax),
+        r.lineTo(i, e.q3),
+        r.closePath(),
+        r.stroke();
     },
-    _getOutliers: function _getOutliers() {
-      return []; // abstract
+    _drawBoxPlotHoriz: function (t, e, r) {
+      var i = t.y,
+        o = t.height,
+        n = i - o / 2;
+      e.q3 > e.q1
+        ? r.fillRect(e.q1, n, e.q3 - e.q1, o)
+        : r.fillRect(e.q3, n, e.q1 - e.q3, o),
+        r.save(),
+        t.medianColor && (r.strokeStyle = t.medianColor),
+        r.beginPath(),
+        r.moveTo(e.median, n),
+        r.lineTo(e.median, n + o),
+        r.closePath(),
+        r.stroke(),
+        r.restore(),
+        e.q3 > e.q1
+          ? r.strokeRect(e.q1, n, e.q3 - e.q1, o)
+          : r.strokeRect(e.q3, n, e.q1 - e.q3, o),
+        r.beginPath(),
+        r.moveTo(e.whiskerMin, n),
+        r.lineTo(e.whiskerMin, n + o),
+        r.moveTo(e.whiskerMin, i),
+        r.lineTo(e.q1, i),
+        r.moveTo(e.whiskerMax, n),
+        r.lineTo(e.whiskerMax, n + o),
+        r.moveTo(e.whiskerMax, i),
+        r.lineTo(e.q3, i),
+        r.closePath(),
+        r.stroke();
     },
-    tooltipPosition: function tooltipPosition(eventPosition, tooltip) {
-      if (!eventPosition) {
-        // fallback
-        return this.getCenterPoint();
-      }
-
-      delete tooltip._tooltipOutlier;
-      var vm = this._view;
-
-      var index = this._outlierIndexInRange(eventPosition.x, eventPosition.y);
-
-      if (index < 0) {
-        return this.getCenterPoint();
-      }
-
-      tooltip._tooltipOutlier = index;
-
-      if (this.isVertical()) {
+    _getBounds: function () {
+      var t = this._view,
+        e = this.isVertical(),
+        r = t.boxplot;
+      if (!r) return { left: 0, top: 0, right: 0, bottom: 0 };
+      if (e) {
+        var i = t.x,
+          o = t.width,
+          n = i - o / 2;
         return {
-          x: vm.x,
-          y: this._getOutliers()[index],
+          left: n,
+          top: r.whiskerMax,
+          right: n + o,
+          bottom: r.whiskerMin,
         };
       }
-
-      return {
-        x: this._getOutliers()[index],
-        y: vm.y,
-      };
+      var a = t.y,
+        l = t.height,
+        s = a - l / 2;
+      return { left: r.whiskerMin, top: s, right: r.whiskerMax, bottom: s + l };
     },
-  });
-
-  Chart.defaults.global.elements.boxandwhiskers = _objectSpread2({}, defaults);
-
-  function transitionBoxPlot(start, view, model, ease) {
-    var keys = Object.keys(model);
-
-    for (var _i = 0, _keys = keys; _i < _keys.length; _i++) {
-      var key = _keys[_i];
-      var target = model[key];
-      var origin = start[key];
-
-      if (origin === target) {
-        continue;
-      }
-
-      if (typeof target === "number") {
-        view[key] = origin + (target - origin) * ease;
-        continue;
-      }
-
-      if (Array.isArray(target)) {
-        var v = view[key];
-        var common = Math.min(target.length, origin.length);
-
-        for (var i = 0; i < common; ++i) {
-          v[i] = origin[i] + (target[i] - origin[i]) * ease;
-        }
-      }
-    }
-  }
-
-  var BoxAndWiskers = (Chart.elements.BoxAndWhiskers = ArrayElementBase.extend({
-    transition: function transition(ease) {
-      var r = Chart.Element.prototype.transition.call(this, ease);
-      var model = this._model;
-      var start = this._start;
-      var view = this._view; // No animation -> No Transition
-
-      if (!model || ease === 1) {
-        return r;
-      }
-
-      if (start.boxplot == null) {
-        return r; // model === view -> not copied
-      } // create deep copy to avoid alternation
-
-      if (model.boxplot === view.boxplot) {
-        view.boxplot = Chart.helpers.clone(view.boxplot);
-      }
-
-      transitionBoxPlot(start.boxplot, view.boxplot, model.boxplot, ease);
-      return r;
+    height: function () {
+      var t = this._view;
+      return t.base - Math.min(t.boxplot.q1, t.boxplot.q3);
     },
-    draw: function draw() {
-      var ctx = this._chart.ctx;
-      var vm = this._view;
-      var boxplot = vm.boxplot;
-      var vert = this.isVertical();
-      ctx.save();
-      ctx.fillStyle = vm.backgroundColor;
-      ctx.strokeStyle = vm.borderColor;
-      ctx.lineWidth = vm.borderWidth;
-
-      this._drawBoxPlot(vm, boxplot, ctx, vert);
-
-      this._drawOutliers(vm, boxplot, ctx, vert);
-
-      ctx.restore();
-
-      this._drawItems(vm, boxplot, ctx, vert);
+    getArea: function () {
+      var t = this._view,
+        e = Math.abs(t.boxplot.q3 - t.boxplot.q1);
+      return this.isVertical() ? e * t.width : e * t.height;
     },
-    _drawBoxPlot: function _drawBoxPlot(vm, boxplot, ctx, vert) {
-      if (vert) {
-        this._drawBoxPlotVert(vm, boxplot, ctx);
-      } else {
-        this._drawBoxPlotHoriz(vm, boxplot, ctx);
-      }
+    _getOutliers: function () {
+      return (this._view.boxplot && this._view.boxplot.outliers) || [];
     },
-    _drawBoxPlotVert: function _drawBoxPlotVert(vm, boxplot, ctx) {
-      var x = vm.x;
-      var width = vm.width;
-      var x0 = x - width / 2; // Draw the q1>q3 box
-
-      if (boxplot.q3 > boxplot.q1) {
-        ctx.fillRect(x0, boxplot.q1, width, boxplot.q3 - boxplot.q1);
-      } else {
-        ctx.fillRect(x0, boxplot.q3, width, boxplot.q1 - boxplot.q3);
-      } // Draw the median line
-
-      ctx.save();
-
-      if (vm.medianColor) {
-        ctx.strokeStyle = vm.medianColor;
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(x0, boxplot.median);
-      ctx.lineTo(x0 + width, boxplot.median);
-      ctx.closePath();
-      ctx.stroke(); // Draw the segment line
-
-      if (boxplot.segment != null) {
-        if (vm.segmentColor) {
-          ctx.strokeStyle = vm.segmentColor;
-        }
-
-        ctx.beginPath();
-        ctx.moveTo(x0, boxplot.segment);
-        ctx.lineTo(x0 + width, boxplot.segment);
-        ctx.closePath();
-      } // fill the part below the median with lowerColor
-
-      if (vm.lowerColor) {
-        ctx.fillStyle = vm.lowerColor;
-
-        if (boxplot.q3 > boxplot.q1) {
-          ctx.fillRect(x0, boxplot.median, width, boxplot.q3 - boxplot.median);
+  }));
+  e.defaults.global.elements.violin = o({ points: 100 }, w);
+  var M = (e.elements.Violin = k.extend({
+      transition: function (t) {
+        var r = e.Element.prototype.transition.call(this, t),
+          i = this._model,
+          o = this._start,
+          n = this._view;
+        return i && 1 !== t
+          ? null == o.violin
+            ? r
+            : (i.violin === n.violin && (n.violin = e.helpers.clone(n.violin)),
+              (function (t, e, r, i) {
+                for (var o = 0, n = Object.keys(r); o < n.length; o++) {
+                  var a = n[o],
+                    l = r[a],
+                    s = t[a];
+                  if (s !== l)
+                    if ("number" != typeof l) {
+                      if ("coords" === a)
+                        for (
+                          var u = e[a], c = Math.min(l.length, s.length), h = 0;
+                          h < c;
+                          ++h
+                        )
+                          (u[h].v = s[h].v + (l[h].v - s[h].v) * i),
+                            (u[h].estimate =
+                              s[h].estimate +
+                              (l[h].estimate - s[h].estimate) * i);
+                    } else e[a] = s + (l - s) * i;
+                }
+              })(o.violin, n.violin, i.violin, t),
+              r)
+          : r;
+      },
+      draw: function () {
+        var t = this._chart.ctx,
+          r = this._view,
+          i = r.violin,
+          o = this.isVertical();
+        t.save(),
+          (t.fillStyle = r.backgroundColor),
+          (t.strokeStyle = r.borderColor),
+          (t.lineWidth = r.borderWidth);
+        var n = i.coords;
+        if (
+          (e.canvasHelpers.drawPoint(t, "rectRot", 5, r.x, r.y),
+          t.stroke(),
+          t.beginPath(),
+          o)
+        ) {
+          var a = r.x,
+            l = r.width / 2 / i.maxEstimate;
+          t.moveTo(a, i.min),
+            n.forEach(function (e) {
+              var r = e.v,
+                i = e.estimate;
+              t.lineTo(a - i * l, r);
+            }),
+            t.lineTo(a, i.max),
+            t.moveTo(a, i.min),
+            n.forEach(function (e) {
+              var r = e.v,
+                i = e.estimate;
+              t.lineTo(a + i * l, r);
+            }),
+            t.lineTo(a, i.max);
         } else {
-          ctx.fillRect(x0, boxplot.median, width, boxplot.q1 - boxplot.median);
+          var s = r.y,
+            u = r.height / 2 / i.maxEstimate;
+          t.moveTo(i.min, s),
+            n.forEach(function (e) {
+              var r = e.v,
+                i = e.estimate;
+              t.lineTo(r, s - i * u);
+            }),
+            t.lineTo(i.max, s),
+            t.moveTo(i.min, s),
+            n.forEach(function (e) {
+              var r = e.v,
+                i = e.estimate;
+              t.lineTo(r, s + i * u);
+            }),
+            t.lineTo(i.max, s);
         }
-      }
-
-      ctx.closePath();
-      ctx.stroke();
-      ctx.restore(); // Draw the border around the main q1>q3 box
-
-      if (boxplot.q3 > boxplot.q1) {
-        ctx.strokeRect(x0, boxplot.q1, width, boxplot.q3 - boxplot.q1);
-      } else {
-        ctx.strokeRect(x0, boxplot.q3, width, boxplot.q1 - boxplot.q3);
-      } // Draw the whiskers
-
-      ctx.beginPath();
-      ctx.moveTo(x0, boxplot.whiskerMin);
-      ctx.lineTo(x0 + width, boxplot.whiskerMin);
-      ctx.moveTo(x, boxplot.whiskerMin);
-      ctx.lineTo(x, boxplot.q1);
-      ctx.moveTo(x0, boxplot.whiskerMax);
-      ctx.lineTo(x0 + width, boxplot.whiskerMax);
-      ctx.moveTo(x, boxplot.whiskerMax);
-      ctx.lineTo(x, boxplot.q3);
-      ctx.closePath();
-      ctx.stroke();
-    },
-    _drawBoxPlotHoriz: function _drawBoxPlotHoriz(vm, boxplot, ctx) {
-      var y = vm.y;
-      var height = vm.height;
-      var y0 = y - height / 2; // Draw the q1>q3 box
-
-      if (boxplot.q3 > boxplot.q1) {
-        ctx.fillRect(boxplot.q1, y0, boxplot.q3 - boxplot.q1, height);
-      } else {
-        ctx.fillRect(boxplot.q3, y0, boxplot.q1 - boxplot.q3, height);
-      } // Draw the median line
-
-      ctx.save();
-
-      if (vm.medianColor) {
-        ctx.strokeStyle = vm.medianColor;
-      }
-
-      ctx.beginPath();
-      ctx.moveTo(boxplot.median, y0);
-      ctx.lineTo(boxplot.median, y0 + height);
-      ctx.closePath();
-      ctx.stroke();
-      ctx.restore(); // Draw the border around the main q1>q3 box
-
-      if (boxplot.q3 > boxplot.q1) {
-        ctx.strokeRect(boxplot.q1, y0, boxplot.q3 - boxplot.q1, height);
-      } else {
-        ctx.strokeRect(boxplot.q3, y0, boxplot.q1 - boxplot.q3, height);
-      } // Draw the whiskers
-
-      ctx.beginPath();
-      ctx.moveTo(boxplot.whiskerMin, y0);
-      ctx.lineTo(boxplot.whiskerMin, y0 + height);
-      ctx.moveTo(boxplot.whiskerMin, y);
-      ctx.lineTo(boxplot.q1, y);
-      ctx.moveTo(boxplot.whiskerMax, y0);
-      ctx.lineTo(boxplot.whiskerMax, y0 + height);
-      ctx.moveTo(boxplot.whiskerMax, y);
-      ctx.lineTo(boxplot.q3, y);
-      ctx.closePath();
-      ctx.stroke();
-    },
-    _getBounds: function _getBounds() {
-      var vm = this._view;
-      var vert = this.isVertical();
-      var boxplot = vm.boxplot;
-
-      if (!boxplot) {
-        return {
-          left: 0,
-          top: 0,
-          right: 0,
-          bottom: 0,
-        };
-      }
-
-      if (vert) {
-        var x = vm.x,
-          width = vm.width;
-        var x0 = x - width / 2;
-        return {
-          left: x0,
-          top: boxplot.whiskerMax,
-          right: x0 + width,
-          bottom: boxplot.whiskerMin,
-        };
-      }
-
-      var y = vm.y,
-        height = vm.height;
-      var y0 = y - height / 2;
-      return {
-        left: boxplot.whiskerMin,
-        top: y0,
-        right: boxplot.whiskerMax,
-        bottom: y0 + height,
-      };
-    },
-    height: function height() {
-      var vm = this._view;
-      return vm.base - Math.min(vm.boxplot.q1, vm.boxplot.q3);
-    },
-    getArea: function getArea() {
-      var vm = this._view;
-      var iqr = Math.abs(vm.boxplot.q3 - vm.boxplot.q1);
-
-      if (this.isVertical()) {
-        return iqr * vm.width;
-      }
-
-      return iqr * vm.height;
-    },
-    _getOutliers: function _getOutliers() {
-      return this._view.boxplot ? this._view.boxplot.outliers || [] : [];
-    },
-  }));
-
-  Chart.defaults.global.elements.violin = _objectSpread2(
-    {
-      points: 100,
-    },
-    defaults
-  );
-
-  function transitionViolin(start, view, model, ease) {
-    var keys = Object.keys(model);
-
-    for (var _i = 0, _keys = keys; _i < _keys.length; _i++) {
-      var key = _keys[_i];
-      var target = model[key];
-      var origin = start[key];
-
-      if (origin === target) {
-        continue;
-      }
-
-      if (typeof target === "number") {
-        view[key] = origin + (target - origin) * ease;
-        continue;
-      }
-
-      if (key === "coords") {
-        var v = view[key];
-        var common = Math.min(target.length, origin.length);
-
-        for (var i = 0; i < common; ++i) {
-          v[i].v = origin[i].v + (target[i].v - origin[i].v) * ease;
-          v[i].estimate =
-            origin[i].estimate +
-            (target[i].estimate - origin[i].estimate) * ease;
+        t.stroke(),
+          t.fill(),
+          t.closePath(),
+          this._drawOutliers(r, i, t, o),
+          t.restore(),
+          this._drawItems(r, i, t, o);
+      },
+      _getBounds: function () {
+        var t = this._view,
+          e = this.isVertical(),
+          r = t.violin;
+        if (e) {
+          var i = t.x,
+            o = t.width,
+            n = i - o / 2;
+          return { left: n, top: r.max, right: n + o, bottom: r.min };
         }
-      }
-    }
+        var a = t.y,
+          l = t.height,
+          s = a - l / 2;
+        return { left: r.min, top: s, right: r.max, bottom: s + l };
+      },
+      height: function () {
+        var t = this._view;
+        return t.base - Math.min(t.violin.min, t.violin.max);
+      },
+      getArea: function () {
+        var t = this._view,
+          e = Math.abs(t.violin.max - t.violin.min);
+        return this.isVertical() ? e * t.width : e * t.height;
+      },
+      _getOutliers: function () {
+        return this._view.violin.outliers || [];
+      },
+    })),
+    P = { scales: { yAxes: [{ type: "arrayLinear" }] } },
+    S = { scales: { xAxes: [{ type: "arrayLinear" }] } };
+  function N(t) {
+    var e = this._chart.config.options.tooltipDecimals;
+    return null == e || "number" != typeof e || e < 0
+      ? t
+      : Number.parseFloat(t).toFixed(e);
   }
-
-  var Violin = (Chart.elements.Violin = ArrayElementBase.extend({
-    transition: function transition(ease) {
-      var r = Chart.Element.prototype.transition.call(this, ease);
-      var model = this._model;
-      var start = this._start;
-      var view = this._view; // No animation -> No Transition
-
-      if (!model || ease === 1) {
-        return r;
-      }
-
-      if (start.violin == null) {
-        return r; // model === view -> not copied
-      } // create deep copy to avoid alternation
-
-      if (model.violin === view.violin) {
-        view.violin = Chart.helpers.clone(view.violin);
-      }
-
-      transitionViolin(start.violin, view.violin, model.violin, ease);
-      return r;
-    },
-    draw: function draw() {
-      var ctx = this._chart.ctx;
-      var vm = this._view;
-      var violin = vm.violin;
-      var vert = this.isVertical();
-      ctx.save();
-      ctx.fillStyle = vm.backgroundColor;
-      ctx.strokeStyle = vm.borderColor;
-      ctx.lineWidth = vm.borderWidth;
-      var coords = violin.coords;
-      Chart.canvasHelpers.drawPoint(ctx, "rectRot", 5, vm.x, vm.y);
-      ctx.stroke();
-      ctx.beginPath();
-
-      if (vert) {
-        var x = vm.x;
-        var width = vm.width;
-        var factor = width / 2 / violin.maxEstimate;
-        ctx.moveTo(x, violin.min);
-        coords.forEach(function (_ref) {
-          var v = _ref.v,
-            estimate = _ref.estimate;
-          ctx.lineTo(x - estimate * factor, v);
+  var V = [
+      "outlierRadius",
+      "itemRadius",
+      "itemStyle",
+      "itemBackgroundColor",
+      "itemBorderColor",
+      "outlierColor",
+      "medianColor",
+      "segmentColor",
+      "hitPadding",
+      "outlierHitRadius",
+      "lowerColor",
+    ],
+    T = [!1, !1, !1, !0, !0, !0, !0, !0, !1, !1, !0],
+    O = {
+      _elementOptions: function () {
+        return {};
+      },
+      updateElement: function (t, r, i) {
+        var o = this.getDataset(),
+          n = t.custom || {},
+          a = this._elementOptions();
+        e.controllers.bar.prototype.updateElement.call(this, t, r, i);
+        var l = e.helpers.options.resolve,
+          s = {
+            chart: this.chart,
+            dataIndex: r,
+            dataset: o,
+            datasetIndex: this.index,
+          };
+        V.forEach(function (e) {
+          t._model[e] = l([n[e], o[e], a[e]], s, r);
         });
-        ctx.lineTo(x, violin.max);
-        ctx.moveTo(x, violin.min);
-        coords.forEach(function (_ref2) {
-          var v = _ref2.v,
-            estimate = _ref2.estimate;
-          ctx.lineTo(x + estimate * factor, v);
+      },
+      _calculateCommonModel: function (t, e, r, i) {
+        r.outliers &&
+          (t.outliers = r.outliers.map(function (t) {
+            return i.getPixelForValue(Number(t));
+          })),
+          Array.isArray(e)
+            ? (t.items = e.map(function (t) {
+                return i.getPixelForValue(Number(t));
+              }))
+            : r.items &&
+              (t.items = r.items.map(function (t) {
+                return i.getPixelForValue(Number(t));
+              }));
+      },
+      setHoverStyle: function (t) {
+        e.controllers.bar.prototype.setHoverStyle.call(this, t);
+        var r = this.chart.data.datasets[t._datasetIndex],
+          i = t._index,
+          o = t.custom || {},
+          n = t._model,
+          a = e.helpers.getHoverColor,
+          l = e.helpers.options.resolve;
+        V.forEach(function (e, s) {
+          t.$previousStyle[e] = n[e];
+          var u = "hover".concat(e.charAt(0).toUpperCase()).concat(e.slice(1)),
+            c = T[s] && null != n[e] ? a(n[e]) : n[e];
+          t._model[e] = l([o[u], r[u], c], void 0, i);
         });
-        ctx.lineTo(x, violin.max);
-      } else {
-        var y = vm.y;
-        var height = vm.height;
-
-        var _factor = height / 2 / violin.maxEstimate;
-
-        ctx.moveTo(violin.min, y);
-        coords.forEach(function (_ref3) {
-          var v = _ref3.v,
-            estimate = _ref3.estimate;
-          ctx.lineTo(v, y - estimate * _factor);
-        });
-        ctx.lineTo(violin.max, y);
-        ctx.moveTo(violin.min, y);
-        coords.forEach(function (_ref4) {
-          var v = _ref4.v,
-            estimate = _ref4.estimate;
-          ctx.lineTo(v, y + estimate * _factor);
-        });
-        ctx.lineTo(violin.max, y);
-      }
-
-      ctx.stroke();
-      ctx.fill();
-      ctx.closePath();
-
-      this._drawOutliers(vm, violin, ctx, vert);
-
-      ctx.restore();
-
-      this._drawItems(vm, violin, ctx, vert);
-    },
-    _getBounds: function _getBounds() {
-      var vm = this._view;
-      var vert = this.isVertical();
-      var violin = vm.violin;
-
-      if (vert) {
-        var x = vm.x,
-          width = vm.width;
-        var x0 = x - width / 2;
-        return {
-          left: x0,
-          top: violin.max,
-          right: x0 + width,
-          bottom: violin.min,
-        };
-      }
-
-      var y = vm.y,
-        height = vm.height;
-      var y0 = y - height / 2;
-      return {
-        left: violin.min,
-        top: y0,
-        right: violin.max,
-        bottom: y0 + height,
-      };
-    },
-    height: function height() {
-      var vm = this._view;
-      return vm.base - Math.min(vm.violin.min, vm.violin.max);
-    },
-    getArea: function getArea() {
-      var vm = this._view;
-      var iqr = Math.abs(vm.violin.max - vm.violin.min);
-
-      if (this.isVertical()) {
-        return iqr * vm.width;
-      }
-
-      return iqr * vm.height;
-    },
-    _getOutliers: function _getOutliers() {
-      return this._view.violin.outliers || [];
-    },
-  }));
-
-  var verticalDefaults = {
-    scales: {
-      yAxes: [
-        {
-          type: "arrayLinear",
-        },
-      ],
-    },
-  };
-  var horizontalDefaults = {
-    scales: {
-      xAxes: [
-        {
-          type: "arrayLinear",
-        },
-      ],
-    },
-  };
-  function toFixed(value) {
-    var decimals = this._chart.config.options.tooltipDecimals; // inject number of decimals from config
-
-    if (decimals == null || typeof decimals !== "number" || decimals < 0) {
-      return value;
-    }
-
-    return Number.parseFloat(value).toFixed(decimals);
-  }
-  var configKeys = [
-    "outlierRadius",
-    "itemRadius",
-    "itemStyle",
-    "itemBackgroundColor",
-    "itemBorderColor",
-    "outlierColor",
-    "medianColor",
-    "segmentColor",
-    "hitPadding",
-    "outlierHitRadius",
-    "lowerColor",
-  ];
-  var configKeyIsColor = [
-    false,
-    false,
-    false,
-    true,
-    true,
-    true,
-    true,
-    true,
-    false,
-    false,
-    true,
-  ];
-  var array = {
-    _elementOptions: function _elementOptions() {
-      return {};
-    },
-    updateElement: function updateElement(elem, index, reset) {
-      var dataset = this.getDataset();
-      var custom = elem.custom || {};
-
-      var options = this._elementOptions();
-
-      Chart.controllers.bar.prototype.updateElement.call(
-        this,
-        elem,
-        index,
-        reset
-      );
-      var resolve = Chart.helpers.options.resolve; // Scriptable options
-
-      var context = {
-        chart: this.chart,
-        dataIndex: index,
-        dataset: dataset,
-        datasetIndex: this.index,
-      };
-      configKeys.forEach(function (item) {
-        elem._model[item] = resolve(
-          [custom[item], dataset[item], options[item]],
-          context,
-          index
-        );
-      });
-    },
-    _calculateCommonModel: function _calculateCommonModel(
-      r,
-      data,
-      container,
-      scale
-    ) {
-      if (container.outliers) {
-        r.outliers = container.outliers.map(function (d) {
-          return scale.getPixelForValue(Number(d));
-        });
-      }
-
-      if (Array.isArray(data)) {
-        r.items = data.map(function (d) {
-          return scale.getPixelForValue(Number(d));
-        });
-      } else if (container.items) {
-        r.items = container.items.map(function (d) {
-          return scale.getPixelForValue(Number(d));
-        });
-      }
-    },
-    setHoverStyle: function setHoverStyle(element) {
-      Chart.controllers.bar.prototype.setHoverStyle.call(this, element);
-      var dataset = this.chart.data.datasets[element._datasetIndex];
-      var index = element._index;
-      var custom = element.custom || {};
-      var model = element._model;
-      var getHoverColor = Chart.helpers.getHoverColor;
-      var resolve = Chart.helpers.options.resolve;
-      configKeys.forEach(function (item, i) {
-        element.$previousStyle[item] = model[item];
-        var hoverKey = "hover"
-          .concat(item.charAt(0).toUpperCase())
-          .concat(item.slice(1));
-        var modelValue =
-          configKeyIsColor[i] && model[item] != null
-            ? getHoverColor(model[item])
-            : model[item];
-        element._model[item] = resolve(
-          [custom[hoverKey], dataset[hoverKey], modelValue],
-          undefined,
-          index
-        );
-      });
-    },
-  };
-
-  function boxplotTooltip(item, data) {
-    var value = data.datasets[item.datasetIndex].data[item.index];
-
-    var options = this._chart
-      .getDatasetMeta(item.datasetIndex)
-      .controller._getValueScale().options.ticks;
-
-    var b = asBoxPlotStats(value, options);
-    var hoveredOutlierIndex =
-      this._tooltipOutlier == null ? -1 : this._tooltipOutlier;
-    var label = this._options.callbacks.boxplotLabel;
-
-    for (
-      var _len = arguments.length,
-        args = new Array(_len > 2 ? _len - 2 : 0),
-        _key = 2;
-      _key < _len;
-      _key++
-    ) {
-      args[_key - 2] = arguments[_key];
-    }
-
-    return label.apply(this, [item, data, b, hoveredOutlierIndex].concat(args));
-  }
-
-  var defaults$1 = {
+      },
+    };
+  var A = {
     tooltips: {
       position: "boxplot",
       callbacks: {
-        label: boxplotTooltip,
-        boxplotLabel: function boxplotLabel(
-          item,
-          data,
-          b,
-          hoveredOutlierIndex
-        ) {
-          var datasetLabel = data.datasets[item.datasetIndex].label || "";
-          var label = ""
-            .concat(datasetLabel, " ")
-            .concat(
-              typeof item.xLabel === "string" ? item.xLabel : item.yLabel
-            );
-
-          if (!b) {
-            return "".concat(label, " (NaN)");
+        label: function (t, e) {
+          for (
+            var r = g(
+                e.datasets[t.datasetIndex].data[t.index],
+                this._chart
+                  .getDatasetMeta(t.datasetIndex)
+                  .controller._getValueScale().options.ticks
+              ),
+              i = null == this._tooltipOutlier ? -1 : this._tooltipOutlier,
+              o = this._options.callbacks.boxplotLabel,
+              n = arguments.length,
+              a = new Array(n > 2 ? n - 2 : 0),
+              l = 2;
+            l < n;
+            l++
+          )
+            a[l - 2] = arguments[l];
+          return o.apply(this, [t, e, r, i].concat(a));
+        },
+        boxplotLabel: function (t, e, r, i) {
+          var o = e.datasets[t.datasetIndex].label || "",
+            n = ""
+              .concat(o, " ")
+              .concat("string" == typeof t.xLabel ? t.xLabel : t.yLabel);
+          if (!r) return "".concat(n, " (NaN)");
+          if (i >= 0) {
+            var a = r.outliers[i];
+            return "".concat(n, " (outlier: ").concat(N.call(this, a), ")");
           }
-
-          if (hoveredOutlierIndex >= 0) {
-            var outlier = b.outliers[hoveredOutlierIndex];
-            return ""
-              .concat(label, " (outlier: ")
-              .concat(toFixed.call(this, outlier), ")");
-          }
-
           return ""
-            .concat(label, " (min: ")
-            .concat(toFixed.call(this, b.min), ", q1: ")
-            .concat(toFixed.call(this, b.q1), ", median: ")
-            .concat(toFixed.call(this, b.median), ", q3: ")
-            .concat(toFixed.call(this, b.q3), ", max: ")
-            .concat(toFixed.call(this, b.max), ")");
+            .concat(n, " (min: ")
+            .concat(N.call(this, r.min), ", q1: ")
+            .concat(N.call(this, r.q1), ", median: ")
+            .concat(N.call(this, r.median), ", q3: ")
+            .concat(N.call(this, r.q3), ", max: ")
+            .concat(N.call(this, r.max), ")");
         },
       },
     },
   };
-  Chart.defaults.boxplot = Chart.helpers.merge({}, [
-    Chart.defaults.bar,
-    verticalDefaults,
-    defaults$1,
-  ]);
-  Chart.defaults.horizontalBoxplot = Chart.helpers.merge({}, [
-    Chart.defaults.horizontalBar,
-    horizontalDefaults,
-    defaults$1,
-  ]);
-
-  if (Chart.defaults.global.datasets && Chart.defaults.global.datasets.bar) {
-    Chart.defaults.global.datasets.boxplot = _objectSpread2(
+  (e.defaults.boxplot = e.helpers.merge({}, [e.defaults.bar, P, A])),
+    (e.defaults.horizontalBoxplot = e.helpers.merge({}, [
+      e.defaults.horizontalBar,
+      S,
+      A,
+    ])),
+    e.defaults.global.datasets &&
+      e.defaults.global.datasets.bar &&
+      (e.defaults.global.datasets.boxplot = o(
+        {},
+        e.defaults.global.datasets.bar
+      )),
+    e.defaults.global.datasets &&
+      e.defaults.global.datasets.horizontalBar &&
+      (e.defaults.global.datasets.horizontalBoxplot = o(
+        {},
+        e.defaults.global.datasets.horizontalBar
+      ));
+  var B = o(
+      o({}, O),
       {},
-      Chart.defaults.global.datasets.bar
-    );
-  }
-
-  if (
-    Chart.defaults.global.datasets &&
-    Chart.defaults.global.datasets.horizontalBar
-  ) {
-    Chart.defaults.global.datasets.horizontalBoxplot = _objectSpread2(
-      {},
-      Chart.defaults.global.datasets.horizontalBar
-    );
-  }
-
-  var boxplot = _objectSpread2(
-    _objectSpread2({}, array),
-    {},
-    {
-      dataElementType: Chart.elements.BoxAndWhiskers,
-      _elementOptions: function _elementOptions() {
-        return this.chart.options.elements.boxandwhiskers;
-      },
-
-      /**
-       * @private
-       */
-      _updateElementGeometry: function _updateElementGeometry(
-        elem,
-        index,
-        reset
-      ) {
-        var _Chart$controllers$ba;
-
-        for (
-          var _len2 = arguments.length,
-            args = new Array(_len2 > 3 ? _len2 - 3 : 0),
-            _key2 = 3;
-          _key2 < _len2;
-          _key2++
-        ) {
-          args[_key2 - 3] = arguments[_key2];
-        }
-
-        (_Chart$controllers$ba =
-          Chart.controllers.bar.prototype._updateElementGeometry).call.apply(
-          _Chart$controllers$ba,
-          [this, elem, index, reset].concat(args)
-        );
-
-        elem._model.boxplot = this._calculateBoxPlotValuesPixels(
-          this.index,
-          index
-        );
-      },
-
-      /**
-       * @private
-       */
-      _calculateBoxPlotValuesPixels: function _calculateBoxPlotValuesPixels(
-        datasetIndex,
-        index
-      ) {
-        var scale = this._getValueScale();
-
-        var data = this.chart.data.datasets[datasetIndex].data[index];
-
-        if (!data) {
-          return null;
-        }
-
-        var v = asBoxPlotStats(data, scale.options.ticks);
-        var r = {};
-        Object.keys(v).forEach(function (key) {
-          if (key !== "outliers" && key !== "items") {
-            r[key] = scale.getPixelForValue(Number(v[key]));
-          }
-        });
-
-        this._calculateCommonModel(r, data, v, scale);
-
-        return r;
-      },
-    }
-  );
-  /**
-   * This class is based off controller.bar.js from the upstream Chart.js library
-   */
-
-  var BoxPlot = (Chart.controllers.boxplot =
-    Chart.controllers.bar.extend(boxplot));
-  var HorizontalBoxPlot = (Chart.controllers.horizontalBoxplot =
-    Chart.controllers.horizontalBar.extend(boxplot));
-
-  function violinTooltip(item, data) {
-    var value = data.datasets[item.datasetIndex].data[item.index];
-
-    var options = this._chart
-      .getDatasetMeta(item.datasetIndex)
-      .controller._getValueScale().options.ticks;
-
-    var v = asViolinStats(value, options);
-    var label = this._options.callbacks.violinLabel;
-
-    for (
-      var _len = arguments.length,
-        args = new Array(_len > 2 ? _len - 2 : 0),
-        _key = 2;
-      _key < _len;
-      _key++
-    ) {
-      args[_key - 2] = arguments[_key];
-    }
-
-    return label.apply(this, [item, data, v].concat(args));
-  }
-
-  var defaults$2 = {
+      {
+        dataElementType: e.elements.BoxAndWhiskers,
+        _elementOptions: function () {
+          return this.chart.options.elements.boxandwhiskers;
+        },
+        _updateElementGeometry: function (t, r, i) {
+          for (
+            var o,
+              n = arguments.length,
+              a = new Array(n > 3 ? n - 3 : 0),
+              l = 3;
+            l < n;
+            l++
+          )
+            a[l - 3] = arguments[l];
+          (o = e.controllers.bar.prototype._updateElementGeometry).call.apply(
+            o,
+            [this, t, r, i].concat(a)
+          ),
+            (t._model.boxplot = this._calculateBoxPlotValuesPixels(
+              this.index,
+              r
+            ));
+        },
+        _calculateBoxPlotValuesPixels: function (t, e) {
+          var r = this._getValueScale(),
+            i = this.chart.data.datasets[t].data[e];
+          if (!i) return null;
+          var o = g(i, r.options.ticks),
+            n = {};
+          return (
+            Object.keys(o).forEach(function (t) {
+              "outliers" !== t &&
+                "items" !== t &&
+                (n[t] = r.getPixelForValue(Number(o[t])));
+            }),
+            this._calculateCommonModel(n, i, o, r),
+            n
+          );
+        },
+      }
+    ),
+    C = (e.controllers.boxplot = e.controllers.bar.extend(B)),
+    I = (e.controllers.horizontalBoxplot =
+      e.controllers.horizontalBar.extend(B));
+  var R = {
     tooltips: {
       callbacks: {
-        label: violinTooltip,
-        violinLabel: function violinLabel(item, data) {
-          var datasetLabel = data.datasets[item.datasetIndex].label || "";
-          var value = item.value;
-          var label = ""
-            .concat(datasetLabel, " ")
-            .concat(
-              typeof item.xLabel === "string" ? item.xLabel : item.yLabel
-            );
-          return "".concat(label, " (").concat(toFixed.call(this, value), ")");
+        label: function (t, e) {
+          for (
+            var r = b(
+                e.datasets[t.datasetIndex].data[t.index],
+                this._chart
+                  .getDatasetMeta(t.datasetIndex)
+                  .controller._getValueScale().options.ticks
+              ),
+              i = this._options.callbacks.violinLabel,
+              o = arguments.length,
+              n = new Array(o > 2 ? o - 2 : 0),
+              a = 2;
+            a < o;
+            a++
+          )
+            n[a - 2] = arguments[a];
+          return i.apply(this, [t, e, r].concat(n));
+        },
+        violinLabel: function (t, e) {
+          var r = e.datasets[t.datasetIndex].label || "",
+            i = t.value,
+            o = ""
+              .concat(r, " ")
+              .concat("string" == typeof t.xLabel ? t.xLabel : t.yLabel);
+          return "".concat(o, " (").concat(N.call(this, i), ")");
         },
       },
     },
   };
-  Chart.defaults.violin = Chart.helpers.merge({}, [
-    Chart.defaults.bar,
-    verticalDefaults,
-    defaults$2,
-  ]);
-  Chart.defaults.horizontalViolin = Chart.helpers.merge({}, [
-    Chart.defaults.horizontalBar,
-    horizontalDefaults,
-    defaults$2,
-  ]);
-
-  if (Chart.defaults.global.datasets && Chart.defaults.global.datasets.bar) {
-    Chart.defaults.global.datasets.violin = _objectSpread2(
+  (e.defaults.violin = e.helpers.merge({}, [e.defaults.bar, P, R])),
+    (e.defaults.horizontalViolin = e.helpers.merge({}, [
+      e.defaults.horizontalBar,
+      S,
+      R,
+    ])),
+    e.defaults.global.datasets &&
+      e.defaults.global.datasets.bar &&
+      (e.defaults.global.datasets.violin = o(
+        {},
+        e.defaults.global.datasets.bar
+      )),
+    e.defaults.global.datasets &&
+      e.defaults.global.datasets.horizontalBar &&
+      (e.defaults.global.datasets.horizontalViolin = o(
+        {},
+        e.defaults.global.datasets.horizontalBar
+      ));
+  var E = o(
+      o({}, O),
       {},
-      Chart.defaults.global.datasets.bar
-    );
-  }
-
-  if (
-    Chart.defaults.global.datasets &&
-    Chart.defaults.global.datasets.horizontalBar
-  ) {
-    Chart.defaults.global.datasets.horizontalViolin = _objectSpread2(
-      {},
-      Chart.defaults.global.datasets.horizontalBar
-    );
-  }
-
-  var controller = _objectSpread2(
-    _objectSpread2({}, array),
-    {},
-    {
-      dataElementType: Chart.elements.Violin,
-      _elementOptions: function _elementOptions() {
-        return this.chart.options.elements.violin;
-      },
-
-      /**
-       * @private
-       */
-      _updateElementGeometry: function _updateElementGeometry(
-        elem,
-        index,
-        reset
-      ) {
-        var _Chart$controllers$ba;
-
-        for (
-          var _len2 = arguments.length,
-            args = new Array(_len2 > 3 ? _len2 - 3 : 0),
-            _key2 = 3;
-          _key2 < _len2;
-          _key2++
-        ) {
-          args[_key2 - 3] = arguments[_key2];
-        }
-
-        (_Chart$controllers$ba =
-          Chart.controllers.bar.prototype._updateElementGeometry).call.apply(
-          _Chart$controllers$ba,
-          [this, elem, index, reset].concat(args)
-        );
-
-        var custom = elem.custom || {};
-
-        var options = this._elementOptions();
-
-        elem._model.violin = this._calculateViolinValuesPixels(
-          this.index,
-          index,
-          custom.points !== undefined ? custom.points : options.points
-        );
-      },
-
-      /**
-       * @private
-       */
-      _calculateViolinValuesPixels: function _calculateViolinValuesPixels(
-        datasetIndex,
-        index,
-        points
-      ) {
-        var scale = this._getValueScale();
-
-        var data = this.chart.data.datasets[datasetIndex].data[index];
-        var violin = asViolinStats(data, scale.options.ticks);
-
-        if (
-          (!Array.isArray(data) && typeof data === "number" && !Number.isNaN) ||
-          violin == null
-        ) {
-          return {
-            min: data,
-            max: data,
-            median: data,
-            coords: [
-              {
-                v: data,
-                estimate: Number.NEGATIVE_INFINITY,
-              },
-            ],
-            maxEstimate: Number.NEGATIVE_INFINITY,
-          };
-        }
-
-        var range = violin.max - violin.min;
-        var samples = [];
-        var inc = range / points;
-
-        for (var v = violin.min; v <= violin.max && inc > 0; v += inc) {
-          samples.push(v);
-        }
-
-        if (samples[samples.length - 1] !== violin.max) {
-          samples.push(violin.max);
-        }
-
-        var coords =
-          violin.coords ||
-          violin.kde(samples).map(function (v) {
-            return {
-              v: v[0],
-              estimate: v[1],
-            };
-          });
-        var r = {
-          min: scale.getPixelForValue(violin.min),
-          max: scale.getPixelForValue(violin.max),
-          median: scale.getPixelForValue(violin.median),
-          coords: coords.map(function (_ref) {
-            var v = _ref.v,
-              estimate = _ref.estimate;
-            return {
-              v: scale.getPixelForValue(v),
-              estimate: estimate,
-            };
-          }),
-          maxEstimate: coords.reduce(function (a, d) {
-            return Math.max(a, d.estimate);
-          }, Number.NEGATIVE_INFINITY),
-        };
-
-        this._calculateCommonModel(r, data, violin, scale);
-
-        return r;
-      },
-    }
-  );
-  /**
-   * This class is based off controller.bar.js from the upstream Chart.js library
-   */
-
-  var Violin$1 = (Chart.controllers.violin =
-    Chart.controllers.bar.extend(controller));
-  var HorizontalViolin = (Chart.controllers.horizontalViolin =
-    Chart.controllers.horizontalBar.extend(controller));
-
-  var helpers = Chart.helpers;
-  var ArrayLinearScaleOptions = helpers.merge({}, [
-    commonScaleOptions,
-    Chart.scaleService.getScaleDefaults("linear"),
-  ]);
-  var ArrayLinearScale = Chart.scaleService
-    .getScaleConstructor("linear")
-    .extend({
-      getRightValue: function getRightValue$1(rawValue) {
-        return Chart.LinearScaleBase.prototype.getRightValue.call(
-          this,
-          getRightValue(rawValue, this.options.ticks)
-        );
-      },
-      _parseValue: function _parseValue(rawValue) {
-        return Chart.LinearScaleBase.prototype._parseValue.call(
-          this,
-          getRightValue(rawValue, this.options.ticks)
-        );
-      },
-      determineDataLimits: function determineDataLimits() {
-        commonDataLimits.call(this); // Common base implementation to handle ticks.min, ticks.max, ticks.beginAtZero
-
-        this.handleTickRangeOptions();
-      },
-    });
-  Chart.scaleService.registerScaleType(
-    "arrayLinear",
-    ArrayLinearScale,
-    ArrayLinearScaleOptions
-  );
-
-  var helpers$1 = Chart.helpers;
-  var ArrayLogarithmicScaleOptions = helpers$1.merge({}, [
-    commonScaleOptions,
-    Chart.scaleService.getScaleDefaults("logarithmic"),
-  ]);
-  var ArrayLogarithmicScale = Chart.scaleService
-    .getScaleConstructor("logarithmic")
-    .extend({
-      getRightValue: function getRightValue$1(rawValue) {
-        return Chart.LinearScaleBase.prototype.getRightValue.call(
-          this,
-          getRightValue(rawValue, this.options.ticks)
-        );
-      },
-      _parseValue: function _parseValue(rawValue) {
-        return Chart.LinearScaleBase.prototype._parseValue.call(
-          this,
-          getRightValue(rawValue, this.options.ticks)
-        );
-      },
-      determineDataLimits: function determineDataLimits() {
-        var _this = this;
-
-        // Add whitespace around bars. Axis shouldn't go exactly from min to max
-        var tickOpts = this.options.ticks;
-        this.minNotZero = null;
-        commonDataLimits.call(this, function (boxPlot) {
-          var value = boxPlot[tickOpts.minStats];
-
-          if (
-            value !== 0 &&
-            (_this.minNotZero === null || value < _this.minNotZero)
-          ) {
-            _this.minNotZero = value;
-          }
-        });
-        this.min = helpers$1.valueOrDefault(
-          tickOpts.min,
-          this.min - this.min * 0.05
-        );
-        this.max = helpers$1.valueOrDefault(
-          tickOpts.max,
-          this.max + this.max * 0.05
-        );
-
-        if (this.min === this.max) {
-          if (this.min !== 0 && this.min !== null) {
-            this.min = Math.pow(10, Math.floor(helpers$1.log10(this.min)) - 1);
-            this.max = Math.pow(10, Math.floor(helpers$1.log10(this.max)) + 1);
-          } else {
-            this.min = 1;
-            this.max = 10;
-          }
-        }
-      },
-    });
-  Chart.scaleService.registerScaleType(
-    "arrayLogarithmic",
-    ArrayLogarithmicScale,
-    ArrayLogarithmicScaleOptions
-  );
-
-  function boxplotPositioner(elements, eventPosition) {
-    var _this = this;
-
-    if (!elements.length) {
-      return false;
-    }
-
-    var _elements$reduce = elements.reduce(
-        function (_ref, el) {
-          var _ref2 = _slicedToArray(_ref, 3),
-            xi = _ref2[0],
-            ci = _ref2[1],
-            counti = _ref2[2];
-
-          if (el && el.hasValue()) {
-            var pos = el.tooltipPosition(eventPosition, _this);
-            return [xi + pos.x, ci + pos.y, counti + 1];
-          }
-
-          return [xi, ci, counti];
+      {
+        dataElementType: e.elements.Violin,
+        _elementOptions: function () {
+          return this.chart.options.elements.violin;
         },
-        [0, 0, 0]
-      ),
-      _elements$reduce2 = _slicedToArray(_elements$reduce, 3),
-      x = _elements$reduce2[0],
-      y = _elements$reduce2[1],
-      count = _elements$reduce2[2];
-
-    return {
-      x: x / count,
-      y: y / count,
-    };
-  }
-  Chart.Tooltip.positioners.boxplot = boxplotPositioner;
-
-  exports.ArrayLinearScale = ArrayLinearScale;
-  exports.ArrayLogarithmicScale = ArrayLogarithmicScale;
-  exports.BoxAndWhiskers = BoxAndWiskers;
-  exports.BoxPlot = BoxPlot;
-  exports.HorizontalBoxPlot = HorizontalBoxPlot;
-  exports.HorizontalViolin = HorizontalViolin;
-  exports.Violin = Violin;
-
-  Object.defineProperty(exports, "__esModule", { value: true });
+        _updateElementGeometry: function (t, r, i) {
+          for (
+            var o,
+              n = arguments.length,
+              a = new Array(n > 3 ? n - 3 : 0),
+              l = 3;
+            l < n;
+            l++
+          )
+            a[l - 3] = arguments[l];
+          (o = e.controllers.bar.prototype._updateElementGeometry).call.apply(
+            o,
+            [this, t, r, i].concat(a)
+          );
+          var s = t.custom || {},
+            u = this._elementOptions();
+          t._model.violin = this._calculateViolinValuesPixels(
+            this.index,
+            r,
+            void 0 !== s.points ? s.points : u.points
+          );
+        },
+        _calculateViolinValuesPixels: function (t, e, r) {
+          var i = this._getValueScale(),
+            o = this.chart.data.datasets[t].data[e],
+            n = b(o, i.options.ticks);
+          if (
+            (!Array.isArray(o) && "number" == typeof o && !Number.isNaN) ||
+            null == n
+          )
+            return {
+              min: o,
+              max: o,
+              median: o,
+              coords: [{ v: o, estimate: Number.NEGATIVE_INFINITY }],
+              maxEstimate: Number.NEGATIVE_INFINITY,
+            };
+          for (
+            var a = [], l = (n.max - n.min) / r, s = n.min;
+            s <= n.max && l > 0;
+            s += l
+          )
+            a.push(s);
+          a[a.length - 1] !== n.max && a.push(n.max);
+          var u =
+              n.coords ||
+              n.kde(a).map(function (t) {
+                return { v: t[0], estimate: t[1] };
+              }),
+            c = {
+              min: i.getPixelForValue(n.min),
+              max: i.getPixelForValue(n.max),
+              median: i.getPixelForValue(n.median),
+              coords: u.map(function (t) {
+                var e = t.v,
+                  r = t.estimate;
+                return { v: i.getPixelForValue(e), estimate: r };
+              }),
+              maxEstimate: u.reduce(function (t, e) {
+                return Math.max(t, e.estimate);
+              }, Number.NEGATIVE_INFINITY),
+            };
+          return this._calculateCommonModel(c, o, n, i), c;
+        },
+      }
+    ),
+    j =
+      ((e.controllers.violin = e.controllers.bar.extend(E)),
+      (e.controllers.horizontalViolin = e.controllers.horizontalBar.extend(E))),
+    L = e.helpers.merge({}, [y, e.scaleService.getScaleDefaults("linear")]),
+    D = e.scaleService.getScaleConstructor("linear").extend({
+      getRightValue: function (t) {
+        return e.LinearScaleBase.prototype.getRightValue.call(
+          this,
+          x(t, this.options.ticks)
+        );
+      },
+      _parseValue: function (t) {
+        return e.LinearScaleBase.prototype._parseValue.call(
+          this,
+          x(t, this.options.ticks)
+        );
+      },
+      determineDataLimits: function () {
+        _.call(this), this.handleTickRangeOptions();
+      },
+    });
+  e.scaleService.registerScaleType("arrayLinear", D, L);
+  var z = e.helpers,
+    H = z.merge({}, [y, e.scaleService.getScaleDefaults("logarithmic")]),
+    F = e.scaleService.getScaleConstructor("logarithmic").extend({
+      getRightValue: function (t) {
+        return e.LinearScaleBase.prototype.getRightValue.call(
+          this,
+          x(t, this.options.ticks)
+        );
+      },
+      _parseValue: function (t) {
+        return e.LinearScaleBase.prototype._parseValue.call(
+          this,
+          x(t, this.options.ticks)
+        );
+      },
+      determineDataLimits: function () {
+        var t = this,
+          e = this.options.ticks;
+        (this.minNotZero = null),
+          _.call(this, function (r) {
+            var i = r[e.minStats];
+            0 !== i &&
+              (null === t.minNotZero || i < t.minNotZero) &&
+              (t.minNotZero = i);
+          }),
+          (this.min = z.valueOrDefault(e.min, this.min - 0.05 * this.min)),
+          (this.max = z.valueOrDefault(e.max, this.max + 0.05 * this.max)),
+          this.min === this.max &&
+            (0 !== this.min && null !== this.min
+              ? ((this.min = Math.pow(10, Math.floor(z.log10(this.min)) - 1)),
+                (this.max = Math.pow(10, Math.floor(z.log10(this.max)) + 1)))
+              : ((this.min = 1), (this.max = 10)));
+      },
+    });
+  e.scaleService.registerScaleType("arrayLogarithmic", F, H),
+    (e.Tooltip.positioners.boxplot = function (t, e) {
+      var r = this;
+      if (!t.length) return !1;
+      var i = n(
+          t.reduce(
+            function (t, i) {
+              var o = n(t, 3),
+                a = o[0],
+                l = o[1],
+                s = o[2];
+              if (i && i.hasValue()) {
+                var u = i.tooltipPosition(e, r);
+                return [a + u.x, l + u.y, s + 1];
+              }
+              return [a, l, s];
+            },
+            [0, 0, 0]
+          ),
+          3
+        ),
+        o = i[0],
+        a = i[1],
+        l = i[2];
+      return { x: o / l, y: a / l };
+    }),
+    (t.ArrayLinearScale = D),
+    (t.ArrayLogarithmicScale = F),
+    (t.BoxAndWhiskers = q),
+    (t.BoxPlot = C),
+    (t.HorizontalBoxPlot = I),
+    (t.HorizontalViolin = j),
+    (t.Violin = M),
+    Object.defineProperty(t, "__esModule", { value: !0 });
 });
