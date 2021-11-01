@@ -723,7 +723,14 @@ function membershipFees(data){
 	}else if(data.schemeBilingType == "HALFYEARLY"){
 		fees = "6 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}else if(data.schemeBilingType == "YEARLY"){
-		fees = "1 year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		if(data.schemeDuration>1){
+		fees = data.schemeDuration + " years - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		console.log("PLURAL",fees);
+		}
+		else{
+		fees = data.schemeDuration + " year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		console.log("SINGULAR",fees);
+		}
 	}
 	return fees;
 }
