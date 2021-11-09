@@ -484,6 +484,12 @@ function getTitle(data){
 		}else{
 			return "YEARLY";
 		}
+	}else if(data.schemeBilingType == "HALFYEARLY"){
+		if(duration){
+			return duration +" "+"MONTHS";
+		}else{
+			return "HALFYEARLY";
+		}
 	}
 	return data.schemeBilingType;
 }
