@@ -727,7 +727,7 @@ function membershipFees(data){
 		fees = data.schemeDuration + " years - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 		console.log("PLURAL",fees);
 		}
-		else{
+		else if(data.schemeDuration==1){
 		fees = data.schemeDuration + " year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 		console.log("SINGULAR",fees);
 		}
