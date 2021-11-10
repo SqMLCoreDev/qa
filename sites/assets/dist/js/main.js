@@ -484,12 +484,6 @@ function getTitle(data){
 		}else{
 			return "YEARLY";
 		}
-	}else if(data.schemeBilingType == "HALFYEARLY"){
-		if(duration){
-			return duration +" "+"MONTHS";
-		}else{
-			return "HALFYEARLY";
-		}
 	}
 	return data.schemeBilingType;
 }
@@ -727,7 +721,7 @@ function membershipFees(data){
 	}else if(data.schemeBilingType == "QUARTERLY"){
 		fees = "3 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}else if(data.schemeBilingType == "HALFYEARLY"){
-		fees = data.schemeDuration + " months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		fees = "6 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}else if(data.schemeBilingType == "YEARLY"){
 		if(data.schemeDuration>1){
 		fees = data.schemeDuration + " years - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
