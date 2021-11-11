@@ -215,6 +215,7 @@ function getFormInfo() {
 			}
 			var schemeInfo = membershipCard(result.formData, result.schemeDefinition);
 			if(schemeInfo){
+				result.formData["rootDepartmentName"] = session.rootdepartmentName;
 				result.formData["scheme"] = schemeInfo;
 				result["formData"] = schemeCard(schemeInfo.schemeId, result.schemeDefinition, result.formData);
 			}
