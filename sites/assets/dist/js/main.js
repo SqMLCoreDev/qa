@@ -215,6 +215,8 @@ function getFormInfo() {
 				if(formDetails.countrys.countryName==""){
 					formDetails.countrys.countryName="Trinidad and Tobago";
 					formDetails.countrys.countryCode="TT";
+					formDetails.secondaryCountrys.countryName="Trinidad and Tobago";
+					formDetails.secondaryCountrys.countryCode="TT";
 				}
 				result["formData"] = formDetails;
 			}
