@@ -211,7 +211,12 @@ function getFormInfo() {
 				var formData = JSON.parse(result.formData);
 				result["formData"] = {"hasUser":false, "hasMember":false, "membershipSchemeType" : formData.membershipSchemeType};
 			}else {
-				result["formData"] = JSON.parse(result.formData);
+				var formDetails=JSON.parse(result.formData);
+				if(formDetails.countrys.countryName==""){
+					formDetails.countrys.countryName="Trinidad and Tobago";
+					formDetails.countrys.countryCode="TT";
+				}
+				result["formData"] = formDetails;
 			}
 			var schemeInfo = membershipCard(result.formData, result.schemeDefinition);
 			if(schemeInfo){
