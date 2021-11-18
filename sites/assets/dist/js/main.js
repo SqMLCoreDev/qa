@@ -667,7 +667,7 @@ var payee = async function payButton(data) {
 				if (Array.isArray(handlerResponse.response)) {
 					handlerResponse["response"] = handlerResponse.response[0];
 				}
-			        window.alert(JSON.stringify(handlerResponse["response"]));
+			        //window.alert(JSON.stringify(handlerResponse["response"]));
 				var receiptNo = null;
 				var paymentMode = null;
 				var transactionStatus = null;
