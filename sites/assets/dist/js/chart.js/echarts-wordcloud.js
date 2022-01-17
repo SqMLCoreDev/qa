@@ -22,7 +22,7 @@ return /******/ (() => { // webpackBootstrap
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: external "echarts"
-var external_echarts_ = __webpack_require__("echarts/lib/echarts");
+var external_echarts_ = __webpack_require__("echarts");
 ;// CONCATENATED MODULE: ./src/WordCloudSeries.js
 
 
@@ -1534,7 +1534,7 @@ external_echarts_.registerPreprocessor(function (option) {
 
 /***/ }),
 
-/***/ "echarts/lib/echarts":
+/***/ "echarts":
 /*!**************************!*\
   !*** external "echarts" ***!
   \**************************/
