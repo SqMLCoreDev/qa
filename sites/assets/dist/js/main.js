@@ -211,10 +211,20 @@ function getFormInfo() {
 				var formData = JSON.parse(result.formData);
 				result["formData"] = {"hasUser":false, "hasMember":false, "membershipSchemeType" : formData.membershipSchemeType};
 			}else {
-				result["formData"] = JSON.parse(result.formData);
+				var formDetails=JSON.parse(result.formData);
+				if(formDetails.hasOwnProperty("countrys")){
+				if(formDetails.countrys.countryName==""){
+					formDetails.countrys.countryName="Trinidad and Tobago";
+					formDetails.countrys.countryCode="TT";
+					formDetails.secondaryCountrys.countryName="Trinidad and Tobago";
+					formDetails.secondaryCountrys.countryCode="TT";
+				}
+				}
+				result["formData"] = formDetails;
 			}
 			var schemeInfo = membershipCard(result.formData, result.schemeDefinition);
 			if(schemeInfo){
+				result.formData["rootDepartmentName"] = session.rootdepartmentName;
 				result.formData["scheme"] = schemeInfo;
 				result["formData"] = schemeCard(schemeInfo.schemeId, result.schemeDefinition, result.formData);
 			}
@@ -657,6 +667,7 @@ var payee = async function payButton(data) {
 				if (Array.isArray(handlerResponse.response)) {
 					handlerResponse["response"] = handlerResponse.response[0];
 				}
+			        //window.alert(JSON.stringify(handlerResponse["response"]));
 				var receiptNo = null;
 				var paymentMode = null;
 				var transactionStatus = null;
@@ -723,7 +734,14 @@ function membershipFees(data){
 	}else if(data.schemeBilingType == "HALFYEARLY"){
 		fees = "6 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}else if(data.schemeBilingType == "YEARLY"){
-		fees = "1 year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		if(data.schemeDuration>1){
+		fees = data.schemeDuration + " years - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		console.log("PLURAL",fees);
+		}
+		else{
+		fees = data.schemeDuration + " year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		console.log("SINGULAR",fees);
+		}
 	}
 	return fees;
 }
