@@ -314,7 +314,7 @@
 				console.log('response body', json);
 				try {
 					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler(handlerName, response.status, json);
+						window.flutter_inappwebview.callHandler(handlerName, response.status, json, false);
 					}
 				} catch (e) {
 					console.log("flutter_inappwebview error");
@@ -325,7 +325,7 @@
 				console.log('error', json.message, json.errorCode);
 				try {
 					if(flutterPlatformReady){
-						window.flutter_inappwebview.callHandler(handlerName, response.status, json);
+						window.flutter_inappwebview.callHandler(handlerName, response.status, json, false);
 					}
 				} catch (e) {
 					console.log("flutter_inappwebview error");
