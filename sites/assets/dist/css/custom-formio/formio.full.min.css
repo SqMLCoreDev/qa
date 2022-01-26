@@ -4835,7 +4835,7 @@ body.formio-dialog-open,html.formio-dialog-open {
 }
 
 .formio-component-submit .has-error {
-    display: none
+    display: block
 }
 
 .formio-component-submit button[disabled]+.has-error {
