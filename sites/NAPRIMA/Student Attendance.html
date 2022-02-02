@@ -4,7 +4,7 @@
        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
        <meta name="description" content="">
        <meta name="generator" content="Jekyll v4.1.1">
-       <title>Student Attendance</title>
+       <title>Sleep Apnea</title>
        <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
        <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
        <link href="../assets/dist/css/custom-formio/theme.less.css" rel="stylesheet">
@@ -127,12 +127,16 @@
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
 
 						delete userObject["submit"];
-						
-						
+						let inTime=userObject.inTime;
+						let outTime=userObject.outTime;
+						let reasonForVisit=userObject.reasonForVisit;
+						let reason=userObject.reason;
+						let timeStamp='1605782689529';
 						console.log("AF : userObject : " + JSON.stringify(userObject));
                          var JSONObj = new Object();
-				         JSONObj={ "user" : docvars.userName, "departmentName"  : docvars.departmentName, "formJson"  : JSON.stringify(userObject),"formid" : formid};
-						
+				         JSONObj={ "userId" : docvars.userName, "createdBy"  : docvars.supervisorName, "deviceName"  : docvars.committeeName, "inTime"  :inTime ,
+						 "outTime" : outTime,"reasonForVisit" : reasonForVisit,"reason" : reason,"timeStamp" : timeStamp};
+						console.log(JSONObj);
 						var requestOptions = {
 				    	  method: 'POST',
 				    	  headers: { 'content-type': 'application/json' },
@@ -140,7 +144,7 @@
 				    	  redirect: 'follow'
 				    	};
 						
-							fetchAPI("https://qa.servicedx.com/filing/FormData/", requestOptions).then(response => {
+							fetchAPI("https://qa.servicedx.com/admin/DailyentryLog/", requestOptions).then(response => {
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Create Success')
 									$('#formSubmit').attr('disabled','disabled');
