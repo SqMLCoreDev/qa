@@ -403,7 +403,7 @@
 			let response = await fetch(url, requestOptions)
 			console.log('response', JSON.stringify(response));
 			console.log(response.status);
-			console.log(json);
+			
 			if (response.ok) {
 				let json = await response.json();
 				console.log('response body', json);
