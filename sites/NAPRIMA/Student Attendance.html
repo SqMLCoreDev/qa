@@ -115,9 +115,22 @@
 					globalForm = form;
 					form.nosubmit = true;
 					var userObj={};
+					let text = docvars.committeeName;
+                    const myArray = text.split("-");
+                    let Form = myArray[0];
+					 let sec = myArray[1];
+					console.log(Form);
+					console.log(sec);
 				    userObj["role"] = docvars.role;
 					userObj["userName"] = docvars.userName;
-					userObj["committeeName"] = docvars.committeeName;
+					userObj["committeeName"] = Form;
+					if(sec == 'SectionA'){
+					userObj["section"] = 'A';
+					}else if(sec == 'SectionB'){
+					userObj["section"] = 'B';
+					}else if(sec == 'SectionC'){
+					userObj["section"] = 'C';
+					}
 					userObj["supervisorName"] = docvars.supervisorName;
 					console.log(userObj);
 					form.submission = { data: userObj };
@@ -127,8 +140,23 @@
 						console.log("B4 : userObject : " + JSON.stringify(userObject));
 
 						delete userObject["submit"];
-						let inTime=userObject.inTime;
-						let outTime=userObject.outTime;
+						
+						let inTime;
+						let outTime;
+						if(userObject.inTime){
+						inTime=userObject.inTime;
+						}else{
+						inTime=null
+						}
+						
+						if(userObject.outTime){
+						 outTime=userObject.outTime;
+						}else{
+						 outTime=null
+						}
+						
+						
+						
 						let reasonForVisit=userObject.reasonForVisit;
 						let reason=userObject.reason;
 						let timeStamp='1605782689529';
@@ -374,6 +402,8 @@
 		var fetchAPI = async function (url, requestOptions) {
 			let response = await fetch(url, requestOptions)
 			console.log('response', JSON.stringify(response));
+			console.log(response.status);
+			console.log(json);
 			if (response.ok) {
 				let json = await response.json();
 				console.log('response body', json);
