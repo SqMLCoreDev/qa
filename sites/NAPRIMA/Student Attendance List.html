@@ -1,1 +1,281 @@
 
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="generator" content="Jekyll v4.1.1">
+  
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link href="../assets/dist/css/selectize/normalize.css" rel="stylesheet">
+  <link href="../assets/dist/css/selectize/selectize.default.css" rel="stylesheet">
+  <link href="../assets/dist/css/custom-formio/theme.less.css" rel="stylesheet">
+  <link href="../assets/dist/css/font-awesome.min.css" rel="stylesheet">
+  <link href="../assets/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="../assets/dist/css/custom-formio/formio.full.min.css" rel="stylesheet">
+  <link href="../assets/dist/css/main.css" rel="stylesheet">
+  <script src='../assets/dist/js/lodash/lodash.core.min.js'></script>
+  <script src='../assets/dist/js/lodash/lodash.min.js'></script>
+  <script src='../assets/dist/js/jquery-3.5.1.min.js'></script>
+  <script src='../assets/dist/js/attrchange.js'></script>
+  <script src='../assets/dist/js/investigate/selectize.js'></script>
+  <script src='../assets/dist/js/bootstrap.bundle.min.js'></script>
+  <script src='../assets/dist/js/pooper/popper.min.js'></script>
+  <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
+  <script src='../assets/dist/js/main.js'></script>
+  <style>
+    table,
+    th,
+    td {
+      border: 1px solid black;
+      padding: 0 7px;
+    }
+
+    .bd-placeholder-img {
+      font-size: 1.125rem;
+      text-anchor: middle;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .select2-selection {
+      overflow: hidden;
+    }
+
+
+    select:disabled {
+      background-color: #e9ecef !important;
+      opacity: 1 !important;
+      cursor: not-allowed !important;
+    }
+
+    .select2-selection__rendered {
+      white-space: normal;
+      word-break: break-all;
+    }
+
+    @media (min-width: 768px) {
+      .bd-placeholder-img-lg {
+        font-size: 3.5rem;
+      }
+    }
+
+    .invalid-feedback {
+      display: block;
+      color: #dc3545 !important;
+    }
+
+    .alert {
+		  display: none;
+		}
+
+    .form-control.is-invalid {
+      border-color: #dc3545 !important;
+    }
+
+    .formio-component {
+      background-color: transparent !important;
+    }
+
+    .formio-error-wrapper,
+    .formio-warning-wrapper {
+      padding: 0em;
+    }
+
+    .disable {
+      background-color: #e9ecef !important;
+      opacity: 1;
+      cursor: not-allowed !important;
+    }
+
+    .field-required:after {
+      content: " *" !important;
+      color: transparent !important;
+    }
+
+    .form-control.is-invalid,
+    .was-validated .form-control:invalid {
+      background-position: right calc(.375em + 0.5875rem) center !important;
+    }
+    table{
+      table-layout:fixed !important;
+    }
+    #initScreen{
+      padding: 10px;
+    }
+  </style>
+  <script>
+
+    $(document).ready(function () {
+      var formDefinition = getFormComp("https://qa.servicedx.com/admin/DailyentryLog/StudentAttendanceList?CommitteeName=Form1-SectionB-Period1-Students&SupervisorName=Naprima");
+      console.log(formDefinition);
+      var attendance = formDefinition;
+      // $('#example').DataTable({
+      //   "ajax": attendance
+      // });
+      $.fn.dataTable.ext.errMode = 'none';
+    var tabledata = $('#example').DataTable({
+
+        "ajax": {
+            "url": "https://qa.servicedx.com/admin/DailyentryLog/StudentAttendanceList?CommitteeName=Form1-SectionB-Period1-Students&SupervisorName=Naprima",
+            "dataSrc": "",
+        },
+        "columns": [{
+            "data": "userName",
+            "title": "Student Name"
+        }, {
+            "data": "attendance",
+            "title": "Attendance"
+        }, {
+            "data": "inTime",
+            "title": "Time Attedance Taken "
+        }, {
+            "data": "outTime" ,
+            "title": "Time Left the Class"       
+        }]
+    });
+    tabledata.columns.adjust().draw();
+    tabledata.on('xhr.dt', function (e, settings, json, xhr) {
+      console.log(json);
+    });
+      function getFormComp(URL) {
+        var formDefinition = null;
+        $.ajax({
+          url: URL,
+          type: "GET",
+          async: false,
+          success: function (result) {
+            console.log(result);
+            formDefinition = result;
+            //console.log("formDefinition "+JSON.stringify(formDefinition));
+          }
+        });
+        return formDefinition;
+      }
+
+    });
+
+  </script>
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600" rel="stylesheet">
+  <style>
+    /* body {
+      font-family: 'Poppins', sans-serif !important;
+      overflow-x: hidden !important;
+    }
+
+    .card-header {
+      padding: 5px;
+      margin-bottom: 0;
+      background-color: rgba(0, 0, 0, .03);
+      border-bottom: 1px solid rgba(0, 0, 0, .125);
+    }
+
+    .formio-component,
+    .form-control,
+    .select2-selection__rendered {
+      font-size: 15px !important;
+    }
+
+    .select2-selection__rendered,
+    .select2-selection--multiple {
+      background-color: #e8f0fa !important;
+    }
+
+    .select2-selection--multiple {
+      padding-left: 4px !important;
+    }
+
+    .select2-container--bootstrap4 .select2-selection {
+      border: 1px solid #d3dae8 !important;
+    }
+
+    .card-body {
+      padding: 5px 10px !important;
+    }
+
+    .select2-selection__choice__remove {
+      border: none;
+      background: transparent;
+      color: #fff !important;
+    }
+
+    .select2-search__field {
+      background: transparent;
+    }
+
+    .select2-selection__choice__display {
+      font-size: 13px !important;
+      color: #fff !important;
+    }
+
+    .head {
+      margin-top: 15px;
+    }
+
+    tr:nth-child(odd) {
+      background-color: #dddddd;
+    }
+
+    .header {
+      padding: 10px;
+    } */
+  </style>
+</head>
+
+<body style="padding:10px;background-color: #dde0e0;">
+  <div id="wrapper">
+    <div id="loader" class="hidden">
+      <div id="loaderCircle"></div>
+    </div>
+    <div id="initScreen" style="display: block; background-color: #fff;">
+      <div class="header">
+        <h4>Daily Attendance</h4>
+      </div>
+      <div style="margin: 0 10px;border: 1px solid #000;padding: 5px;background-color: rgb(0 0 0 / 35%); color: #fff;">
+        Daily Attendance</div>
+      <div style="margin: 0 10px;border: 1px solid #000;padding: 5px;">
+        <ul style="padding-left: 5px; margin-bottom: 0; list-style-type: none;">
+          <li>Date - 2022-02-03 
+          </li>
+          <li>Teacher Name - GregoryPeck
+          </li>
+          <li>Form Name -Form2
+          </li>
+          <li>Section Name - B
+          </li>
+        </ul>
+      </div>
+      <table id="example">
+      </table>
+      <!-- <table style="margin: 0 10px;">
+  <tbody style="font-size: 14px;">
+  <tr style="background-color: rgb(0 0 0 / 35%); color: #fff; font-size: 13px;">
+    <th>Student Name</th>
+    <th>Attendance </th>
+    <th>Time Attendance Taken</th>
+	<th>Time Left the Class</th>
+	<th>Reason for Late</th>
+  </tr>
+  <tr>
+    <td>{{ group.userName }}</td>
+    <td>{{ group.attendance }}</td>
+    <td>{{ group.inTime }}</td>
+	 <td>{{ group.outTime }}</td>
+	 <td>{{ group.reasonForAbsent }}</td>
+  </tr>
+</tbody>
+</table> -->
+    </div>
+
+  </div>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">  
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+</body>
+
+</html>
