@@ -112,6 +112,7 @@
   <script>
 
     $(document).ready(function () {
+	    var docvars = getUrlVars();
       var formDefinition = getFormComp("https://qa.servicedx.com/admin/DailyentryLog/StudentAttendanceList?CommitteeName=Form1-SectionB-Period1-Students&SupervisorName=Naprima");
       console.log(formDefinition);
       var attendance = formDefinition;
@@ -122,7 +123,8 @@
     var tabledata = $('#example').DataTable({
 
         "ajax": {
-            "url": "https://qa.servicedx.com/admin/DailyentryLog/StudentAttendanceList?CommitteeName=Form2-SectionB-Period2&SupervisorName=GregoryPeck",
+           "url": "https://qa.servicedx.com/admin/DailyentryLog/StudentAttendanceList?CommitteeName="+docvars.CommitteeName+"&SupervisorName="+docvars.SupervisorName,
+         
             "dataSrc": "",
         },
         "columns": [{
