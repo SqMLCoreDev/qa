@@ -646,7 +646,7 @@ var payee = async function payButton(data) {
 		}
 	} else {
 		description = "Membership Fee for " + data.firstName +' '+ data.lastName;
-		totalFees =  parseInt(data.fees);
+		totalFees =  parseInt(data.fees) + parseInt(data.scheme.schemeBaseAmount);
 	}
 	var json = {
 		"totalAmount": totalFees,
