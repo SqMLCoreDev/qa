@@ -112,10 +112,13 @@
   <script>
 
     $(document).ready(function () {
+	    let today=new Date().toISOString().slice(0,10)	
+	console.log(today)	
+	document.getElementById('mylocation').innerHTML=today;
 	    var docvars = getUrlVars();
       var formDefinition = getFormComp("https://qa.servicedx.com/admin/DailyentryLog/StudentAttendanceList?CommitteeName=Form1-SectionB-Period1-Students&SupervisorName=Naprima");
       console.log(formDefinition);
-      var attendance = formDefinition;
+      //var attendance = formDefinition;
       // $('#example').DataTable({
       //   "ajax": attendance
       // });
@@ -144,6 +147,14 @@
     tabledata.columns.adjust().draw();
     tabledata.on('xhr.dt', function (e, settings, json, xhr) {
       console.log(json);
+	    var attendance = json[0].committeeName;	
+	   console.log(attendance);	
+	   var commitee=attendance.slice(0, 5);	
+	 document.getElementById('committeeName').innerHTML=commitee;	
+	var section=attendance.slice(13,14);	
+	 document.getElementById('section').innerHTML=section;		
+	var supervisorName = json[0].supervisorName;	
+	document.getElementById('supervisor').innerHTML=supervisorName;
     });
       function getFormComp(URL) {
         var formDefinition = null;
@@ -242,13 +253,13 @@
         Daily Attendance</div>
       <div style="margin: 0 10px;border: 1px solid #000;padding: 5px;">
         <ul style="padding-left: 5px; margin-bottom: 0; list-style-type: none;">
-          <li>Date - 2022-02-03 
+          <li>Date -<span id="mylocation"></span> 
           </li>
-          <li>Teacher Name - GregoryPeck
+          <li>Teacher Name - <span id="supervisor"></span>
           </li>
-          <li>Form Name -Form2
+          <li>Form Name - <span id="committeeName"></span>
           </li>
-          <li>Section Name - B
+          <li>Section Name - <span id="section"></span>
           </li>
         </ul>
       </div>
