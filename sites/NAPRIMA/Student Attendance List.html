@@ -118,7 +118,7 @@
 	    var docvars = getUrlVars();
       var formDefinition = getFormComp("https://qa.servicedx.com/admin/DailyentryLog/StudentAttendanceList?CommitteeName=Form1-SectionB-Period1-Students&SupervisorName=Naprima");
       console.log(formDefinition);
-      //var attendance = formDefinition;
+      var attendance = formDefinition;
       // $('#example').DataTable({
       //   "ajax": attendance
       // });
@@ -147,14 +147,14 @@
     tabledata.columns.adjust().draw();
     tabledata.on('xhr.dt', function (e, settings, json, xhr) {
       console.log(json);
-	    var attendance = json[0].committeeName;	
-	   console.log(attendance);	
-	   var commitee=attendance.slice(0, 5);	
-	 document.getElementById('committeeName').innerHTML=commitee;	
-	var section=attendance.slice(13,14);	
-	 document.getElementById('section').innerHTML=section;		
-	var supervisorName = json[0].supervisorName;	
-	document.getElementById('supervisor').innerHTML=supervisorName;
+// 	    var attendance = json[0].committeeName;	
+// 	   console.log(attendance);	
+// 	   var commitee=attendance.slice(0, 5);	
+// 	 document.getElementById('committeeName').innerHTML=commitee;	
+// 	var section=attendance.slice(13,14);	
+// 	 document.getElementById('section').innerHTML=section;		
+// 	var supervisorName = json[0].supervisorName;	
+// 	document.getElementById('supervisor').innerHTML=supervisorName;
     });
       function getFormComp(URL) {
         var formDefinition = null;
