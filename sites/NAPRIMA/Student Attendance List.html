@@ -1,4 +1,3 @@
-
 <html>
 
 <head>
@@ -112,9 +111,6 @@
   <script>
 
     $(document).ready(function () {
-	    let today=new Date().toISOString().slice(0,10)	
-	console.log(today)	
-	document.getElementById('mylocation').innerHTML=today;
 	    var docvars = getUrlVars();
       var formDefinition = getFormComp("https://qa.servicedx.com/admin/DailyentryLog/StudentAttendanceList?CommitteeName=Form1-SectionB-Period1-Students&SupervisorName=Naprima");
       console.log(formDefinition);
@@ -147,14 +143,6 @@
     tabledata.columns.adjust().draw();
     tabledata.on('xhr.dt', function (e, settings, json, xhr) {
       console.log(json);
-// 	    var attendance = json[0].committeeName;	
-// 	   console.log(attendance);	
-// 	   var commitee=attendance.slice(0, 5);	
-// 	 document.getElementById('committeeName').innerHTML=commitee;	
-// 	var section=attendance.slice(13,14);	
-// 	 document.getElementById('section').innerHTML=section;		
-// 	var supervisorName = json[0].supervisorName;	
-// 	document.getElementById('supervisor').innerHTML=supervisorName;
     });
       function getFormComp(URL) {
         var formDefinition = null;
@@ -180,60 +168,48 @@
       font-family: 'Poppins', sans-serif !important;
       overflow-x: hidden !important;
     }
-
     .card-header {
       padding: 5px;
       margin-bottom: 0;
       background-color: rgba(0, 0, 0, .03);
       border-bottom: 1px solid rgba(0, 0, 0, .125);
     }
-
     .formio-component,
     .form-control,
     .select2-selection__rendered {
       font-size: 15px !important;
     }
-
     .select2-selection__rendered,
     .select2-selection--multiple {
       background-color: #e8f0fa !important;
     }
-
     .select2-selection--multiple {
       padding-left: 4px !important;
     }
-
     .select2-container--bootstrap4 .select2-selection {
       border: 1px solid #d3dae8 !important;
     }
-
     .card-body {
       padding: 5px 10px !important;
     }
-
     .select2-selection__choice__remove {
       border: none;
       background: transparent;
       color: #fff !important;
     }
-
     .select2-search__field {
       background: transparent;
     }
-
     .select2-selection__choice__display {
       font-size: 13px !important;
       color: #fff !important;
     }
-
     .head {
       margin-top: 15px;
     }
-
     tr:nth-child(odd) {
       background-color: #dddddd;
     }
-
     .header {
       padding: 10px;
     } */
@@ -253,13 +229,13 @@
         Daily Attendance</div>
       <div style="margin: 0 10px;border: 1px solid #000;padding: 5px;">
         <ul style="padding-left: 5px; margin-bottom: 0; list-style-type: none;">
-          <li>Date -<span id="mylocation"></span> 
+          <li>Date - 2022-02-03 
           </li>
-          <li>Teacher Name - <span id="supervisor"></span>
+          <li>Teacher Name - GregoryPeck
           </li>
-          <li>Form Name - <span id="committeeName"></span>
+          <li>Form Name -Form2
           </li>
-          <li>Section Name - <span id="section"></span>
+          <li>Section Name - B
           </li>
         </ul>
       </div>
@@ -287,7 +263,7 @@
 
   </div>
   <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
-  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">  
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">  
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
 </body>
 
