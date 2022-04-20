@@ -165,8 +165,8 @@
 						let timeStamp='1605782689529';
 						console.log("AF : userObject : " + JSON.stringify(userObject));
                          var JSONObj = new Object();
-				         JSONObj={ "userId" : userName,"firstName":docvars.firstName,"lastName":docvars.lastName, "createdBy"  : docvars.supervisorName, "deviceName"  : docvars.committeeName, "inTime"  :inTime ,
-						 "outTime" : outTime,"reasonForVisit" : reasonForVisit,"reason" : reason,"timeStamp" : timeStamp};
+				         JSONObj={ "userName" : userName,"firstName":docvars.firstName,"lastName":docvars.lastName, "attendanceTakenBy"  : docvars.supervisorName, "groupName"  : docvars.committeeName, "inTime"  :inTime ,
+						 "outTime" : outTime,"reasonForLateCome" : reasonForVisit,"reasonForAbsent" : reason};
 						console.log(JSONObj);
 						var requestOptions = {
 				    	  method: 'POST',
@@ -175,7 +175,7 @@
 				    	  redirect: 'follow'
 				    	};
 						
-							fetchAPI("https://qa.servicedx.com/admin/DailyentryLog/", requestOptions).then(response => {
+							fetchAPI("https://qa.servicedx.com/admin/AttendanceDetails/save/", requestOptions).then(response => {
 								if(!response.hasOwnProperty('errorCode')){
 									form.emit('submitDone', 'Create Success')
 									$('#formSubmit').attr('disabled','disabled');
