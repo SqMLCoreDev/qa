@@ -122,7 +122,9 @@
 					console.log(Form);
 					console.log(sec);
 				    userObj["role"] = docvars.role;
-					userObj["userName"] = docvars.userName;
+					
+					userObj["firstName"] = docvars.firstName;
+					userObj["lastName"] = docvars.lastName;
 					userObj["committeeName"] = Form;
 					if(sec == 'SectionA'){
 					userObj["section"] = 'A';
@@ -162,7 +164,7 @@
 						let timeStamp='1605782689529';
 						console.log("AF : userObject : " + JSON.stringify(userObject));
                          var JSONObj = new Object();
-				         JSONObj={ "userId" : docvars.userName, "createdBy"  : docvars.supervisorName, "deviceName"  : docvars.committeeName, "inTime"  :inTime ,
+				         JSONObj={ "userId" : docvars.userName,"firstName":docvars.firstName,"lastName":docvars.lastName, "createdBy"  : docvars.supervisorName, "deviceName"  : docvars.committeeName, "inTime"  :inTime ,
 						 "outTime" : outTime,"reasonForVisit" : reasonForVisit,"reason" : reason,"timeStamp" : timeStamp};
 						console.log(JSONObj);
 						var requestOptions = {
