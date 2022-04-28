@@ -62,6 +62,8 @@
 		});
 		
 		function editObject(json){
+			console.log("EDIT");
+		console.log(json);
 			if(json.bloodGroup){
 				json["bloodGroupDisabled"] = json.bloodGroup;
 			}
@@ -74,39 +76,54 @@
 		function submissionObject(json){
 			console.log(json);
 			
-			var docvars = getUrlVars();
-			 var lowProfileUsers = [];
+			
+			 var userRelationsArray = [];
 						   if(json.hasOwnProperty('fathersFirstName') && json.fathersFirstName){
-                               var lowProfileUser = {};
-							   
-							lowProfileUser["departmentName"] = docvars.departmentName;
-							lowProfileUser["contactName"] = json.fathersFirstName+json.fathersLastName;
-							lowProfileUser["mobileNo"] = json.fathersMobileNo;
-							lowProfileUser["relationship"] = "Father";
-							lowProfileUser["userName"]=json.fathersFirstName+json.fathersLastName;
-							lowProfileUser["address"] = json.fathersAddress;
-							lowProfileUser["mailId"] = json.fathersEmail;
+                               var userRelations = {};
+							  
+							userRelations["contactName"] = json.fathersFirstName+json.fathersLastName;
+							userRelations["mobileNo"] = json.fathersMobileNo;
+							userRelations["userRelation"] = "Father";
+							userRelations["userName"]=json.userName;
+							userRelations["address"] = json.fathersAddress;
+							userRelations["mailId"] = json.fathersEmail;
+							userRelations["firstName"] = json.fathersFirstName;
+							userRelations["lastName"] = json.fathersLastName;
 							
-							   lowProfileUsers.push(lowProfileUser);
+							   userRelationsArray.push(userRelations);
                                }
 							   
 							    if(json.hasOwnProperty('mothersFirstName') && json.mothersFirstName){
-                               var lowProfileUser = {};
+                               var userRelations = {};
 							   
-							lowProfileUser["departmentName"] = docvars.departmentName;
-							lowProfileUser["userName"] = json.mothersFirstName+json.mothersLastName;
-							lowProfileUser["mobileNo"] = json.mothersMobileNo;
-							lowProfileUser["relationship"] = "mother";
-							lowProfileUser["userName"]=json.mothersFirstName+json.mothersLastName;
-							lowProfileUser["address"] = json.mothersAddress;
-							lowProfileUser["mailId"] = json.mothersEmail;
-							   lowProfileUsers.push(lowProfileUser);
+							userRelations["contactName"] = json.mothersFirstName+json.mothersLastName;
+							userRelations["mobileNo"] = json.mothersMobileNo;
+							userRelations["userRelation"] = "mother";
+							userRelations["userName"]=json.userName;
+							userRelations["address"] = json.mothersAddress;
+							userRelations["mailId"] = json.mothersEmail;
+							userRelations["firstName"] = json.mothersFirstName;
+							userRelations["lastName"] = json.mothersLastName;
+							   userRelationsArray.push(userRelations);
                                }
+							    if(json.hasOwnProperty('guardiansFirstName') && json.guardiansFirstName){
+                               var userRelations = {};
 							   
-							   
+							userRelations["contactName"] = json.guardiansFirstName+json.guardiansLastName;
+							userRelations["mobileNo"] = json.mothersMobileNo;
+							userRelations["userRelation"] = "guardian";
+							userRelations["userName"]=json.userName;
+							//userRelations["address"] = json.mothersAddress;
+							//userRelations["mailId"] = json.guardiansEmail;
+							userRelations["firstName"] = json.guardiansFirstName;
+							userRelations["lastName"] = json.guardiansLastName;
+							   userRelationsArray.push(userRelations);
+                               }
+							  
+				
 							
 							
-						json["lowProfileUsers"] = lowProfileUsers;
+						json["userRelations"] = userRelationsArray;
 			
 			
 			console.log(json);
