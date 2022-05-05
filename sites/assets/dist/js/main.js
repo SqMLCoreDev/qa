@@ -776,7 +776,7 @@ function calculatePayableMonths(formData) {
 	//console.log("YYYYYY",formData.expiredMonths);
 	var payableFees = parseInt(formData.fees) * Math.abs(formData.expiredMonths) + parseInt(formData.renewalPayableFees);
 	}
-	//console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', Math.abs(formData.expiredMonths),' : ', parseInt(formData.renewalPayableFees));
+	console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', Math.abs(formData.expiredMonths),' : ', parseInt(formData.renewalPayableFees));
 	return payableFees;
 }
 
