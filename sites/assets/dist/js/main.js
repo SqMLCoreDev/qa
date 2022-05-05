@@ -433,6 +433,7 @@ function schemeCard(id, scheme, formData){
 		userObj["newMemberFees"] = membershipFees(schema);
 		userObj["fees"] = schema.schemeActivePrice;
 	}else if (schema.schemeType == "RENEWAL"){ // TODO
+		userObj["fees"] = schema.schemeActivePrice;
 		userObj["renewalFees"] = membershipFees(schema);
 		userObj["renewalPayableFees"] = schema.schemeActivePrice;
 	}
@@ -747,8 +748,35 @@ function membershipFees(data){
 }
 
 function calculatePayableMonths(formData) {
+	if(formData.scheme.schemeBilingType!='MONTHLY')
+	{
+        //console.log("INNNNNNNNNNN");
+        if(formData.scheme.schemeBilingType=='QUARTERLY')
+	{
+	formData.expiredMonths=Math.trunc(formData.expiredMonths/3);
+	//console.log("AAAAAAA",formData.expiredMonths);
+        }
+        else if(formData.scheme.schemeBilingType=='HALFYEARLY')
+	{
+	//console.log("BBBBBBB",formData.expiredMonths);
+	formData.expiredMonths=Math.trunc(formData.expiredMonths/6);
+	//console.log("BBBBBBB",formData.expiredMonths);
+        }
+	else if(formData.scheme.schemeBilingType=='YEARLY')
+	{
+	//console.log("CCCCCCC",formData.expiredMonths);
+	formData.expiredMonths=Math.trunc(formData.expiredMonths/12);
+	//console.log("CCCCCCC",formData.expiredMonths);
+        }
+	//console.log("ABC",formData.expiredMonths);
 	var payableFees = parseInt(formData.fees) * Math.abs(formData.expiredMonths) + parseInt(formData.renewalPayableFees);
-	console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', Math.abs(formData.expiredMonths),' : ', parseInt(formData.renewalPayableFees));
+        }
+	else
+	{
+	//console.log("YYYYYY",formData.expiredMonths);
+	var payableFees = parseInt(formData.fees) * Math.abs(formData.expiredMonths) + parseInt(formData.renewalPayableFees);
+	}
+	//console.log('calculatePayableMonths ', parseInt(formData.fees),' : ', Math.abs(formData.expiredMonths),' : ', parseInt(formData.renewalPayableFees));
 	return payableFees;
 }
 
