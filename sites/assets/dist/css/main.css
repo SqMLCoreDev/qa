@@ -142,7 +142,7 @@ body {
 
 .field-required:after {
   content: " *" !important;
-  color: transparent !important;													  
+  color: #dc3545 !important;													  
 }
 
 .form-control.is-invalid,
