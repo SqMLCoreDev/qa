@@ -163,6 +163,7 @@
 						let reason=userObject.reason;
 						let userName=userObject.userName;
 						let attendance =userObject.attendance;
+						let execusedLate =userObject.execusedLate;
 						let session =userObject.session;
 						let attendanceType =docvars.attendanceType;
 						let attendanceSource =docvars.attendanceSource;
@@ -170,7 +171,7 @@
 						console.log("AF : userObject : " + JSON.stringify(userObject));
                          var JSONObj = new Object();
 				         JSONObj={ "userName" : userName,"firstName":docvars.firstName,"lastName":docvars.lastName, "attendanceTakenBy"  : docvars.supervisorName, "groupName"  : docvars.committeeName, "inTime"  :inTime ,
-						 "outTime" : outTime,"reasonForLateCome" : reasonForVisit,"reasonForAbsent" : reason,"session" : session,"attendance" : attendance,"attendanceType" :attendanceType,"attendanceSource" :attendanceSource};
+						 "outTime" : outTime,"reasonForLateCome" : reasonForVisit,"reasonForAbsent" : reason,"execusedLate":execusedLate,"session" : session,"attendance" : attendance,"attendanceType" :attendanceType,"attendanceSource" :attendanceSource};
 						console.log(JSONObj);
 						var requestOptions = {
 				    	  method: 'POST',
