@@ -33,6 +33,7 @@ function getUrlVars() {
 		if(vars.env_code.toLowerCase() == "pd"){
 			vars["env_code"] = 'prod';
 		}
+		vars["baseURL"] = "https://" + vars.env_code.replace("#", "") + ".servicedx.com";
 	}
 	if(vars.hasOwnProperty('loggedInRole') && vars.loggedInRole != null){
 		vars["loggedInRole"] = vars.loggedInRole.toLowerCase();
@@ -178,6 +179,40 @@ var fetchAPI = async function (url, formdata, handlerName) {
 		}
 		return json;
 	}
+}
+
+
+var getRequest = async function (url) {
+	var docvars = getSessionStorage();
+	var options = {
+		method: 'GET',
+		redirect: 'follow',
+		headers: new Headers({
+			'content-type': 'application/json',
+			'clientid': docvars.clientId
+		})
+	};
+	let response = await fetch(url, options)
+	console.log('response', JSON.stringify(response));
+	if (response.ok) {
+		let json = await response.json();
+		console.log('response body', json);
+		return json;
+	} else {
+		let json = await response.json();
+		console.log('error', json.message, json.errorCode);
+		return json;
+	}
+}
+
+async function validateUser(userName, departmentName) {
+	showLoader('show');
+	let session = getUrlVars();
+	let URL = session.baseURL + "/admin/departments/" + departmentName + "/users/" + userName + "/exists";
+	console.log(session, URL);
+	let res = await getRequest(URL);
+	showLoader('hide');
+	return res;
 }
 
 function getFormInfo() {
@@ -629,9 +664,7 @@ function scrollx(){
 
 }());
 
-var payee = async function payButton(data) {
-	console.log('payButton', data);
-	var session = getSessionStorage();
+async function payment(data) {
 	var formData = data;
 	var description;
 	var Renewal = false;
@@ -649,7 +682,7 @@ var payee = async function payButton(data) {
 		description = "Membership Fee for " + data.firstName +' '+ data.lastName;
 		totalFees =  parseInt(data.fees) + parseInt(data.scheme.schemeBaseAmount);
 	}
-	var json = {
+	var json = { 
 		"totalAmount": totalFees,
 		"payeePhoneNumber": data.mobileNo,
 		"payeeName": data.firstName +' '+ data.lastName,
@@ -723,6 +756,31 @@ var payee = async function payButton(data) {
 		console.log(data);
 		return data;
 	}
+}
+
+var payee = function payButton(data) {
+	let session = getSessionStorage();
+	console.log('payButton', data, session);
+	if(session.page == "addUser"){
+		let userId = session.departmentName.includes("DOMDA") ? data.emailId : data.userName;
+		try {
+			let userExist = validateUser(userId, session.departmentName).then(response => {
+				console.log("response", response);
+				if(response) {
+					WarningAlert("Error", "User already exists");
+					throw "User already exists";
+				} else {
+					payment(data);
+				}
+			});
+		}
+		catch(err) {
+			console.log("err", err);
+		}
+	} else {
+		payment(data);
+	}
+	
 }
 
 function membershipFees(data){
