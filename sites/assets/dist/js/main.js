@@ -793,13 +793,13 @@ function membershipFees(data){
 	}else if(data.schemeBilingType == "HALFYEARLY"){
 		fees = "6 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
 	}else if(data.schemeBilingType == "YEARLY"){
-		if(data.schemeDuration>1){
-		fees = data.schemeDuration + " years - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
-		console.log("PLURAL",fees);
+		if(data.schemeDuration > 1){
+			fees = data.schemeDuration + " years - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+			console.log("PLURAL",fees);
 		}
 		else{
-		fees = data.schemeDuration + " year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
-		console.log("SINGULAR",fees);
+			fees = data.schemeDuration + " year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+			console.log("SINGULAR",fees);
 		}
 	}
 	return fees;
@@ -850,10 +850,29 @@ var update = async function (submission){
 
 function submit(form, submission){
 	$('#formSubmit').attr('disabled','disabled');
-	var data = toObject(submission);				
+	var data = toObject(submission);
+	let session = getSessionStorage();
 	var handlerName =  'userMembershipHandlerWithArgs';				
-	var formURL = URLBuilder(data.hasUser, data.hasMember);				
-	var responce = fetchRequest(form, formURL, data, handlerName);
+	var formURL = URLBuilder(data.hasUser, data.hasMember);
+	if(session.page == "addUser" || session.page == "signup" ){
+		let userId = session.departmentName.includes("DOMDA") ? data.emailId : data.userName;
+		try {
+			let userExist = validateUser(userId, session.departmentName).then(response => {
+				console.log("response", response);
+				if(response) {
+					WarningAlert("Error", "User already exists");
+					throw "User already exists";
+				} else {
+					var responce = fetchRequest(form, formURL, data, handlerName);
+				}
+			});
+		}
+		catch(err) {
+			console.log("err", err);
+		}
+	}else {
+		var responce = fetchRequest(form, formURL, data, handlerName);
+	}
 }
 function setObject(info){
 	var userObj = {};
