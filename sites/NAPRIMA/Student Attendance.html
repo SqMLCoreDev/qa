@@ -125,6 +125,7 @@
 					
 					userObj["firstName"] = docvars.firstName;
 					userObj["lastName"] = docvars.lastName;
+					userObj["session"] =docvars.session;
 					userObj["committeeName"] = Form;
 					if(sec == 'SectionA'){
 					userObj["section"] = 'A';
@@ -161,7 +162,7 @@
 						
 						let reasonForVisit=userObject.reasonForVisit;
 						let reason=userObject.reason;
-						let userName=userObject.userName;
+						let userName=docvars.userName;
 						let attendance =userObject.attendance;
 						let execusedLate =userObject.execusedLate;
 						let session =userObject.session;
