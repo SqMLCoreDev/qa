@@ -28,7 +28,9 @@ function getUrlVars() {
 	if(vars.hasOwnProperty('clientId')){
 		vars["clientId"] = vars.clientId;
 	}
+	console.log(":::::::::::::::::::",vars.env_code);
 	if(vars.hasOwnProperty('env_code')){
+		console.log("inside into check");
 		vars["env_code"] = vars.env_code.toLowerCase();
 		if(vars.env_code.toLowerCase() == "pd"){
 			vars["env_code"] = 'prod';

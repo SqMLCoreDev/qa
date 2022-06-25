@@ -23,13 +23,7 @@
 	   <script src='../assets/dist/js/main.js'></script>
        <script>
 	   
-	   function getUrlVars() {
-			var vars = {};
-			var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi, function (m, key, value) {
-				vars[key] = decodeURI(value);
-			});
-			return vars;
-		}
+	
 	   
 		$(document).ready(function () {
 			
@@ -111,6 +105,7 @@
 							   
 							userRelations["contactName"] = json.guardiansFirstName+json.guardiansLastName;
 							userRelations["userRelation"] = "guardian";
+						        userRelations["mobileNo"] = json.guardiansMobileNo;
 							userRelations["userName"]=json.userName;
 							userRelations["mailId"] = json.guardiansEmail;
 							userRelations["firstName"] = json.guardiansFirstName;
