@@ -764,7 +764,7 @@ var payee = function payButton(data) {
 	let session = getSessionStorage();
 	console.log('payButton', data, session);
 	if(session.page == "addUser"){
-		let userId = session.departmentName.includes("DOMDA") ? data.emailId : data.userName;
+		let userId = session.departmentName.includes(session.departmentName) ? data.emailId : data.userName;
 		try {
 			let userExist = validateUser(userId, session.departmentName).then(response => {
 				console.log("response", response);
@@ -857,7 +857,7 @@ function submit(form, submission){
 	var handlerName =  'userMembershipHandlerWithArgs';				
 	var formURL = URLBuilder(data.hasUser, data.hasMember);
 	if(session.page == "addUser" || session.page == "signup" ){
-		let userId = session.departmentName.includes("DOMDA") ? data.emailId : data.userName;
+		let userId = session.departmentName.includes(session.departmentName) ? data.emailId : data.userName;
 		try {
 			let userExist = validateUser(userId, session.departmentName).then(response => {
 				console.log("response", response);
