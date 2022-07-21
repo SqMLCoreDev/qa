@@ -331,15 +331,12 @@ function membershipCard(formData, scheme) {
 			card += "<div class='u-text--uppercase text-mt u-pos--rel u-text--bold' style='font-size: 12px;'><br></div>";
 		}
 		card += "</div>";
-		if(data.clientId=="DDA"){
-		}else{
 		card += "<div class='plan-details u-d-flex u-d-flex--center u-border-bottom--paleGrey'>";
 		card += "<div class='u-p-b--20 u-p-t--8'>";
 		card += "<div class='text-gre u-text--striked text-epsilon u-m-r--4 il-f'>";
 		card += "<div class='text-currency-symbol'>" + data.schemeCurrencySymbol + "</div>";
 		card += "<div class=''>" + data.schemeActualPrice + "</div>";
 		card += "</div>";
-		}
 		card += "<div class='card_container'>";
 		card += "<sup class='text-currency-symbol'>" + data.schemeCurrencySymbol + "</sup><span class='text-delta text-currency text-center u-text--bold u-align--vm cardBlock'>" + data.schemeActivePrice + "</span>";
 		//card += "<span class='text-theta text-gre u-align--vtt cardBlock'>/ " + data.schemeDuration + "</span>";
