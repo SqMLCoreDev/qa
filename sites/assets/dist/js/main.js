@@ -789,19 +789,39 @@ function membershipFees(data){
 	console.log(data);
 	var fees = "";
 	if(data.schemeBilingType == "MONTHLY"){
-		fees = "1 Month - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		if(data.departmentName == "GNAT"){
+			fees = "1 Month - " + Rs + " "+ data.schemeActivePrice;
+		}else{
+			fees = "1 Month - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		}
 	}else if(data.schemeBilingType == "QUARTERLY"){
-		fees = "3 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		if(data.departmentName == "GNAT"){
+			fees = "3 Months - " + Rs + " "+ data.schemeActivePrice;
+		}else{
+			fees = "3 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		}
 	}else if(data.schemeBilingType == "HALFYEARLY"){
-		fees = "6 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		if(data.departmentName == "GNAT"){
+			fees = "6 Months - " + Rs + " "+ data.schemeActivePrice;
+		}else{
+			fees = "6 Months - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		}
 	}else if(data.schemeBilingType == "YEARLY"){
-		if(data.schemeDuration > 1){
-			fees = data.schemeDuration + " years - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
-			console.log("PLURAL",fees);
+		if(data.schemeDuration>1){
+		if(data.departmentName == "GNAT"){
+		fees = data.schemeDuration + " years - " + Rs + " "+ data.schemeActivePrice;
+		}else{
+		fees = data.schemeDuration + " years - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+		}
+		console.log("PLURAL",fees);
 		}
 		else{
-			fees = data.schemeDuration + " year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
-			console.log("SINGULAR",fees);
+			if(data.departmentName == "GNAT"){
+					fees = data.schemeDuration + " year - " + Rs + " "+ data.schemeActivePrice;
+			}else{
+					fees = data.schemeDuration + " year - " + data.schemeCurrencySymbol + " "+ data.schemeActivePrice;
+			}
+		    console.log("SINGULAR",fees);
 		}
 	}
 	return fees;
