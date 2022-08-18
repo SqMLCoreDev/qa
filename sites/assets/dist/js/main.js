@@ -833,6 +833,10 @@ function calculatePayableMonths(formData) {
         //console.log("INNNNNNNNNNN");
         if(formData.scheme.schemeBilingType=='QUARTERLY')
 	{
+	console.log("tech",formData.expiredMonths);
+	var barb = formData.expiredMonths/3;
+	console.log("tech2",barb);
+	console.log("tech3",Math.trunc(barb));
 	formData.expiredMonths=Math.trunc(formData.expiredMonths/3);
 	console.log("AAAAAAA",formData.expiredMonths);
         }
