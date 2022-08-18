@@ -834,7 +834,7 @@ function calculatePayableMonths(formData) {
         if(formData.scheme.schemeBilingType=='QUARTERLY')
 	{
 	formData.expiredMonths=Math.trunc(formData.expiredMonths/3);
-	//console.log("AAAAAAA",formData.expiredMonths);
+	console.log("AAAAAAA",formData.expiredMonths);
         }
         else if(formData.scheme.schemeBilingType=='HALFYEARLY')
 	{
@@ -850,6 +850,7 @@ function calculatePayableMonths(formData) {
         }
 	//console.log("ABC",formData.expiredMonths);
 	var payableFees = parseInt(formData.fees) * Math.abs(formData.expiredMonths) + parseInt(formData.renewalPayableFees);
+	console.log("ABC",payableFees);
         }
 	else
 	{
