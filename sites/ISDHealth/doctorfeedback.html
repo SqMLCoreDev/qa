@@ -105,13 +105,13 @@ font-size: 13.5px;
 		 
           }
 		  
-		  if((docvars.userCategory) == "DOCTOR" && (docvars.feedback) != "edit"){
+		 if((docvars.userCategory) == "CONSULTANT"){
  
-         document.getElementById('builder').setAttribute("style", "display:none");
+         document.getElementById('doctorHeader').setAttribute("style", "display:none");
 		 
           }
 		
-		 if((docvars.userCategory) == "DOCTOR" && (docvars.feedback) == "edit"){
+		 if((docvars.userCategory) == "DOCTOR"){
  
          document.getElementById('doctorHeader').setAttribute("style", "display:none");
 		 
