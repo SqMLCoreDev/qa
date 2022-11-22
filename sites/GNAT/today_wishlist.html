@@ -139,31 +139,31 @@
   animation: 2s anim-popoutin ease infinite;
 	position: absolute;
 	    font-size: 6px;
-    right: 40px;
-    top: 100px;
+    left: 40%;
+    top: 5px;
 }
 
 @keyframes anim-popoutin {
   0% {
-    color: white;
+    color: red;
     transform: scale(0);
     opacity: 0;
     text-shadow: 0 0 0 rgba(0, 0, 0, 0);
   }
   25% {
-     color: white;
+     color: red;
     transform: scale(2);
     opacity: 1;
   }
   50% {
-    color: #fff;
+    color: red;
     transform: scale(1);
     opacity: 1;
   }
   100% {
     /* animate nothing to add pause at the end of animation */
     transform: scale(2);
-     color: white;
+     color: red;
     opacity: 1;
   }
 }
