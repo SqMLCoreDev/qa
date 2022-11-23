@@ -198,7 +198,15 @@
 			});
 			
 		});
-		
+		 var events = ["4TH BLOOD DONATION CAMP"];
+            window.addEventListener("flutterInAppWebViewPlatformReady", function(event) {
+              console.log("flutterInAppWebViewPlatformReady....");
+            });
+
+           function myFunction(x) {
+              window.flutter_inappwebview.callHandler('OutNavHandler', 
+              'https://docs.google.com/forms/d/e/1FAIpQLScHazIfcRIZHygJk5haTATsUWP8MuUND67tnEQpBcTEblec0A/viewform');
+            }    
 		
 	</script>    
 	
@@ -290,14 +298,14 @@
                 <!-- 															<p style="font-size:7px;">Blood Donation Camp. For registration please click the below link</p> -->
                 <!-- <p class="m-0 font-weight-600"><span class="text-primary">https://forms.gle/KXZbzNAfjEjrA5kVA</span></p> -->
                 <!-- 															 <a href="https://forms.gle/KXZbzNAfjEjrA5kVA" target="_blank" rel="noopener noreferrer">https://forms.gle/KXZbzNAfjEjrA5kVA</a> -->
-               <div>
-<div class='line'>
-    <h2 class='pop-outin'>Click to register</h2>
-</div>
-<a href="https://forms.gle/KXZbzNAfjEjrA5kVA" target="_blank" rel="noopener noreferrer"><img
-        src="https://qa-memberly.github.io/qa/sites/assets/dist/images/blood donation.jpg" alt="Girl in a jacket"
-        style="width:350px; height: 120px; margin: auto;" /></a>
-</div>
+              <table>
+				  <div class='line'>
+					<h2 class='pop-outin'>Click to register</h2>
+				</div>
+				  <tr onclick="myFunction(this)">
+					<td><img src="https://qa-memberly.github.io/qa/sites/assets/dist/images/blood%20donation.jpg" style="width:350px;height: 120px;margin: auto;" /></td>   
+				  </tr>
+			  </table>
 			  
                 <div class="d-flex align-items-center justify-content-between mt-2">
                     <div style="border:1px solid #F8F8F8;padding:5px;">
