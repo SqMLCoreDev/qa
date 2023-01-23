@@ -25,6 +25,12 @@ function getUrlVars() {
 		var convert = convertType(decodeURI(value));
 		vars[key] = convert;
 	});
+	console.log("Variables", vars);
+	if(vars.hasOwnProperty('signup') && vars.departmentName=='Naparima College'){
+		console.log("INSIDE SIGNUP STAGE");
+		vars["tokenkey"] = vars.tokenkey;
+		console.log("CODE",vars);
+	}
 	if(vars.hasOwnProperty('clientId')){
 		vars["clientId"] = vars.clientId;
 	}
