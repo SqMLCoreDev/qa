@@ -26,7 +26,7 @@ function getUrlVars() {
 		vars[key] = convert;
 	});
 	console.log("Variables", vars);
-	if(vars.signup!=null && vars.departmentName=='NaparimaCollege'){
+	if(vars.hasOwnProperty('signup')){
 		console.log("INSIDE SIGNUP STAGE");
 		vars["tokenkey"] = vars.tokenkey;
 		console.log("CODE",vars);
