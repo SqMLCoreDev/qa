@@ -884,6 +884,7 @@ function submit(form, submission){
 	$('#formSubmit').attr('disabled','disabled');
 	var data = toObject(submission);
 	let session = getSessionStorage();
+	console.log("SESSION INFO",session);
 	var handlerName =  'userMembershipHandlerWithArgs';				
 	var formURL = URLBuilder(data.hasUser, data.hasMember);
 	if(session.page == "addUser" || session.page == "signup" ){
