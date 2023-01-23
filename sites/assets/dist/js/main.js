@@ -26,10 +26,9 @@ function getUrlVars() {
 		vars[key] = convert;
 	});
 	console.log("Variables", vars);
-	if(vars.hasOwnProperty('tokenkey')){
+	if(vars.hasOwnProperty('page') && vars.hasOwnProperty('tokenkey')){
 		console.log("INSIDE SIGNUP STAGE");
 		vars["tokenkey"] = vars.tokenkey;
-		console.log("CODE",vars);
 	}
 	if(vars.hasOwnProperty('clientId')){
 		vars["clientId"] = vars.clientId;
