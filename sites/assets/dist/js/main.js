@@ -916,6 +916,11 @@ function setObject(info){
 	if(getSessionStorage().mode){
 		userObj["mode"] = getSessionStorage().mode;
 	}
+	if(getSessionStorage().tokenKey){
+		console.log('inside set objectXXXXXXXXXX');
+		userObj["tokenKey"] = getSessionStorage().tokenKey;
+		console.log('Set token key XXLL',userObj);
+	}
 	return userObj;
 }
 function toObject(userObject){
