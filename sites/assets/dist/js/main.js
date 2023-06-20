@@ -304,6 +304,9 @@ function membershipCard(formData, scheme) {
 	card += "<div id='scheme' class=''>";
 	card += "<div class=''>";
 	card += "<div class='u-p-v--10 container scroll' style=''>";
+	if(session.departmentName=='Great Expectation'){
+		card += "<div class='wrapperone'>";
+	}
 	card += "<div class='wrapper'>";
 	card += "<ul class='list' id='myTab'>";
 	scheme.forEach(function (data) {
