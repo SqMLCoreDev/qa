@@ -425,6 +425,14 @@ strong {
     /*overflow:visibile;*/
 }
 
+.wrapperone {
+	margin:0 auto;
+	padding:5px;
+  	height:5px;
+    position:relative;
+    /*overflow:visibile;*/
+}
+
 .read{
 	margin-top: 140px;
 	background: rgba(255, 255, 255, 0.52);
