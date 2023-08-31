@@ -272,7 +272,9 @@ font-size: 13.5px;
 		  document.getElementById("troubleStayingAwake").innerHTML =  userData.doYouHaveTroubleStayingAwake;
 		  document.getElementById("troubleStayingAsleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
 		  document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
-		   document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
+		  document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
+	          document.getElementById("doYouExperienceAnyLumpWoundInYourBreast").innerHTML =  userData.doYouExperienceAnyLumpWoundInYourBreast;
+	          document.getElementById("anyDetectionOfMamogramBefore").innerHTML =  userData.anyDetectionOfMamogramBefore;
       
         var symptoms = [];
          for (var p in userData.doYouCurrentlySufferAnyOfTheFollowingConditions) {
@@ -389,7 +391,7 @@ font-size: 13.5px;
 							  <td id="email"></td>
 							  <td id="age"></td>
 							</tr>
-							<tr>
+<!-- 							<tr>
 							  <th>Weight</th>
 							  <th>Height</th>
 							</tr>
@@ -404,16 +406,24 @@ font-size: 13.5px;
 							<tr>
 							  <td id="address"></td>
 							  <td id="country"></td>
-							</tr>
+							</tr> -->
 							<tr>
-							  <th>City</th>
+<!-- 							  <th>City</th> -->
 							  <th>Cell Phone</th>
 							</tr>
 							<tr>
-							  <td id="city"></td>
+<!-- 							  <td id="city"></td> -->
 							  <td id="phone"></td>
 							</tr>
 							<tr>
+							  <th>Do you experiencing change in the size, shape or appearance of the breast ? </th>
+							  <th>Any detection of Mamogram before ?</th>
+							</tr>
+							<tr>
+							  <td id="doYouExperienceAnyLumpWoundInYourBreast"></td>
+							  <td id="anyDetectionOfMamogramBefore"></td>
+							</tr>
+<!-- 							<tr>
 							  <th>Health insurance</th>
 							  <th>Health insurance Name</th>
 							</tr>
@@ -475,12 +485,12 @@ font-size: 13.5px;
 							<tr>
 							  <td colspan="5" id = "symptoms"> </td>
 							</tr>
-									<tr>
+							<tr>
 							  <th colspan="5">Any other symptoms</th>
 							</tr>
 							<tr>
 							  <td colspan="5" id = "anyOtherSymptoms"> </td>
-							</tr>
+							</tr> -->
 						  </table>
 						</div>
 					</div>
