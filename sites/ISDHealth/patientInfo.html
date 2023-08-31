@@ -250,7 +250,7 @@ font-size: 13.5px;
 		  document.getElementById("lastName").innerHTML =  userData.lastName;
 		  document.getElementById("email").innerHTML =  userData.email;
 		  document.getElementById("address").innerHTML =  userData.address;
-		  document.getElementById("phone").innerHTML =  userData.cellNumber;
+		  document.getElementById("cellNumber").innerHTML =  userData.cellNumber;
 		  document.getElementById("city").innerHTML =  userData.cityTown;
 		  document.getElementById("country").innerHTML =  userData.country1;
 		  document.getElementById("insurance").innerHTML =  userData.healthInsurance1;
@@ -273,8 +273,10 @@ font-size: 13.5px;
 		  document.getElementById("troubleStayingAsleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
 		  document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
 		  document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
-	          document.getElementById("doYouExperienceAnyLumpWoundInYourBreast").innerHTML =  userData.doYouExperienceAnyLumpWoundInYourBreast;
-	          document.getElementById("anyDetectionOfMamogramBefore").innerHTML =  userData.anyDetectionOfMamogramBefore;
+	      document.getElementById("doYouAnyLumpWoundInYourBreast").innerHTML =  userData.doYouAnyLumpWoundInYourBreast;
+	      document.getElementById("doYouExperienceAnyChangeInSize").innerHTML =  userData.doYouExperienceAnyChangeInSize;
+		  document.getElementById("monthlyBreastSelfExams").innerHTML =  userData.monthlyBreastSelfExams;
+		  
       
         var symptoms = [];
          for (var p in userData.doYouCurrentlySufferAnyOfTheFollowingConditions) {
