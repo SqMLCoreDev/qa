@@ -19,8 +19,8 @@
     <script src='../assets/dist/js/investigate/selectize.js'></script>
     <script src='../assets/dist/js/bootstrap.bundle.min.js'></script>
     <script src='../assets/dist/js/pooper/popper.min.js'></script>
-    <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
     <script src='../assets/dist/js/main.js'></script>
+    <script src='../assets/dist/js/investigate/formio.full.min.js'></script>
     <style>
       table, th, td {
 border: 0px solid #d8cccc;
@@ -249,15 +249,19 @@ font-size: 13.5px;
 		  document.getElementById("firstName").innerHTML =  userData.firstname;
 		  document.getElementById("lastName").innerHTML =  userData.lastName;
 		  document.getElementById("email").innerHTML =  userData.email;
-		  document.getElementById("address").innerHTML =  userData.address;
+		  document.getElementById("age").innerHTML =  userData.age;
 		  document.getElementById("cellNumber").innerHTML =  userData.cellNumber;
+		  document.getElementById("doYouAnyLumpWoundInYourBreast").innerHTML =  userData.doYouAnyLumpWoundInYourBreast;
+	      document.getElementById("doYouExperienceAnyChangeInSize").innerHTML =  userData.doYouExperienceAnyChangeInSize;
+		  document.getElementById("monthlyBreastSelfExams").innerHTML =  userData.monthlyBreastSelfExams;
+		  document.getElementById("address").innerHTML =  userData.address;
 		  document.getElementById("city").innerHTML =  userData.cityTown;
 		  document.getElementById("country").innerHTML =  userData.country1;
 		  document.getElementById("insurance").innerHTML =  userData.healthInsurance1;
 		  document.getElementById("insuranceName").innerHTML =  userData.policyNumber;
 		  document.getElementById("height").innerHTML =  userData.height;
 		  document.getElementById("weight").innerHTML =  userData.weight;
-		  document.getElementById("age").innerHTML =  userData.age;
+		  
 		  
 		  document.getElementById("sittingAndReading").innerHTML =  userData.survey.sittingAndReading;
 		  document.getElementById("WatchingTv").innerHTML =  userData.survey.watchingTv;
@@ -273,9 +277,7 @@ font-size: 13.5px;
 		  document.getElementById("troubleStayingAsleep").innerHTML =  userData.doYouHaveTroubleStayingAsleep;
 		  document.getElementById("sleepDuration").innerHTML =  userData.howLongDoYouSleepInADay;
 		  document.getElementById("anyOtherSymptoms").innerHTML =  userData.anyOtherSymptoms;
-	      document.getElementById("doYouAnyLumpWoundInYourBreast").innerHTML =  userData.doYouAnyLumpWoundInYourBreast;
-	      document.getElementById("doYouExperienceAnyChangeInSize").innerHTML =  userData.doYouExperienceAnyChangeInSize;
-		  document.getElementById("monthlyBreastSelfExams").innerHTML =  userData.monthlyBreastSelfExams;
+	      
 		  
       
         var symptoms = [];
