@@ -96,7 +96,9 @@
 				    	  .then(response => response.text())
 				    	  .then(result => console.log(result))
 				    	  .catch(error => console.log('error', error));
-				    	
+					   console.log("SUBMIT BUTTON++++++++++++ ");
+				    	   console.log("SUBMIT RESPONSE++++++++++++ ",response);
+					   $("submitsucccess").show();
 				    	
 				    });
 			  });
@@ -267,6 +269,7 @@
 						
 							  
                      </div>
+		     <div id="submitsucccess" style="display:none">Submitted Successfully</div>
                      <div class="privacy-policy-row" style="display:none">
                         <div class="privacy-policy-container">
                            <div id="privacy-policy-text" class="privacy-policy-text">By clicking the button above, you agree to our
